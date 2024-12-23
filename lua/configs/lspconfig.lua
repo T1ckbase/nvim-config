@@ -28,6 +28,9 @@ lspconfig.denols.setup {
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
   root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+  -- init_options = {
+    -- lint = true,
+  -- }
 }
 
 lspconfig.ts_ls.setup {

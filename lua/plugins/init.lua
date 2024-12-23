@@ -32,11 +32,11 @@ return {
         right = { " ", wilder.popupmenu_scrollbar { thumb_char = " " } },
         highlights = {
           default = "WilderMenu",
-          border = 'Normal',
+          border = 'Whitespace',
           accent = wilder.make_hl("WilderAccent", "Pmenu", {
             { a = 1 },
             { a = 1 },
-            { foreground = "#f4468f" },
+            { foreground = "#c586c0" },
           }),
         },
         border = 'rounded',
@@ -49,5 +49,32 @@ return {
     opts = {},
     event = "VeryLazy",
     enabled = vim.fn.has("nvim-0.10.0") == 1,
+  },
+
+  {
+    "hrsh7th/nvim-cmp",
+    config = function(_, opts)
+      local cmp = require("cmp")
+      local mappings = {
+        ["<Up>"] = cmp.mapping.select_prev_item(),
+        ["<Down>"] = cmp.mapping.select_next_item(),
+        ["<Tab>"] = cmp.mapping.confirm({
+          behavior = cmp.ConfirmBehavior.Replace,
+          select = true,
+        }),
+      }
+      opts.mapping = vim.tbl_deep_extend("force", opts.mapping, mappings)
+      opts.window = {
+        completion = cmp.config.window.bordered({
+          winhighlight = 'FloatBorder:CmpBorder',
+          border = 'rounded'
+        }),
+        documentation = cmp.config.window.bordered({
+          winhighlight = 'FloatBorder:CmpDocBorder',
+          border = 'rounded'
+        }),
+      }
+      cmp.setup(opts)
+    end,
   }
 }
