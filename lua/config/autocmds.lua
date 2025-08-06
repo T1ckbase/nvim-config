@@ -6,3 +6,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank({ higroup = 'IncSearch', timeout = 50 })
   end,
 })
+
+vim.api.nvim_create_autocmd('OptionSet', {
+  pattern = 'background',
+  callback = function()
+    if vim.o.background ~= 'dark' then
+      vim.schedule(function()
+        vim.opt.background = 'dark'
+      end)
+    end
+  end,
+})

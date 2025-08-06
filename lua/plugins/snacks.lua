@@ -12,8 +12,16 @@ return {
     -- dashboard = { enabled = true },
     -- explorer = { enabled = true },
     -- image = { enabled = true },
-    -- indent = { enabled = true },
-    -- input = { enabled = true },
+    indent = {
+      enabled = true,
+      indent = { char = '▏' },
+      scope = { char = '▏' },
+      animate = { enabled = false },
+    },
+    input = {
+      enabled = true,
+      border = 'single',
+    },
     picker = {
       enabled = true,
       -- layout = {
@@ -62,24 +70,31 @@ return {
     },
     notifier = { enabled = true },
     -- quickfile = { enabled = true },
-    -- scope = { enabled = true },
+    scope = { enabled = true },
     -- scroll = { enabled = true },
     -- statuscolumn = { enabled = true },
     -- words = { enabled = true },
   },
   keys = {
-    { '<leader>ff', function() Snacks.picker.files() end, desc = 'Find Files' },
+    { '<leader>fb', function() Snacks.picker.buffers() end, desc = 'Find Buffers' },
+    { '<leader>ff', function() Snacks.picker.files() end,   desc = 'Find Files' },
     {
       '<leader>fF',
       function() Snacks.picker.files({ hidden = true, ignored = true }) end,
       desc = 'Find all files'
     },
-    { '<leader>fw', function() Snacks.picker.grep() end,  desc = 'Find Words' },
+    { '<leader>fw', function() Snacks.picker.grep() end,                 desc = 'Find Words' },
     {
       '<leader>fW',
       function() Snacks.picker.grep({ hidden = true, ignored = true }) end,
       desc = 'Find words in all files',
     },
-    { '<leader>ft', function() Snacks.picker.colorschemes() end, desc = 'Colorschemes' }
+    { '<leader>ft', function() Snacks.picker.colorschemes() end,         desc = 'Colorschemes' },
+    { '<leader>fk', function() Snacks.picker.keymaps() end,              desc = 'Find keymaps' },
+    -- { '<leader>z',  function() Snacks.zen() end,                 desc = 'Toggle Zen Mode' },
+
+    { 'gd',         function() Snacks.picker.lsp_definitions() end,      desc = 'Goto Definition' },
+    { 'gD',         function() Snacks.picker.lsp_declarations() end,     desc = 'Goto Declaration' },
+    { 'gy',         function() Snacks.picker.lsp_type_definitions() end, desc = 'Goto T[y]pe Definition' },
   }
 }
