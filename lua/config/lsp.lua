@@ -28,6 +28,12 @@ vim.lsp.config('ty', {
   cmd = { 'uvx', '--quiet', 'ty', 'server' },
 })
 
+vim.lsp.config('vtsls', {
+  -- cmd = { 'bunx', '--silent', '--bun', '@vtsls/language-server', '--stdio' },
+  cmd = { 'deno', 'run', '--quiet', '--reload', '-A', 'npm:@vtsls/language-server', '--stdio' },
+  cmd_env = { NO_COLOR = true },
+})
+
 vim.lsp.enable({
   'lua_ls',
   'denols',
@@ -35,6 +41,7 @@ vim.lsp.enable({
   'ruff',
   -- 'pyright',
   -- 'ty',
+  'vtsls',
 })
 
 vim.diagnostic.config({
