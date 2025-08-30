@@ -13,7 +13,7 @@ vim.keymap.set('v', '<A-J>', ":<C-u>'<,'>copy '<-1<cr>gv=gv", { desc = 'Copy Sel
 vim.keymap.set('v', '<A-K>', ":<C-u>'<,'>copy '><cr>gv=gv", { desc = 'Copy Selection Up' })
 
 vim.keymap.set({ 'n', 'x' }, '<C-s>', '<Cmd>silent! update! | redraw<CR>', { remap = true, desc = 'Force write' })
-vim.keymap.set({ 'i', 'n', 's' }, '<Esc>', '<Cmd>noh<CR>', { remap = true, desc = 'Clear search highlight' })
+vim.keymap.set({ 'n' }, '<Esc>', '<Cmd>noh<CR>', { noremap = true, desc = 'Clear search highlight' })
 
 vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>', { remap = true, desc = 'Toggle Explorer' })
 

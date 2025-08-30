@@ -1,6 +1,11 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 vim.opt.autoindent = true
 vim.opt.background = 'dark'
 vim.opt.backup = false
@@ -45,6 +50,7 @@ vim.opt.smartindent = true
 vim.opt.splitkeep = 'screen'
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.swapfile = false
 vim.opt.tabstop = 2
 vim.opt.termguicolors = true
 vim.opt.timeoutlen = 500
@@ -59,5 +65,16 @@ vim.opt.winborder = 'single'
 vim.opt.wrap = false
 vim.opt.writebackup = false
 
+-- if vim.fn.has('win32') == 1 then
+--   vim.o.shell = 'pwsh'
+
+--   vim.o.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command'
+
+--   vim.o.shellquote = '"'
+--   vim.o.shellxquote = ''
+
+--   vim.o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+--   vim.o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+-- end
 
 -- print(vim.opt.fileformat)

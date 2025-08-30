@@ -13,13 +13,13 @@ return {
     -- explorer = { enabled = true },
     -- image = { enabled = true },
     indent = {
-      enabled = true,
+      enabled = false,
       indent = { char = '▏' },
       scope = { char = '▏' },
       animate = { enabled = false },
     },
     input = {
-      enabled = true,
+      enabled = false,
       border = 'single',
     },
     picker = {

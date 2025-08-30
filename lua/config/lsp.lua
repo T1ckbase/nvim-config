@@ -30,7 +30,7 @@ vim.lsp.config('ty', {
 
 vim.lsp.config('vtsls', {
   -- cmd = { 'bunx', '--silent', '--bun', '@vtsls/language-server', '--stdio' },
-  cmd = { 'deno', 'run', '--quiet', '--reload', '-A', 'npm:@vtsls/language-server', '--stdio' },
+  cmd = { 'deno', 'run', '--quiet', '--reload', '--no-lock', '-A', 'npm:@vtsls/language-server', '--stdio' },
   cmd_env = { NO_COLOR = true },
 })
 
