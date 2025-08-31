@@ -60,6 +60,7 @@ vim.diagnostic.config({
     prefix = '',
   },
   signs = {
+    priority = 0,
     text = {
       [vim.diagnostic.severity.ERROR] = '󰅚 ',
       [vim.diagnostic.severity.WARN] = '󰀪 ',

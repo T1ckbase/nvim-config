@@ -12,7 +12,9 @@ vim.keymap.set({ 'n', 'i' }, '<A-K>', '<Cmd>copy .-1<cr>', { desc = 'Copy Line U
 vim.keymap.set('v', '<A-J>', ":<C-u>'<,'>copy '<-1<cr>gv=gv", { desc = 'Copy Selection Down' })
 vim.keymap.set('v', '<A-K>', ":<C-u>'<,'>copy '><cr>gv=gv", { desc = 'Copy Selection Up' })
 
-vim.keymap.set({ 'n', 'x' }, '<C-s>', '<Cmd>silent! update! | redraw<CR>', { remap = true, desc = 'Force write' })
+vim.keymap.set({ 'n', 'x' }, '<C-s>', '<Cmd>silent! update! | redraw<CR>', { desc = 'Force write' })
+vim.keymap.set({ 'i', 'c' }, '<C-S-V>', '<C-r>+', { noremap = true, desc = 'Paste' })
+
 vim.keymap.set({ 'n' }, '<Esc>', '<Cmd>noh<CR>', { noremap = true, desc = 'Clear search highlight' })
 
 vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>', { remap = true, desc = 'Toggle Explorer' })
@@ -23,5 +25,5 @@ vim.keymap.set('v', '<leader>/', 'gc', { remap = true, silent = true, desc = 'To
 vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
 vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 
-vim.keymap.set('n', '<C-K>', vim.diagnostic.open_float, { desc = 'Hover diagnostic' })
+vim.keymap.set('n', '<C-S-K>', vim.diagnostic.open_float, { desc = 'Hover diagnostic' })
 vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.code_action, { desc = 'Code Action' })

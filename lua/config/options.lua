@@ -15,7 +15,7 @@ vim.opt.clipboard = 'unnamedplus' -- Sync with system clipboard
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'noinsert', 'preview' }
 vim.opt.confirm = true
 vim.opt.copyindent = true
-vim.opt.cursorline = true
+-- vim.opt.cursorline = true
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.fileformat = 'unix'
 vim.opt.fileformats = { 'unix', 'dos' }
@@ -28,14 +28,15 @@ vim.opt.fillchars = {
   eob = ' ', -- disable `~` on nonexistent lines
 }
 vim.opt.foldlevel = 99
-vim.opt.grepformat = '%f:%l:%c:%m'
-vim.opt.grepprg = 'rg --vimgrep'
+-- vim.opt.grepformat = '%f:%l:%c:%m'
+-- vim.opt.grepprg = 'rg --vimgrep'
 -- vim.opt.laststatus = 3
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.incsearch = true
 vim.opt.mouse = 'a'
 vim.opt.number = true
+vim.opt.path:append('**')
 vim.opt.pumheight = 12
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 4
@@ -43,7 +44,7 @@ vim.opt.shiftwidth = 2
 vim.opt.showmode = false
 vim.opt.showtabline = 2
 vim.opt.sidescrolloff = 8
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = 'yes:2'
 vim.opt.softtabstop = 2
 vim.opt.smartcase = true
 vim.opt.smartindent = true
@@ -65,16 +66,18 @@ vim.opt.winborder = 'single'
 vim.opt.wrap = false
 vim.opt.writebackup = false
 
--- if vim.fn.has('win32') == 1 then
---   vim.o.shell = 'pwsh'
+if vim.fn.has('win32') == 1 then
+  vim.o.shell = 'pwsh'
+  vim.o.shellcmdflag =
+  "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering = 'PlainText';"
+  vim.o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+  vim.o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+  vim.o.shellquote = ''
+  vim.o.shellxquote = ''
+end
 
---   vim.o.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command'
+-- vim.opt.statusline =
+-- [[%{v:lua.require('config.statusline').mode_component()} %< %f %h%w%m%r %=%{% &showcmdloc == 'statusline' ? '%-10.S ' : '' %}%{% exists('b:keymap_name') ? '<'..b:keymap_name..'> ' : '' %}%{% &busy > 0 ? '◐ ' : '' %}%(%{luaeval('(package.loaded[''vim.diagnostic''] and vim.diagnostic.status()) or '''' ')} %)%{% &ruler ? ( &rulerformat == '' ? '%-14.(%l,%c%V%) %P' : &rulerformat ) : '' %}]]
 
---   vim.o.shellquote = '"'
---   vim.o.shellxquote = ''
-
---   vim.o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
---   vim.o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
--- end
-
+-- vim.cmd('syntax off')
 -- print(vim.opt.fileformat)
