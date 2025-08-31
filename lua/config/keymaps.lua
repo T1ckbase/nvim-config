@@ -25,3 +25,4 @@ vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 
 vim.keymap.set('n', '<C-K>', vim.diagnostic.open_float, { desc = 'Hover diagnostic' })
 vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.code_action, { desc = 'Code Action' })
+vim.keymap.set('i', '<C-space>', vim.lsp.completion.get, { desc = 'Trigger autocompletion' })

@@ -5,6 +5,8 @@ if vim.g.neovide then
   vim.g.neovide_floating_shadow = false
   vim.g.neovide_title_background_color = 'black'
   vim.g.neovide_title_text_color = 'gray'
+  vim.g.neovide_floating_blur_amount_x = 0
+  vim.g.neovide_floating_blur_amount_y = 0
   vim.g.neovide_position_animation_length = 0.06
   vim.g.neovide_scroll_animation_length = 0.04
   vim.g.neovide_scroll_animation_far_lines = 5

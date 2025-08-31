@@ -13,7 +13,7 @@ return {
     -- explorer = { enabled = true },
     -- image = { enabled = true },
     indent = {
-      enabled = false,
+      enabled = true,
       indent = { char = '▏' },
       scope = { char = '▏' },
       animate = { enabled = false },

@@ -28,8 +28,8 @@ vim.opt.fillchars = {
   eob = ' ', -- disable `~` on nonexistent lines
 }
 vim.opt.foldlevel = 99
-vim.opt.grepformat = '%f:%l:%c:%m'
-vim.opt.grepprg = 'rg --vimgrep'
+-- vim.opt.grepformat = '%f:%l:%c:%m'
+-- vim.opt.grepprg = 'rg --vimgrep'
 -- vim.opt.laststatus = 3
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
@@ -37,6 +37,7 @@ vim.opt.incsearch = true
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.pumheight = 12
+vim.opt.path:append('**')
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 4
 vim.opt.shiftwidth = 2
