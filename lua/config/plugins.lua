@@ -3,6 +3,7 @@ vim.pack.add({
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter-textobjects' },
   { src = 'https://github.com/neovim/nvim-lspconfig' },
   { src = 'https://github.com/nvim-mini/mini.nvim' },
+  -- { src = 'https://github.com/folke/snacks.nvim' },
   { src = 'https://github.com/lewis6991/gitsigns.nvim' }
 })
 
@@ -108,7 +109,18 @@ require('nvim-treesitter.configs').setup({
 })
 
 
+require('mini.ai').setup({
+  mappings = {
+    around_next = '',
+    inside_next = '',
+    around_last = '',
+    inside_last = '',
+    goto_left   = '',
+    goto_right  = '',
+  }
+})
 
+require('mini.comment').setup()
 require('mini.git').setup()
 require('mini.icons').setup()
 require('mini.pairs').setup()

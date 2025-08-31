@@ -7,7 +7,6 @@
   },
   "workspace.library": [
     "C:\\Users\\Nah\\scoop\\apps\\neovim-nightly\\current\\share\\nvim\\runtime\\lua",
-    "C:\\Users\\Nah\\AppData\\Local\\nvim-data\\site\\pack\\core\\opt\\mini.nvim\\lua",
-    "C:\\Users\\Nah\\AppData\\Local\\nvim-data\\site\\pack\\core\\opt\\nvim-treesitter\\lua"
+    "C:\\Users\\Nah\\AppData\\Local\\nvim-data\\site\\pack\\core\\opt"
   ]
 }
