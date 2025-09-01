@@ -18,44 +18,22 @@ vim.api.nvim_create_autocmd('OptionSet', {
   end,
 })
 
--- vim.api.nvim_create_autocmd('LspAttach', {
---   group = vim.api.nvim_create_augroup('my.lsp', {}),
---   callback = function(args)
---     local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
---     if client:supports_method('textDocument/implementation') then
---     end
---     -- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
---     if client:supports_method('textDocument/completion') then
---       -- Optional: trigger autocompletion on EVERY keypress. May be slow!
---       -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
---       -- client.server_capabilities.completionProvider.triggerCharacters = chars
---       vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
---     end
---     -- Auto-format ("lint") on save.
---     -- Usually not needed if server supports "textDocument/willSaveWaitUntil".
---     if not client:supports_method('textDocument/willSaveWaitUntil')
---         and client:supports_method('textDocument/formatting') then
---       vim.api.nvim_create_autocmd('BufWritePre', {
---         group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
---         buffer = args.buf,
---         callback = function()
---           vim.lsp.buf.format({ bufnr = args.buf, id = client.id, timeout_ms = 1000 })
---         end,
---       })
---     end
---   end,
--- })
+vim.api.nvim_create_autocmd('CmdlineEnter', {
+  group = group,
+  callback = function()
+    vim.g.__saved_laststatus = vim.opt.laststatus:get()
+    vim.opt.laststatus = 0
+    vim.opt.cmdheight = 1
+  end,
+})
 
--- vim.api.nvim_create_autocmd('CmdlineEnter', {
---   group = group,
---   callback = function()
---     vim.o.cmdheight = 1
---   end,
--- })
---
--- vim.api.nvim_create_autocmd('CmdlineLeave', {
---   group = group,
---   callback = function()
---     vim.o.cmdheight = 0
---   end,
--- })
+vim.api.nvim_create_autocmd('CmdlineLeave', {
+  group = group,
+  callback = function()
+    if vim.g.__saved_laststatus ~= nil then
+      vim.opt.laststatus = vim.g.__saved_laststatus
+      vim.g.__saved_laststatus = nil
+      vim.opt.cmdheight = 0
+    end
+  end,
+})

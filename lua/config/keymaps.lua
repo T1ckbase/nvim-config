@@ -12,12 +12,15 @@ vim.keymap.set({ 'n', 'i' }, '<A-K>', '<Cmd>copy .-1<cr>', { desc = 'Copy Line U
 vim.keymap.set('v', '<A-J>', ":<C-u>'<,'>copy '<-1<cr>gv=gv", { desc = 'Copy Selection Down' })
 vim.keymap.set('v', '<A-K>', ":<C-u>'<,'>copy '><cr>gv=gv", { desc = 'Copy Selection Up' })
 
-vim.keymap.set({ 'n', 'x' }, '<C-s>', '<Cmd>silent! update! | redraw<CR>', { desc = 'Force write' })
+vim.api.nvim_set_keymap('v', '>', '>gv', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<', '<gv', { noremap = true, silent = true })
+
+vim.keymap.set({ 'n', 'x' }, '<C-s>', '<Cmd>silent! update! | redraw<CR>', { desc = 'Force write', silent = true })
 vim.keymap.set({ 'i', 'c' }, '<C-S-V>', '<C-r>+', { noremap = true, desc = 'Paste' })
 
 vim.keymap.set({ 'n' }, '<Esc>', '<Cmd>noh<CR>', { noremap = true, desc = 'Clear search highlight' })
 
-vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>', { remap = true, desc = 'Toggle Explorer' })
+-- vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>', { remap = true, desc = 'Toggle Explorer' })
 
 vim.keymap.set('n', '<leader>/', 'gcc', { remap = true, silent = true, desc = 'Toggle comment' })
 vim.keymap.set('v', '<leader>/', 'gc', { remap = true, silent = true, desc = 'Toggle comment line' })
@@ -25,6 +28,12 @@ vim.keymap.set('v', '<leader>/', 'gc', { remap = true, silent = true, desc = 'To
 vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
 vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 
+vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ max_width = 96, max_height = 20 }) end, { desc = 'vim.lsp.buf.hover()' })
+vim.keymap.set('i', '<C-space>', vim.lsp.completion.get, { desc = 'Trigger autocompletion' })
 vim.keymap.set('n', '<C-S-K>', vim.diagnostic.open_float, { desc = 'Hover diagnostic' })
 vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.code_action, { desc = 'Code Action' })
-vim.keymap.set('i', '<C-space>', vim.lsp.completion.get, { desc = 'Trigger autocompletion' })
+vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = 'Format buffer' })
+
+vim.keymap.set('n', '<leader>test', function()
+  vim.notify('test')
+end, { desc = 'Test' })
