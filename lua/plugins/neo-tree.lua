@@ -5,13 +5,32 @@ return {
   dependencies = {
     'nvim-lua/plenary.nvim',
     'MunifTanjim/nui.nvim',
-    'nvim-tree/nvim-web-devicons', -- optional, but recommended
   },
-  lazy = false,                    -- neo-tree will lazily load itself
+  lazy = false, -- neo-tree will lazily load itself
   opts = {
     default_component_configs = {
       container = {
         enable_character_fade = false,
+      },
+      icon = {
+        provider = function(icon, node)
+          local text, hl
+          local mini_icons = require('mini.icons')
+          if node.type == 'file' then
+            text, hl = mini_icons.get('file', node.name)
+          elseif node.type == 'directory' then
+            text, hl = mini_icons.get('directory', node.name)
+            if node:is_expanded() then text = nil end
+          end
+
+          if text then icon.text = text end
+          if hl then icon.highlight = hl end
+        end,
+      },
+      kind_icon = {
+        provider = function(icon, node)
+          icon.text, icon.highlight = require('mini.icons').get('lsp', node.extra.kind.name)
+        end,
       },
       git_status = {
         symbols = {
@@ -39,7 +58,7 @@ return {
         hide_gitignored = false,
       },
       hijack_netrw_behavior = 'open_current',
-      use_libuv_file_watcher = vim.fn.has 'win32' ~= 1,
+      use_libuv_file_watcher = vim.fn.has('win32') ~= 1,
     }
   }
 }

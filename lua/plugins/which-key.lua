@@ -1,7 +1,11 @@
 ---@type LazySpec
 return {
   'folke/which-key.nvim',
-  event = 'VeryLazy',
+  -- The default priority for non-lazy plugins is 50.
+  -- Setting this to 49 ensures the plugin loads slightly later than most others,
+  -- without making it lazy-loaded.
+  priority = 49,
+  lazy = false,
   opts = {
     -- your configuration comes here
     -- or leave it empty to use the default settings

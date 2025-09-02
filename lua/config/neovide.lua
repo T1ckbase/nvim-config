@@ -7,7 +7,7 @@ if vim.g.neovide then
   vim.g.neovide_title_text_color = 'gray'
   vim.g.neovide_floating_blur_amount_x = 0
   vim.g.neovide_floating_blur_amount_y = 0
-  vim.g.neovide_position_animation_length = 0.06
+  vim.g.neovide_position_animation_length = 0.02
   vim.g.neovide_scroll_animation_length = 0.04
   vim.g.neovide_scroll_animation_far_lines = 5
   vim.g.neovide_refresh_rate = 165 -- This setting is only effective when not using vsync, for example by passing --no-vsync on the commandline.
@@ -34,15 +34,13 @@ if vim.g.neovide then
   )
 
   vim.keymap.set('', '<C-F5>', function()
-    local autocmd_group_id = vim.api.nvim_create_augroup('Restart', { clear = true })
-
     local id = vim.api.nvim_create_autocmd('VimLeavePre', {
-      group = autocmd_group_id,
+      group = vim.api.nvim_create_augroup('Restart', {}),
       pattern = '*',
-      callback = function() vim.fn.system 'neovide' end,
+      callback = function() vim.fn.system('neovide') end,
     })
 
-    vim.cmd 'qa'
+    vim.cmd('qa')
 
     vim.api.nvim_del_autocmd(id)
   end, { desc = 'Restart Neovide' })
