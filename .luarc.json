@@ -3,10 +3,17 @@
   "runtime.version": "LuaJIT",
   "format.defaultConfig": {
     "quote_style": "single",
-    "max_line_length": "160"
+    "max_line_length": "160",
+    "end_of_line": "lf",
+    "align_continuous_assign_statement": "false"
   },
-  "workspace.library": [
-    "C:\\Users\\Nah\\scoop\\apps\\neovim\\current\\share\\nvim\\runtime\\lua",
-    "C:\\Users\\Nah\\AppData\\Local\\nvim-data\\lazy"
-  ]
+  "workspace": {
+    "library": [
+      "$VIMRUNTIME/lua",
+      "~/AppData/Local/nvim/lua",
+      "~/AppData/Local/nvim-data/site/pack/deps",
+      "${3rd}/luv/library"
+    ],
+    "checkThirdParty": false
+  }
 }

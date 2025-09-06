@@ -15,12 +15,12 @@ vim.keymap.set('v', '<A-K>', ":<C-u>'<,'>copy '><cr>gv=gv", { desc = 'Copy Selec
 vim.api.nvim_set_keymap('v', '>', '>gv', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', '<', '<gv', { noremap = true, silent = true })
 
-vim.keymap.set({ 'n', 'x' }, '<C-s>', '<Cmd>silent! update! | redraw<CR>', { desc = 'Force write', silent = true })
+vim.keymap.set('n', '<c-s>', '<cmd>w<cr>', { desc = 'Force write', silent = true })
 vim.keymap.set({ 'i', 'c' }, '<C-v>', '<C-r>+', { noremap = true, desc = 'Paste' })
 
 vim.keymap.set({ 'n' }, '<Esc>', '<Cmd>noh<CR>', { noremap = true, desc = 'Clear search highlight' })
 
-vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>', { remap = true, desc = 'Toggle Explorer' })
+-- vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>', { remap = true, desc = 'Toggle Explorer' })
 
 vim.keymap.set('n', '<leader>/', 'gcc', { remap = true, silent = true, desc = 'Toggle comment' })
 vim.keymap.set('v', '<leader>/', 'gc', { remap = true, silent = true, desc = 'Toggle comment line' })
@@ -30,7 +30,25 @@ vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
 vim.keymap.set('n', '<leader>n', '<cmd>enew<cr>', { desc = 'New file' })
 
 vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ max_width = 100, max_height = 20 }) end, { desc = 'vim.lsp.buf.hover()' })
-vim.keymap.set('i', '<C-space>', vim.lsp.completion.get, { desc = 'Trigger autocompletion' })
 vim.keymap.set('n', '<leader>ld', vim.diagnostic.open_float, { desc = 'Hover diagnostic' })
 vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.code_action, { desc = 'Code Action' })
 vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = 'Format buffer' })
+
+vim.keymap.set('n', '<leader>c', function() MiniBufremove.delete() end, { desc = 'Close buffer' })
+
+vim.keymap.set('n', '<leader>fe', function() MiniExtra.pickers.explorer() end, { desc = 'File explorer' })
+vim.keymap.set('n', '<leader>ff', function() MiniPick.builtin.files() end, { desc = 'Find files' })
+vim.keymap.set('n', '<leader>fw', function() MiniPick.builtin.grep_live() end, { desc = 'Find words' })
+vim.keymap.set('n', '<leader>lD', function() MiniExtra.pickers.diagnostic() end, { desc = 'Search diagnostic' })
+
+vim.keymap.set('n', '<leader>nh', function() MiniNotify.show_history() end, { desc = 'Notify history' })
+
+local notify_many_keys = function(key)
+  local lhs = string.rep(key, 5)
+  local action = function() vim.notify('Too many ' .. key) end
+  MiniKeymap.map_combo({ 'n', 'x' }, lhs, action)
+end
+notify_many_keys('h')
+notify_many_keys('j')
+notify_many_keys('k')
+notify_many_keys('l')

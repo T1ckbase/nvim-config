@@ -1,20 +1,25 @@
-vim.g.mapleader = ' '
-vim.g.maplocalleader = '\\'
+-- disable
+-- vim.g.loaded_gzip = 1
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
+-- vim.g.loaded_tarPlugin = 1
+-- vim.g.loaded_tohtml = 1
+-- vim.g.loaded_zipPlugin = 1
 
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python_provider = 0
 vim.g.loaded_ruby_provider = 0
 
-vim.g.loaded_netrw = 0
-vim.g.loaded_netrwPlugin = 0
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '\\'
 
 vim.opt.autoindent = true
 vim.opt.background = 'dark'
 vim.opt.backup = false
 vim.opt.breakindent = true
 vim.opt.clipboard = 'unnamedplus' -- Sync with system clipboard
-vim.opt.cmdheight = 0
+-- vim.opt.cmdheight = 0
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'noinsert', 'preview' }
 vim.opt.confirm = true
 vim.opt.copyindent = true
@@ -43,10 +48,11 @@ vim.opt.foldmethod = 'expr'
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 vim.opt.incsearch = true
+vim.opt.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.path:append('**')
-vim.opt.pumheight = 20
+vim.opt.pumheight = 16
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 4
 vim.opt.shiftwidth = 2

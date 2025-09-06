@@ -1,3 +1,22 @@
+vim.lsp.config('basedpyright', {
+  cmd = { 'uvx', '--quiet', '--from', 'basedpyright', 'basedpyright-langserver', '--stdio' },
+  settings = {
+    basedpyright = {
+      analysis = {
+        diagnosticMode = 'workspace',
+        inlayHints = {
+          callArgumentNames = false
+        }
+      },
+    },
+  }
+})
+
+vim.lsp.config('cssls', {
+  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-css-language-server', '--stdio' },
+  cmd_env = { NO_COLOR = true },
+})
+
 vim.lsp.config('denols', {
   settings = {
     deno = {
@@ -18,23 +37,19 @@ vim.lsp.config('denols', {
 })
 -- vim.lsp.config.denols.root_markers = { 'deno.json', 'deno.jsonc' }
 
-vim.lsp.config('basedpyright', {
-  cmd = { 'uvx', '--quiet', '--from', 'basedpyright', 'basedpyright-langserver', '--stdio' },
-  settings = {
-    basedpyright = {
-      analysis = {
-        diagnosticMode = 'workspace',
-        inlayHints = {
-          callArgumentNames = false
-        }
-      },
-    },
-  }
-})
-
 vim.lsp.config('emmet_language_server', {
   cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@olrtg/emmet-language-server', '--stdio' },
-  cmd_env = { NO_COLOR = true }
+  cmd_env = { NO_COLOR = true },
+})
+
+vim.lsp.config('html', {
+  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-html-language-server', '--stdio' },
+  cmd_env = { NO_COLOR = true },
+})
+
+vim.lsp.config('jsonls', {
+  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-json-language-server', '--stdio' },
+  cmd_env = { NO_COLOR = true },
 })
 
 vim.lsp.config('ruff', {
@@ -60,9 +75,14 @@ vim.lsp.config('vtsls', {
 
 vim.lsp.enable({
   'lua_ls',
+  'cssls',
   'denols',
+  -- 'deno_fmt',
   -- 'basedpyright',
+  'jsonls',
   'emmet_language_server',
+  'html',
+  'markdown',
   'ruff',
   'pyrefly',
   -- 'pyright',
@@ -88,10 +108,10 @@ vim.diagnostic.config({
   signs = {
     priority = 0,
     text = {
-      [vim.diagnostic.severity.ERROR] = '󰅚 ',
-      [vim.diagnostic.severity.WARN] = '󰀪 ',
-      [vim.diagnostic.severity.INFO] = '󰋽 ',
-      [vim.diagnostic.severity.HINT] = '󰌶 ',
+      [vim.diagnostic.severity.ERROR] = '󰅚',
+      [vim.diagnostic.severity.WARN] = '󰀪',
+      [vim.diagnostic.severity.INFO] = '󰋽',
+      [vim.diagnostic.severity.HINT] = '󰌶',
     },
   },
 })
@@ -101,9 +121,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
-    -- if client:supports_method('textDocument/documentColor') then -- 0.12
-    --   vim.lsp.document_color.enable(true, args.buf, { style = 'virtual' })
-    -- end
+    if vim.fn.has('nvim-0.12') == 1 and client:supports_method('textDocument/documentColor') then
+      vim.lsp.document_color.enable(true, args.buf, { style = 'virtual' })
+    end
 
     -- format on save
     if not client:supports_method('textDocument/willSaveWaitUntil') and client:supports_method('textDocument/formatting') then
@@ -131,14 +151,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
         name = 'vtsls',
       })
       for _, client in ipairs(clients) do
-        vim.lsp.stop_client(client.id, true)
+        vim.lsp.stop_client(client.id, false)
       end
     end
 
     -- if vtsls attached, stop it if there is a denols server attached
     if curr_client and curr_client.name == 'vtsls' then
       if next(vim.lsp.get_clients({ bufnr = bufnr, name = 'denols' })) then
-        vim.lsp.stop_client(curr_client.id, true)
+        vim.lsp.stop_client(curr_client.id, false)
       end
     end
   end
