@@ -1,7 +1,7 @@
 -- disable
 -- vim.g.loaded_gzip = 1
--- vim.g.loaded_netrw = 1
--- vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 -- vim.g.loaded_tarPlugin = 1
 -- vim.g.loaded_tohtml = 1
 -- vim.g.loaded_zipPlugin = 1
@@ -69,6 +69,7 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 -- vim.opt.statuscolumn = '%s%l%C'
 vim.opt.swapfile = false
+vim.opt.synmaxcol = 1000
 vim.opt.tabstop = 2
 vim.opt.termguicolors = true
 vim.opt.timeoutlen = 500

@@ -19,18 +19,32 @@ vim.api.nvim_create_autocmd('OptionSet', {
   end,
 })
 
-vim.api.nvim_create_autocmd('VimLeave', {
-  group = vim.api.nvim_create_augroup('mini_sessions_auto_save', {}),
-  pattern = '*',
-  desc = 'Save current state to a default session before quitting',
-  callback = function()
-    if #vim.fn.getbufinfo({ buflisted = 1 }) == 0 or vim.v.this_session ~= '' then
-      return
-    end
-    -- MiniSessions.write('LastSession.vim', { force = true })
-    MiniSessions.write(vim.fn.getcwd():gsub('[\\/:]', '%%') .. '.vim', { force = true })
-  end,
-})
+-- vim.api.nvim_create_autocmd('InsertEnter', {
+--   group = augroup,
+--   callback = function()
+--     vim.opt.relativenumber = false
+--   end,
+-- })
+--
+-- vim.api.nvim_create_autocmd('InsertLeave', {
+--   group = augroup,
+--   callback = function()
+--     vim.opt.relativenumber = true
+--   end,
+-- })
+
+-- vim.api.nvim_create_autocmd('VimLeave', {
+--   group = vim.api.nvim_create_augroup('mini_sessions_auto_save', {}),
+--   pattern = '*',
+--   desc = 'Save current state to a default session before quitting',
+--   callback = function()
+--     if #vim.fn.getbufinfo({ buflisted = 1 }) == 0 or vim.v.this_session ~= '' then
+--       return
+--     end
+--     -- MiniSessions.write('LastSession.vim', { force = true })
+--     MiniSessions.write(vim.fn.getcwd():gsub('[\\/:]', '%%') .. '.vim', { force = true })
+--   end,
+-- })
 
 -- vim.api.nvim_create_autocmd('CmdlineEnter', {
 --   group = augroup,

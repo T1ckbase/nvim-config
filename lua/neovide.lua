@@ -1,5 +1,5 @@
 if vim.g.neovide then
-  vim.o.guifont = 'JetBrainsMonoNL Nerd Font:h11'
+  vim.o.guifont = 'JetBrainsMonoNL Nerd Font,Cascadia Mono:h11'
   vim.opt.linespace = 0
   vim.g.neovide_scale_factor = 1.0
   vim.g.neovide_floating_shadow = false
@@ -7,9 +7,9 @@ if vim.g.neovide then
   vim.g.neovide_title_text_color = 'gray'
   vim.g.neovide_floating_blur_amount_x = 0
   vim.g.neovide_floating_blur_amount_y = 0
-  vim.g.neovide_position_animation_length = 0.02
-  vim.g.neovide_scroll_animation_length = 0.04
-  vim.g.neovide_scroll_animation_far_lines = 5
+  vim.g.neovide_position_animation_length = 0.03
+  vim.g.neovide_scroll_animation_length = 0
+  -- vim.g.neovide_scroll_animation_far_lines = 1
   vim.g.neovide_refresh_rate = 165 -- This setting is only effective when not using vsync, for example by passing --no-vsync on the commandline.
   -- vim.g.neovide_refresh_rate_idle = 165
   vim.g.neovide_no_idle = true
@@ -35,7 +35,7 @@ if vim.g.neovide then
 
   vim.keymap.set('', '<C-F5>', function()
     local id = vim.api.nvim_create_autocmd('VimLeavePre', {
-      group = vim.api.nvim_create_augroup('Restart', {}),
+      group = vim.api.nvim_create_augroup('NeovideRestart', {}),
       pattern = '*',
       callback = function() vim.fn.system('neovide') end,
     })
@@ -44,4 +44,22 @@ if vim.g.neovide then
 
     vim.api.nvim_del_autocmd(id)
   end, { desc = 'Restart Neovide' })
+
+  -- https://github.com/neovide/neovide/issues/1771
+  vim.api.nvim_create_autocmd('BufLeave', {
+    group = vim.api.nvim_create_augroup('NeovideBufLeave', {}),
+    callback = function()
+      vim.g.neovide_scroll_animation_length = 0
+      -- vim.g.neovide_cursor_animation_length = 0
+    end,
+  })
+  vim.api.nvim_create_autocmd('BufEnter', {
+    group = vim.api.nvim_create_augroup('NeovideBufEnter', {}),
+    callback = function()
+      vim.fn.timer_start(70, function()
+        vim.g.neovide_scroll_animation_length = 0.04
+        -- vim.g.neovide_cursor_animation_length = 0.02
+      end)
+    end,
+  })
 end

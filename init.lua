@@ -23,3 +23,10 @@ require('keymaps')
 require('autocmds')
 require('lsp')
 require('colorscheme')
+
+-- Load the session if available
+vim.schedule_wrap(function()
+  if pcall(MiniSessions.read, vim.fn.getcwd():gsub('[\\/:]', '%%') .. '.vim') then
+    vim.schedule_wrap(MiniFiles.close)()
+  end
+end)()

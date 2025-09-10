@@ -35,6 +35,16 @@ M.get_lsp_client_names = function(bufnr)
   return names
 end
 
+---@param plugin_name string
+M.get_plugin_path = function(plugin_name)
+  for _, path in ipairs(vim.api.nvim_list_runtime_paths()) do
+    if string.match(path, M.escape(plugin_name)) then
+      return path
+    end
+  end
+  return nil
+end
+
 M.patch_convert_input_to_markdown_lines = function()
   local original_converter = vim.lsp.util.convert_input_to_markdown_lines
   ---@param input lsp.MarkedString|lsp.MarkedString[]|lsp.MarkupContent

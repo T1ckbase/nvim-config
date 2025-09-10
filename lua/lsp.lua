@@ -56,6 +56,18 @@ vim.lsp.config('ruff', {
   cmd = { 'uvx', '--quiet', 'ruff', 'server' },
 })
 
+vim.lsp.config('rust_analyzer', {
+  settings = {
+    ['rust-analyzer'] = {
+      initialization_options = {
+        check = {
+          command = 'clippy'
+        }
+      }
+    }
+  }
+})
+
 vim.lsp.config('pyrefly', {
   cmd = { 'uvx', '--quiet', 'pyrefly', 'lsp' }
 })
@@ -84,6 +96,7 @@ vim.lsp.enable({
   'html',
   'markdown',
   'ruff',
+  'rust_analyzer',
   'pyrefly',
   -- 'pyright',
   -- 'ty',
