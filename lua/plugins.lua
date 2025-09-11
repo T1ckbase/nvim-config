@@ -18,10 +18,10 @@ add({
   depends = { 'T1ckbase/vscode-snippets' },
   checkout = 'v1.6.0',
 })
+add('Mofiqul/vscode.nvim')
 
 local utils = require('utils')
 utils.setup()
-utils.patch_convert_input_to_markdown_lines()
 
 now(function()
   require('mini.notify').setup()
@@ -471,7 +471,9 @@ now(function()
 end)
 
 now(function()
-  require('mini.surround').setup()
+  require('mini.surround').setup({
+    silent = true
+  })
 end)
 
 now(function()
@@ -488,10 +490,10 @@ now(function()
   local starter = require('mini.starter')
   starter.setup({
     header = 'welcome',
-    footer = function()
-      local plugins = MiniDeps.get_session()
-      return string.format('Neovim loaded %d/%d plugins', #plugins, #plugins)
-    end
+    -- footer = function()
+    --   local plugins = MiniDeps.get_session()
+    --   return string.format('Neovim loaded %d/%d plugins', #plugins, #plugins)
+    -- end
   })
 end)
 
@@ -620,7 +622,7 @@ later(function()
     signature = {
       enabled = true,
       window = {
-        border = 'none',
+        border = 'single',
         show_documentation = true,
         winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder',
       }

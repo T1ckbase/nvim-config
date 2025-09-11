@@ -1,10 +1,13 @@
-vim.keymap.set('i', '<C-/>', '<ESC>mbgcc`ba', { remap = true, desc = 'Toggle comment' })
-vim.keymap.set('n', '<C-/>', 'mbgcc`b', { remap = true, desc = 'Toggle comment' })
-vim.keymap.set('v', '<C-/>', 'mbgc`b', { remap = true, desc = 'Toggle comment' })
+vim.keymap.set('i', '<C-/>', '<ESC>mbgcc`ba', { remap = true, desc = 'Toggle comment line' })
+vim.keymap.set('n', '<C-/>', 'mbgcc`b', { remap = true, desc = 'Toggle comment line' })
+vim.keymap.set('x', '<C-/>', 'mbgc`b', { remap = true, desc = 'Toggle comment line' })
+vim.keymap.set('n', '<leader>/', 'gcc', { remap = true, silent = true, desc = 'Toggle comment' })
+vim.keymap.set('x', '<leader>/', 'gc', { remap = true, silent = true, desc = 'Toggle comment line' })
+
 vim.keymap.set({ 'n', 'i' }, '<M-J>', '<Cmd>copy .<cr>', { desc = 'Copy Line Down' })
 vim.keymap.set({ 'n', 'i' }, '<M-K>', '<Cmd>copy .-1<cr>', { desc = 'Copy Line Up' })
-vim.keymap.set('v', '<M-J>', ":<C-u>'<,'>copy '<-1<cr>gv=gv", { desc = 'Copy Selection Down' })
-vim.keymap.set('v', '<M-K>', ":<C-u>'<,'>copy '><cr>gv=gv", { desc = 'Copy Selection Up' })
+vim.keymap.set('x', '<M-J>', ":<C-u>'<,'>copy '<-1<cr>gv=gv", { desc = 'Copy Selection Down' })
+vim.keymap.set('x', '<M-K>', ":<C-u>'<,'>copy '><cr>gv=gv", { desc = 'Copy Selection Up' })
 
 vim.keymap.set('n', '*', function()
   local count = vim.v.count
@@ -98,18 +101,15 @@ vim.keymap.set('x', '#', function()
 end, { desc = 'Search selected text backward, jump only with count', expr = true })
 
 vim.keymap.set('n', '<C-s>', '<Cmd>w<CR>', { desc = 'Force write', silent = true })
+
 vim.keymap.set({ 'i', 'c' }, '<C-v>', '<C-r>+', { desc = 'Paste' })
 
 vim.keymap.set('n', '<Esc>', '<Cmd>nohlsearch<CR>', { desc = 'Clear search highlight' })
 
-vim.keymap.set('n', '<leader>e', function() if not MiniFiles.close() then MiniFiles.open() end end, { desc = 'Toggle Explorer' })
-
-vim.keymap.set('n', '<leader>/', 'gcc', { remap = true, silent = true, desc = 'Toggle comment' })
-vim.keymap.set('v', '<leader>/', 'gc', { remap = true, silent = true, desc = 'Toggle comment line' })
-
 vim.keymap.set('n', '[b', '<Cmd>bprevious<CR>', { desc = 'Prev Buffer' })
 vim.keymap.set('n', ']b', '<Cmd>bnext<CR>', { desc = 'Next Buffer' })
 vim.keymap.set('n', '<leader>n', '<Cmd>enew<CR>', { desc = 'New file' })
+
 vim.keymap.set('n', '<C-Left>', '"<Cmd>vertical resize -" . v:count1 . "<CR>"', { expr = true, replace_keycodes = false, desc = 'Decrease window width' })
 vim.keymap.set('n', '<C-Down>', '"<Cmd>resize -"          . v:count1 . "<CR>"', { expr = true, replace_keycodes = false, desc = 'Decrease window height' })
 vim.keymap.set('n', '<C-Up>', '"<Cmd>resize +"          . v:count1 . "<CR>"', { expr = true, replace_keycodes = false, desc = 'Increase window height' })
@@ -123,12 +123,28 @@ vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'Go to declaration' 
 vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { desc = 'Go to type definition' })
 vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = 'Format buffer' })
 
-vim.keymap.set('n', '<leader>c', function() MiniBufremove.delete() end, { desc = 'Close buffer' })
 
-vim.keymap.set('n', "<leader>f'", function() MiniExtra.pickers.marks() end, { desc = 'File marks' })
+local ts_repeat_move = require('nvim-treesitter.textobjects.repeatable_move')
+vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move)
+vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_opposite)
+vim.keymap.set({ 'n', 'x', 'o' }, 'f', ts_repeat_move.builtin_f_expr, { expr = true })
+vim.keymap.set({ 'n', 'x', 'o' }, 'F', ts_repeat_move.builtin_F_expr, { expr = true })
+vim.keymap.set({ 'n', 'x', 'o' }, 't', ts_repeat_move.builtin_t_expr, { expr = true })
+vim.keymap.set({ 'n', 'x', 'o' }, 'T', ts_repeat_move.builtin_T_expr, { expr = true })
+
+-- Disable `s` shortcut (use `cl` instead) for safer usage of 'mini.surround'
+vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
+
+vim.keymap.set('n', '<leader>e', function() if not MiniFiles.close() then MiniFiles.open() end end, { desc = 'Toggle Explorer' })
+
+vim.keymap.set('n', '<leader>c', function() MiniBufremove.wipeout() end, { desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>C', function() MiniBufremove.wipeout(0, true) end, { desc = 'Close buffer!' })
+
+vim.keymap.set('n', "<leader>f'", function() MiniExtra.pickers.marks() end, { desc = 'Find marks' })
 vim.keymap.set('n', '<leader>fb', function() MiniPick.builtin.buffers() end, { desc = 'Find buffers' })
 vim.keymap.set('n', '<leader>fe', function() MiniExtra.pickers.explorer() end, { desc = 'File explorer' })
 vim.keymap.set('n', '<leader>ff', function() MiniPick.builtin.files() end, { desc = 'Find files' })
+vim.keymap.set('n', '<leader>fg', function() MiniExtra.pickers.hl_groups() end, { desc = 'Find highlight groups' })
 vim.keymap.set('n', '<leader>fh', function() MiniPick.builtin.help() end, { desc = 'Find help' })
 vim.keymap.set('n', '<leader>fk', function() MiniExtra.pickers.keymaps() end, { desc = 'Find keymaps' })
 vim.keymap.set('n', '<leader>fr', function() MiniExtra.pickers.registers() end, { desc = 'Find registers' })

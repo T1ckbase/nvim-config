@@ -144,6 +144,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
         buffer = args.buf,
         callback = function()
+          if client.name == 'jsonls' then return end
           vim.lsp.buf.format({ async = false, id = args.data.client_id, timeout_ms = 5000 })
         end,
       })

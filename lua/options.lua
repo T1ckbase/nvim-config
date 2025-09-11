@@ -80,7 +80,7 @@ vim.opt.updatetime = 300
 vim.opt.virtualedit = 'block'
 vim.opt.wildmenu = true
 vim.opt.wildmode = 'longest:full,full'
-vim.opt.winborder = 'none'
+vim.opt.winborder = 'single'
 vim.opt.wrap = false
 vim.opt.writebackup = false
 

@@ -1,4 +1,4 @@
-vim.cmd.colorscheme('retrobox') -- habamax, retrobox
+vim.cmd.colorscheme('vscode') -- habamax, retrobox
 
 vim.api.nvim_set_hl(0, 'DiagnosticError', { fg = '#e45454' })
 vim.api.nvim_set_hl(0, 'DiagnosticWarn', { fg = '#ff942f' })
@@ -29,6 +29,8 @@ vim.api.nvim_set_hl(0, 'MiniTablineModifiedCurrent', { link = 'MiniTablineCurren
 vim.api.nvim_set_hl(0, 'MiniTablineModifiedVisible', { link = 'MiniTablineVisible' })
 vim.api.nvim_set_hl(0, 'MiniTablineModifiedHidden', { link = 'MiniTablineHidden' })
 
+vim.api.nvim_set_hl(0, 'MiniCursorword', { bg = '#252525', underline = false })
+vim.api.nvim_set_hl(0, 'MiniIndentscopeSymbol', { fg = '#404040' })
 
 if vim.g.colors_name == 'retrobox' then
   vim.api.nvim_set_hl(0, 'PmenuSel', { bg = '#4f665b' })
@@ -42,7 +44,10 @@ if vim.g.colors_name == 'retrobox' then
   -- vim.api.nvim_set_hl(0, 'SnacksPickerBorder', { fg = '#807366' })
   -- vim.api.nvim_set_hl(0, 'SnacksPickerDir', { fg = 'NONE', bg = 'NONE', nocombine = true })
   -- vim.api.nvim_set_hl(0, 'SnacksPickerDirectory', { fg = 'NONE', bg = 'NONE', nocombine = true })
+end
 
-  vim.api.nvim_set_hl(0, 'MiniIndentscopeSymbol', { fg = '#404040' })
-  vim.api.nvim_set_hl(0, 'MiniCursorword', { bg = '#252525', underline = false })
+if vim.g.colors_name == 'vscode' then
+  vim.api.nvim_set_hl(0, 'MiniStatuslineDevinfo', { bg = '#3d3d3d' })
+  vim.api.nvim_set_hl(0, 'MiniStatuslineFileinfo', { link = 'MiniStatuslineFilename' })
+  vim.api.nvim_set_hl(0, 'TabLine', { fg = '#868686', bg = '#101010' })
 end
