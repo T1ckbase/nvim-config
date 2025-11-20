@@ -59,6 +59,7 @@ now(function()
       'regex',
       'rust',
       'scss',
+      'svelte',
       'toml',
       'tsx',
       'typescript',
@@ -112,6 +113,7 @@ now(function()
           [']c'] = { query = '@class.outer', desc = 'Next class start' },
           [']?'] = { query = '@conditional.outer', desc = 'Next conditional start' },
           [']m'] = { query = '@function.outer', desc = 'Next method/function definition start' },
+          [']o'] = { query = '@loop.outer', desc = 'Next loop start' },
           [']a'] = { query = '@parameter.inner', desc = 'Next argument start' },
         },
         goto_next_end = {
@@ -119,6 +121,7 @@ now(function()
           [']F'] = { query = '@call.outer', desc = 'Next function call end' },
           [']C'] = { query = '@class.outer', desc = 'Next class end' },
           [']M'] = { query = '@function.outer', desc = 'Next method/function definition end' },
+          [']O'] = { query = '@loop.outer', desc = 'Next loop end' },
           [']A'] = { query = '@parameter.inner', desc = 'Next argument end' },
         },
         goto_previous_start = {
@@ -127,6 +130,7 @@ now(function()
           ['[c'] = { query = '@class.outer', desc = 'Previous class start' },
           ['[?'] = { query = '@conditional.outer', desc = 'Previous conditional start' },
           ['[m'] = { query = '@function.outer', desc = 'Previous method/function definition start' },
+          ['[o'] = { query = '@loop.outer', desc = 'Previous loop start' },
           ['[a'] = { query = '@parameter.inner', desc = 'Previous argument start' },
         },
         goto_previous_end = {
@@ -134,6 +138,7 @@ now(function()
           ['[F'] = { query = '@call.outer', desc = 'Previous function call end' },
           ['[C'] = { query = '@class.outer', desc = 'Previous class end' },
           ['[M'] = { query = '@function.outer', desc = 'Previous method/function definition end' },
+          ['[O'] = { query = '@loop.outer', desc = 'Previous loop end' },
           ['[A'] = { query = '@parameter.inner', desc = 'Previous argument end' },
         },
       },
@@ -141,12 +146,14 @@ now(function()
         enable = true,
         swap_next = {
           ['>K'] = { query = '@block.outer', desc = 'Swap next block' },
-          ['>F'] = { query = '@function.outer', desc = 'Swap next function' },
+          ['>F'] = { query = '@call.outer', desc = 'Swap next function call' },
+          ['>M'] = { query = '@function.outer', desc = 'Swap next method/function definition' },
           ['>A'] = { query = '@parameter.inner', desc = 'Swap next argument' },
         },
         swap_previous = {
           ['<K'] = { query = '@block.outer', desc = 'Swap previous block' },
-          ['<F'] = { query = '@function.outer', desc = 'Swap previous function' },
+          ['<F'] = { query = '@call.outer', desc = 'Swap previous function call' },
+          ['<M'] = { query = '@function.outer', desc = 'Swap previous method/function definition' },
           ['<A'] = { query = '@parameter.inner', desc = 'Swap previous argument' },
         },
       },
@@ -260,6 +267,9 @@ now(function()
       { mode = 'o', keys = 'i' },
       { mode = 'x', keys = 'a' },
       { mode = 'x', keys = 'i' },
+      -- Swap
+      { mode = 'n', keys = '>' },
+      { mode = 'n', keys = '<' },
     },
     clues = {
       -- Enhance this by adding descriptions for <Leader> mapping groups
@@ -310,7 +320,7 @@ now(function()
   require('mini.diff').setup({
     view = {
       style = 'sign',
-      signs = { add = '▎', change = '▎', delete = 'ˍ' },
+      signs = { add = '▌', change = '▌', delete = '𝅋' },
     },
     source = {
       require('mini.diff').gen_source.git(),
@@ -535,7 +545,7 @@ later(function()
       preset = 'none',
       ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'fallback' },
-      ['<CR>'] = { 'accept', 'fallback' },
+      -- ['<CR>'] = { 'accept', 'fallback' },
       ['<Tab>'] = {
         function(cmp)
           if cmp.snippet_active() then

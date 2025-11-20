@@ -1,4 +1,6 @@
-vim.cmd.colorscheme('vscode') -- habamax, retrobox
+vim.opt.rtp:append('C:\\Users\\Nah\\personal-files\\projects\\bleak.nvim')
+
+vim.cmd.colorscheme('retrobox') -- habamax, retrobox,  vscode
 
 vim.api.nvim_set_hl(0, 'DiagnosticError', { fg = '#e45454' })
 vim.api.nvim_set_hl(0, 'DiagnosticWarn', { fg = '#ff942f' })

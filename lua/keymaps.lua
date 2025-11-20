@@ -123,6 +123,19 @@ vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = 'Go to declaration' 
 vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { desc = 'Go to type definition' })
 vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = 'Format buffer' })
 
+vim.keymap.set('n', '<C-w>gd', function()
+  vim.cmd.vsplit()
+  vim.lsp.buf.definition()
+end, { desc = 'Go to definition in a new vertical split' })
+vim.keymap.set('n', '<C-w>gD', function()
+  vim.cmd.vsplit()
+  vim.lsp.buf.declaration()
+end, { desc = 'Go to declaration in a new vertical split' })
+vim.keymap.set('n', '<C-w>gy', function()
+  vim.cmd.vsplit()
+  vim.lsp.buf.type_definition()
+end, { desc = 'Go to type_definition in a new vertical split' })
+
 
 local ts_repeat_move = require('nvim-treesitter.textobjects.repeatable_move')
 vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move)
