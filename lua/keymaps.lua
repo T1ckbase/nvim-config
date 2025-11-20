@@ -1,8 +1,7 @@
-vim.keymap.set('i', '<C-/>', '<ESC>mbgcc`ba', { remap = true, desc = 'Toggle comment line' })
-vim.keymap.set('n', '<C-/>', 'mbgcc`b', { remap = true, desc = 'Toggle comment line' })
-vim.keymap.set('x', '<C-/>', 'mbgc`b', { remap = true, desc = 'Toggle comment line' })
-vim.keymap.set('n', '<leader>/', 'gcc', { remap = true, silent = true, desc = 'Toggle comment' })
-vim.keymap.set('x', '<leader>/', 'gc', { remap = true, silent = true, desc = 'Toggle comment line' })
+vim.keymap.set({ 'n', 'x' }, '<C-/>', 'gc', { remap = true, silent = true, desc = 'Toggle comment' })
+vim.keymap.set('n', '<C-/>', 'gcc', { remap = true, silent = true, desc = 'Toggle comment line' })
+vim.keymap.set({ 'n', 'x' }, '<C-_>', 'gc', { remap = true, silent = true, desc = 'Toggle comment' })
+vim.keymap.set('n', '<C-_>', 'gcc', { remap = true, silent = true, desc = 'Toggle comment line' })
 
 vim.keymap.set({ 'n', 'i' }, '<M-J>', '<Cmd>copy .<cr>', { desc = 'Copy Line Down' })
 vim.keymap.set({ 'n', 'i' }, '<M-K>', '<Cmd>copy .-1<cr>', { desc = 'Copy Line Up' })
