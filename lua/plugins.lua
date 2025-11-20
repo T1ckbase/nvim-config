@@ -543,7 +543,7 @@ later(function()
   require('blink.cmp').setup({
     keymap = {
       preset = 'none',
-      ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+      ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'fallback' },
       -- ['<CR>'] = { 'accept', 'fallback' },
       ['<Tab>'] = {
