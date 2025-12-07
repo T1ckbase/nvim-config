@@ -1,6 +1,6 @@
 if not vim.g.neovide then return end
 
-vim.o.guifont = 'JetBrainsMonoNL Nerd Font,Cascadia Mono:h11'
+vim.o.guifont = 'JetBrainsMonoNL Nerd Font,Cascadia Mono,Symbols Nerd Font:h11:#e-subpixelantialias'
 vim.opt.linespace = 0
 vim.g.neovide_scale_factor = 1.0
 vim.g.neovide_floating_shadow = false
@@ -8,10 +8,10 @@ vim.g.neovide_title_background_color = 'black'
 vim.g.neovide_title_text_color = 'gray'
 vim.g.neovide_floating_blur_amount_x = 0
 vim.g.neovide_floating_blur_amount_y = 0
-vim.g.neovide_position_animation_length = 0.03
+vim.g.neovide_position_animation_length = 0.01
 vim.g.neovide_scroll_animation_length = 0
 -- vim.g.neovide_scroll_animation_far_lines = 1
-vim.g.neovide_refresh_rate = 165   -- This setting is only effective when not using vsync, for example by passing --no-vsync on the commandline.
+vim.g.neovide_refresh_rate = 165 -- This setting is only effective when not using vsync, for example by passing --no-vsync on the commandline.
 -- vim.g.neovide_refresh_rate_idle = 165
 vim.g.neovide_no_idle = true
 -- vim.g.neovide_profiler = true -- frametime graph

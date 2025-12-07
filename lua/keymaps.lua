@@ -147,7 +147,7 @@ vim.keymap.set({ 'n', 'x', 'o' }, 'T', ts_repeat_move.builtin_T_expr, { expr = t
 -- Disable `s` shortcut (use `cl` instead) for safer usage of 'mini.surround'
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 
-vim.keymap.set('n', '<leader>e', function() if not MiniFiles.close() then MiniFiles.open() end end, { desc = 'Toggle Explorer' })
+vim.keymap.set('n', '<leader>e', '<Cmd>Neotree toggle<CR>', { desc = 'Toggle Explorer' })
 
 vim.keymap.set('n', '<leader>c', function() MiniBufremove.wipeout() end, { desc = 'Close buffer' })
 vim.keymap.set('n', '<leader>C', function() MiniBufremove.wipeout(0, true) end, { desc = 'Close buffer!' })

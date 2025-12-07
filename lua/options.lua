@@ -47,6 +47,7 @@ vim.opt.foldmethod = 'expr'
 -- vim.opt.laststatus = 3
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
+-- vim.opt.inccommand = 'split'
 vim.opt.incsearch = true
 vim.opt.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 vim.opt.mouse = 'a'

@@ -47,6 +47,11 @@ vim.lsp.config('emmet_language_server', {
   cmd_env = { NO_COLOR = true },
 })
 
+vim.lsp.config('eslint', {
+  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-eslint-language-server', '--stdio' },
+  cmd_env = { NO_COLOR = true },
+})
+
 vim.lsp.config('html', {
   cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-html-language-server', '--stdio' },
   cmd_env = { NO_COLOR = true },
@@ -98,6 +103,7 @@ vim.lsp.enable({
   -- 'deno_fmt',
   -- 'basedpyright',
   'emmet_language_server',
+  'eslint',
   'html',
   'jsonls',
   'lua_ls',
@@ -114,9 +120,10 @@ vim.lsp.enable({
 })
 
 vim.diagnostic.config({
-  virtual_text = {
-    severity = { min = vim.diagnostic.severity.WARN }
-  },
+  virtual_text = true,
+  -- virtual_text = {
+  --   severity = { min = vim.diagnostic.severity.WARN }
+  -- },
   underline = true,
   update_in_insert = true,
   severity_sort = true,
