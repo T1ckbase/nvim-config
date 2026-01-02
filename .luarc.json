@@ -11,12 +11,7 @@
     }
   },
   "workspace": {
-    "library": [
-      "$VIMRUNTIME/lua",
-      "~/AppData/Local/nvim/lua",
-      "~/AppData/Local/nvim-data/site/pack/deps",
-      "${3rd}/luv/library"
-    ],
+    "library": ["$VIMRUNTIME/lua", "~/AppData/Local/nvim/lua", "~/AppData/Local/nvim-data/site/pack/deps", "${3rd}/luv/library"],
     "checkThirdParty": false
   }
 }

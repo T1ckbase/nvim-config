@@ -13,27 +13,13 @@ add({
   monitor = 'main',
 })
 add('nvim-mini/mini.nvim')
-add({
-  source = 'nvim-neo-tree/neo-tree.nvim',
-  checkout = 'v3.x',
-  depends = {
-    'nvim-lua/plenary.nvim',
-    'MunifTanjim/nui.nvim',
-  }
-})
+-- add('saghen/blink.indent')
 add({
   source = 'saghen/blink.cmp',
   depends = { 'T1ckbase/vscode-snippets' },
-  checkout = 'v1.x',
+  checkout = 'v1.8.0', -- https://github.com/nvim-mini/mini.nvim/discussions/1896
 })
--- add('Mofiqul/vscode.nvim')
-
-local utils = require('utils')
-utils.setup()
-
-now(function()
-  require('mini.notify').setup()
-end)
+add('sainnhe/gruvbox-material')
 
 now(function()
   require('mini.icons').setup({
@@ -74,304 +60,18 @@ now(function()
       variable = { glyph = '' },
     }
   })
-  MiniIcons.mock_nvim_web_devicons()
+  -- later(MiniIcons.mock_nvim_web_devicons)
   -- later(MiniIcons.tweak_lsp_kind)
 end)
 
 now(function()
-  require('neo-tree').setup({
-    default_component_configs = {
-      container = {
-        enable_character_fade = false,
-      },
-      -- icon = {
-      --   provider = function(icon, node)
-      --     local text, hl
-      --     local mini_icons = require('mini.icons')
-      --     if node.type == 'file' then
-      --       text, hl = mini_icons.get('file', node.name)
-      --     elseif node.type == 'directory' then
-      --       text, hl = mini_icons.get('directory', node.name)
-      --       if node:is_expanded() then text = nil end
-      --     end
-
-      --     if text then icon.text = text end
-      --     if hl then icon.highlight = hl end
-      --   end,
-      -- },
-      -- kind_icon = {
-      --   provider = function(icon, node)
-      --     icon.text, icon.highlight = require('mini.icons').get('lsp', node.extra.kind.name)
-      --   end,
-      -- },
-      git_status = {
-        symbols = {
-          -- Change type
-          added = 'A',
-          modified = 'M',
-          deleted = 'D',
-          renamed = 'R',
-          -- Status type
-          untracked = 'U',
-          ignored = 'I',
-          unstaged = ' ',
-          staged = 'S',
-          conflict = 'C',
-        },
-      },
-    },
-    source_selector = {
-      statusline = false,
-      truncation_character = '…',
-      winbar = true,
-    },
-    filesystem = {
-      filtered_items = {
-        hide_dotfiles = false,
-        hide_gitignored = false,
-      },
-      follow_current_file = { enabled = true },
-      hijack_netrw_behavior = 'open_current',
-      use_libuv_file_watcher = vim.fn.has('win32') ~= 1,
-    }
-  })
+  require('mini.misc').setup()
+  MiniMisc.setup_restore_cursor()
 end)
 
-now(function()
-  require('mini.ai').setup({
-    custom_textobjects = {
-      b = false,
-      f = false,
-      a = false,
-      ['?'] = false
-    },
-    mappings = {
-      around_next = '',
-      inside_next = '',
-      around_last = '',
-      inside_last = '',
-      -- goto_left   = '',
-      -- goto_right  = '',
-    },
-    n_lines = 69,
-    silent = true
-  })
-end)
+now(function() require('mini.notify').setup() end)
 
-now(function()
-  require('mini.bufremove').setup()
-end)
-
-now(function()
-  local miniclue = require('mini.clue')
-  miniclue.setup({
-    triggers = {
-      -- Leader triggers
-      { mode = 'n', keys = '<Leader>' },
-      { mode = 'x', keys = '<Leader>' },
-      -- Bracket
-      { mode = 'n', keys = '[' },
-      { mode = 'n', keys = ']' },
-      { mode = 'x', keys = '[' },
-      { mode = 'x', keys = ']' },
-      -- Built-in completion
-      { mode = 'i', keys = '<C-x>' },
-      -- `g` key
-      { mode = 'n', keys = 'g' },
-      { mode = 'x', keys = 'g' },
-      -- Marks
-      { mode = 'n', keys = "'" },
-      { mode = 'n', keys = '`' },
-      { mode = 'x', keys = "'" },
-      { mode = 'x', keys = '`' },
-      -- Registers
-      { mode = 'n', keys = '"' },
-      { mode = 'x', keys = '"' },
-      { mode = 'i', keys = '<C-r>' },
-      { mode = 'c', keys = '<C-r>' },
-      -- Window commands
-      { mode = 'n', keys = '<C-w>' },
-      -- `z` key
-      { mode = 'n', keys = 'z' },
-      { mode = 'x', keys = 'z' },
-      -- Text objects
-      { mode = 'o', keys = 'a' },
-      { mode = 'o', keys = 'i' },
-      { mode = 'x', keys = 'a' },
-      { mode = 'x', keys = 'i' },
-      -- Swap
-      { mode = 'n', keys = '>' },
-      { mode = 'n', keys = '<' },
-    },
-    clues = {
-      -- Enhance this by adding descriptions for <Leader> mapping groups
-      miniclue.gen_clues.builtin_completion(),
-      miniclue.gen_clues.g(),
-      miniclue.gen_clues.marks(),
-      miniclue.gen_clues.registers({ show_contents = true }),
-      miniclue.gen_clues.windows(),
-      miniclue.gen_clues.z(),
-    },
-    window = {
-      config = {
-        width = 42
-      }
-    }
-  })
-end)
-
-now(function()
-  require('mini.comment').setup({
-    mappings = {
-      comment = 'gc',
-      comment_line = 'gcc',
-      comment_visual = 'gc',
-      textobject = 'igc',
-    },
-  })
-end)
-
-now(function()
-  -- require('mini.completion').setup({
-  --   lsp_completion = {
-  --     process_items = function(items, base)
-  --       local processed_items = MiniCompletion.default_process_items(items, base)
-  --       return processed_items
-  --     end
-  --   }
-  -- })
-end)
-
-now(function()
-  require('mini.cursorword').setup({
-    delay = 0
-  })
-end)
-
-now(function()
-  require('mini.diff').setup({
-    view = {
-      style = 'sign',
-      signs = { add = '▌', change = '▌', delete = '𝅋' },
-    },
-    source = {
-      require('mini.diff').gen_source.git(),
-      require('mini.diff').gen_source.none(),
-    },
-    mappings = {
-      apply = '',
-      -- reset = 'gH',
-      -- textobject = 'gh',
-      goto_first = '[H',
-      goto_prev = '[h',
-      goto_next = ']h',
-      goto_last = ']H',
-    },
-  })
-  vim.api.nvim_create_user_command('DiffClipboard', utils.diff_with_clipboard, {})
-  vim.api.nvim_create_user_command('DiffRestore', utils.restore_diff_source, {})
-end)
-
-now(function()
-  require('mini.extra').setup()
-end)
-
-now(function()
-  require('mini.files').setup({
-    mappings = {
-      go_in_plus = '<CR>'
-    },
-    options = {
-      use_as_default_explorer = true,
-    },
-    windows = {
-      preview = true
-    }
-  })
-end)
-
-now(function()
-  require('mini.git').setup()
-end)
-
-now(function()
-  require('mini.indentscope').setup({
-    draw = {
-      delay = 0,
-      animation = require('mini.indentscope').gen_animation.none(),
-      predicate = function(scope) return scope.border.indent > 1 end
-    },
-    symbol = '▏'
-  })
-end)
-
-now(function()
-  require('mini.jump2d').setup({
-    view = {
-      dim = true
-    },
-    allowed_windows = {
-      not_current = false,
-    },
-    silent = true
-  })
-end)
-
--- now(function()
---   require('mini.keymap').setup()
---   local notify_many_keys = function(key)
---     local lhs = string.rep(key, 5)
---     local action = function() vim.notify('Too many ' .. key) end
---     MiniKeymap.map_combo({ 'n', 'x' }, lhs, action)
---   end
---   notify_many_keys('h')
---   notify_many_keys('j')
---   notify_many_keys('k')
---   notify_many_keys('l')
--- end)
-
-now(function()
-  require('mini.misc').setup_restore_cursor()
-end)
-
-now(function()
-  require('mini.move').setup()
-end)
-
-now(function()
-  require('mini.pairs').setup({
-    mappings = {
-      ['"'] = {
-        action = 'closeopen',
-        pair = '""',
-        neigh_pattern = '[^%w\\][^%w\\]',
-        register = { cr = false },
-      },
-      ["'"] = {
-        action = 'closeopen',
-        pair = "''",
-        neigh_pattern = '[^%w\\][^%w\\]',
-        register = { cr = false },
-      },
-      ['`'] = {
-        action = 'closeopen',
-        pair = '``',
-        neigh_pattern = '[^%w\\][^%w\\]',
-        register = { cr = false },
-      },
-    }
-  })
-end)
-
-now(function()
-  require('mini.pick').setup()
-  vim.ui.select = MiniPick.ui_select
-end)
-
-now(function()
-  require('mini.sessions').setup()
-  vim.api.nvim_create_user_command('SaveSession', function() MiniSessions.write(vim.fn.getcwd():gsub('[\\/:]', '%%') .. '.vim', { force = true }) end, {})
-end)
+now(function() require('mini.sessions').setup() end)
 
 now(function()
   require('mini.statusline').setup({
@@ -381,20 +81,20 @@ now(function()
         local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
         mode = string.upper(mode)
 
-        local macro_recording = utils.status.macro_recording({})
+        -- local macro_recording = utils.status.macro_recording({})
         local git = MiniStatusline.section_git({ trunc_width = 40 })
         local diff = MiniStatusline.section_diff({ trunc_width = 75 })
         local filename = [[%{substitute(fnamemodify(expand('%'),':~:.'),'\\','/','g')}%m%r]] -- MiniStatusline.section_filename({ trunc_width = 140 })
         local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75, icon = '', signs = { ERROR = '󰅚 ', WARN = '󰀪 ', INFO = '󰋽 ', HINT = '󰌶 ' } })
         local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
-        local lsp = utils.status.lsp({ trunc_width = 100 }) -- MiniStatusline.section_lsp({ trunc_width = 75 })
+        local lsp = MiniStatusline.section_lsp({ trunc_width = 75 }) -- utils.status.lsp({ trunc_width = 100 }) -- MiniStatusline.section_lsp({ trunc_width = 75 })
         local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
         local location = MiniStatusline.section_location({ trunc_width = 75 })
-        local treesitter = vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()] and '' or ''
+        -- local treesitter = vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()] and '' or ''
         local percentage = '%P'
 
         return MiniStatusline.combine_groups({
-          { hl = mode_hl,                 strings = { mode, macro_recording } },
+          { hl = mode_hl,                 strings = { mode } },
           { hl = 'MiniStatuslineDevinfo', strings = { git, diff } },
           '%<',
           { hl = 'MiniStatuslineFilename', strings = { filename } },
@@ -404,7 +104,7 @@ now(function()
           '%=',
           { hl = 'MiniStatuslineDevinfo',  strings = { lsp } },
           { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
-          { hl = 'MiniStatuslineDevinfo',  strings = { treesitter } },
+          -- { hl = 'MiniStatuslineDevinfo',  strings = { treesitter } },
           { hl = mode_hl,                  strings = { location, percentage } },
         })
       end,
@@ -413,31 +113,16 @@ now(function()
 end)
 
 now(function()
-  require('mini.surround').setup({
-    silent = true
-  })
-end)
-
-now(function()
   require('mini.tabline').setup({
     format = function(buf_id, label)
-      local suffix = vim.bo[buf_id].modified and ' ' or ''
+      local suffix = vim.bo[buf_id].modified and ' ' or '  '
       local default_formatted = MiniTabline.default_format(buf_id, label)
-      return default_formatted .. suffix
+      return ' ' .. default_formatted .. suffix
     end,
   })
 end)
 
-now(function()
-  local starter = require('mini.starter')
-  starter.setup({
-    header = 'welcome',
-    -- footer = function()
-    --   local plugins = MiniDeps.get_session()
-    --   return string.format('Neovim loaded %d/%d plugins', #plugins, #plugins)
-    -- end
-  })
-end)
+---
 
 later(function()
   require('nvim-treesitter.configs').setup({
@@ -456,8 +141,8 @@ later(function()
       'gitcommit',
       'gitignore',
       'go',
-      'html',
       'hlsl',
+      'html',
       'javascript',
       'jsdoc',
       'json',
@@ -487,13 +172,16 @@ later(function()
       enable = true,
       -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
       disable = function(lang, buf)
-        local max_filesize = 1000 * 10 * 1024 -- 10 MB
+        local max_filesize = 2 * 1024 * 1024 -- 2 MB
         local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
         if ok and stats and stats.size > max_filesize then
           return true
         end
       end,
       additional_vim_regex_highlighting = false,
+    },
+    indent = {
+      enable = true
     },
     textobjects = {
       select = {
@@ -575,11 +263,314 @@ later(function()
 end)
 
 later(function()
-  local gen_loader = require('mini.snippets').gen_loader
+  require('mini.extra').setup()
+end)
+
+later(function()
+  require('mini.ai').setup({
+    custom_textobjects = {
+      b = false,
+      f = false,
+      a = false,
+      ['?'] = false
+    },
+    mappings = {
+      around_next = '',
+      inside_next = '',
+      around_last = '',
+      inside_last = '',
+      -- goto_left   = '',
+      -- goto_right  = '',
+    },
+    n_lines = 69,
+    silent = true
+  })
+end)
+
+later(function()
+  require('mini.bufremove').setup()
+end)
+
+later(function()
+  local miniclue = require('mini.clue')
+  miniclue.setup({
+    triggers = {
+      -- Leader triggers
+      { mode = 'n', keys = '<Leader>' },
+      { mode = 'x', keys = '<Leader>' },
+      -- Bracket
+      { mode = 'n', keys = '[' },
+      { mode = 'n', keys = ']' },
+      { mode = 'x', keys = '[' },
+      { mode = 'x', keys = ']' },
+      -- Built-in completion
+      { mode = 'i', keys = '<C-x>' },
+      -- `g` key
+      { mode = 'n', keys = 'g' },
+      { mode = 'x', keys = 'g' },
+      -- Marks
+      { mode = 'n', keys = "'" },
+      { mode = 'n', keys = '`' },
+      { mode = 'x', keys = "'" },
+      { mode = 'x', keys = '`' },
+      -- Registers
+      { mode = 'n', keys = '"' },
+      { mode = 'x', keys = '"' },
+      { mode = 'i', keys = '<C-r>' },
+      { mode = 'c', keys = '<C-r>' },
+      -- Window commands
+      { mode = 'n', keys = '<C-w>' },
+      -- `z` key
+      { mode = 'n', keys = 'z' },
+      { mode = 'x', keys = 'z' },
+      -- Text objects
+      { mode = 'o', keys = 'a' },
+      { mode = 'o', keys = 'i' },
+      { mode = 'x', keys = 'a' },
+      { mode = 'x', keys = 'i' },
+      -- Swap
+      { mode = 'n', keys = '>' },
+      { mode = 'n', keys = '<' },
+    },
+    clues = {
+      -- Enhance this by adding descriptions for <Leader> mapping groups
+      miniclue.gen_clues.builtin_completion(),
+      miniclue.gen_clues.g(),
+      miniclue.gen_clues.marks(),
+      miniclue.gen_clues.registers({ show_contents = true }),
+      miniclue.gen_clues.windows(),
+      miniclue.gen_clues.z(),
+    },
+    window = {
+      config = {
+        width = 42
+      }
+    }
+  })
+end)
+
+later(function()
+  require('mini.comment').setup({
+    mappings = {
+      comment = 'gc',
+      comment_line = 'gcc',
+      comment_visual = 'gc',
+      textobject = 'igc',
+    },
+  })
+end)
+
+-- later(function()
+--   require('mini.completion').setup({
+--     source_func = 'omnifunc',
+--     lsp_completion = {
+--       process_items = function(items, base)
+--         local processed_items = MiniCompletion.default_process_items(items, base)
+--         return processed_items
+--       end
+--     }
+--   })
+--   vim.lsp.config('*', { capabilities = MiniCompletion.get_lsp_capabilities() })
+-- end)
+
+later(function()
+  require('mini.cursorword').setup({
+    delay = 0
+  })
+end)
+
+later(function()
+  require('mini.diff').setup({
+    view = {
+      style = 'sign',
+      signs = { add = '▌', change = '▌', delete = '𝅋' },
+    },
+    source = {
+      require('mini.diff').gen_source.git(),
+      require('mini.diff').gen_source.none(),
+    },
+    mappings = {
+      apply = '',
+      -- reset = 'gH',
+      -- textobject = 'gh',
+      goto_first = '[H',
+      goto_prev = '[h',
+      goto_next = ']h',
+      goto_last = ']H',
+    },
+  })
+end)
+
+later(function()
+  require('mini.files').setup({
+    mappings = {
+      go_in_plus = '<CR>'
+    },
+    options = {
+      use_as_default_explorer = false,
+    },
+    windows = {
+      preview = true
+    }
+  })
+end)
+
+later(function() require('mini.git').setup() end)
+
+later(function()
+  require('mini.indentscope').setup({
+    draw = {
+      delay = 0,
+      animation = require('mini.indentscope').gen_animation.none(),
+      predicate = function(scope) return scope.border.indent > 1 end
+    },
+    symbol = '▏'
+  })
+end)
+
+-- later(function()
+--   require('mini.jump2d').setup({
+--     view = {
+--       dim = true
+--     },
+--     allowed_windows = {
+--       not_current = false,
+--     },
+--     silent = true
+--   })
+-- end)
+
+later(function() require('mini.move').setup() end)
+
+later(function()
+  require('mini.pairs').setup({
+    mappings = {
+      ['"'] = {
+        action = 'closeopen',
+        pair = '""',
+        neigh_pattern = '[^%w\\][^%w\\]',
+        register = { cr = false },
+      },
+      ["'"] = {
+        action = 'closeopen',
+        pair = "''",
+        neigh_pattern = '[^%w\\][^%w\\]',
+        register = { cr = false },
+      },
+      ['`'] = {
+        action = 'closeopen',
+        pair = '``',
+        neigh_pattern = '[^%w\\][^%w\\]',
+        register = { cr = false },
+      },
+    }
+  })
+end)
+
+now(function()
+  require('mini.pick').setup()
+
+  local is_array_of = function(x, ref_type)
+    if not vim.islist(x) then return false end
+    for i = 1, #x do
+      if type(x[i]) ~= ref_type then return false end
+    end
+    return true
+  end
+
+  MiniPick.registry.grep_all_live = function(local_opts)
+    local_opts = vim.tbl_extend('force', { globs = {} }, local_opts or {})
+
+    local tool = 'rg'
+    if vim.fn.executable(tool) ~= 1 then
+      vim.notify('grep_live_all needs `rg` executable.', vim.log.levels.ERROR)
+      return
+    end
+
+    local globs = is_array_of(local_opts.globs, 'string') and local_opts.globs or {}
+    local name_suffix = #globs == 0 and '' or (' | ' .. table.concat(globs, ', '))
+
+    local show = MiniPick.config.source.show or MiniPick.default_show
+    local source = {
+      name = string.format('Grep all live (%s%s)', tool, name_suffix),
+      show = show,
+      cwd = local_opts.cwd
+    }
+
+    local set_items_opts = { do_match = false, querytick = MiniPick.get_querytick() }
+    local spawn_cwd = source.cwd or vim.fn.getcwd()
+    local spawn_opts = { cwd = spawn_cwd }
+    local process
+
+    local get_rg_command = function(pattern, current_globs)
+      local res = {
+        'rg',
+        '--column',
+        '--line-number',
+        '--no-heading',
+        '--field-match-separator', '\\x00',
+        '--color=never',
+        '--hidden',
+        '--no-ignore',
+        '--glob', '!.git/*'
+      }
+
+      for _, g in ipairs(current_globs) do
+        table.insert(res, '--glob')
+        table.insert(res, g)
+      end
+
+      local case = vim.o.ignorecase and (vim.o.smartcase and 'smart-case' or 'ignore-case') or 'case-sensitive'
+      table.insert(res, '--' .. case)
+
+      table.insert(res, '--')
+      table.insert(res, pattern)
+
+      return res
+    end
+
+    local match = function(_, _, query)
+      if process then pcall(vim.loop.process_kill, process) end
+      set_items_opts.querytick = MiniPick.get_querytick()
+
+      if #query == 0 then return MiniPick.set_picker_items({}, set_items_opts) end
+
+      local pattern = table.concat(query)
+      local command = get_rg_command(pattern, globs)
+
+      process = MiniPick.set_picker_items_from_cli(command, {
+        set_items_opts = set_items_opts,
+        spawn_opts = spawn_opts
+      })
+    end
+
+    local add_glob = function()
+      local ok, glob = pcall(vim.fn.input, 'Glob pattern: ')
+      if ok and glob ~= '' then
+        table.insert(globs, glob)
+        local new_suffix = #globs == 0 and '' or (' | ' .. table.concat(globs, ', '))
+        MiniPick.set_picker_opts({
+          source = { name = string.format('Grep All (%s%s)', tool, new_suffix) }
+        })
+        ---@diagnostic disable-next-line: param-type-mismatch
+        MiniPick.set_picker_query(MiniPick.get_picker_query())
+      end
+    end
+
+    local mappings = { add_glob = { char = '<C-o>', func = add_glob } }
+
+    return MiniPick.start({
+      source = { items = {}, match = match, name = source.name, show = source.show, cwd = source.cwd },
+      mappings = mappings
+    })
+  end
+end)
+
+later(function()
   require('mini.snippets').setup({
     snippets = {
-      -- gen_loader.from_file(vim.fn.stdpath('config') .. '/snippets/global.json'),
-      gen_loader.from_lang({
+      -- require('mini.snippets').gen_loader.from_file(vim.fn.stdpath('config') .. '/snippets/global.json'),
+      require('mini.snippets').gen_loader.from_lang({
         lang_patterns = {
           javascriptreact = { 'javascript.json' },
           jsx = { 'javascript.json' },
@@ -603,6 +594,25 @@ later(function()
   })
   -- MiniSnippets.start_lsp_server()
 end)
+
+later(function()
+  require('mini.surround').setup({
+    silent = true
+  })
+end)
+
+-- later(function()
+--   require('blink.indent').setup({
+--     static = {
+--       -- enabled = true,
+--       char = '▏'
+--     },
+--     scope = {
+--       -- enabled = true,
+--       char = '▏'
+--     }
+--   })
+-- end)
 
 later(function()
   require('blink.cmp').setup({
@@ -634,6 +644,7 @@ later(function()
     appearance = {
       nerd_font_variant = 'normal'
     },
+    cmdline = { enabled = false },
     completion = {
       list = { selection = { preselect = true, auto_insert = false } },
       trigger = {
@@ -641,10 +652,15 @@ later(function()
       },
       menu = {
         auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,
+        auto_show_delay_ms = 0,
         max_height = 12,
         scrollbar = true,
-        winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None',
+        -- winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None',
         draw = {
+          -- treesitter = { 'lsp' },
+          columns = {
+            { 'kind_icon', 'label', 'kind', gap = 1 }, { 'label_description', gap = 1 }
+          },
           components = {
             kind_icon = {
               text = function(ctx)
@@ -672,7 +688,8 @@ later(function()
         auto_show = true,
         auto_show_delay_ms = 0,
         window = {
-          winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None',
+          -- winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None',
+          border = 'padded'
         },
       },
     },
@@ -682,6 +699,10 @@ later(function()
     },
     fuzzy = {
       implementation = 'rust',
+      -- WARNING
+      -- If you are using the Rust implementation but specify a custom Lua function for sorting,
+      -- the sorting process will fall back to Lua instead of being handled by Rust.
+      -- This can impact performance, particularly when working with large lists.
       sorts = {
         function(a, b)
           if (a.client_name == nil or b.client_name == nil) or (a.client_name == b.client_name) then
@@ -696,10 +717,16 @@ later(function()
     },
     signature = {
       enabled = true,
+      trigger = {
+        -- Show the signature help window after typing a trigger character
+        show_on_trigger_character = false,
+        -- Show the signature help window when the cursor comes after a trigger character when entering insert mode
+        show_on_insert_on_trigger_character = false,
+      },
       window = {
-        border = 'single',
+        border = 'solid',
         show_documentation = true,
-        winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder',
+        -- winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder',
       }
     }
   })

@@ -1,8 +1,3 @@
--- vim.lsp.config('astro', {
---   cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@astrojs/language-server', '--stdio' },
---   cmd_env = { NO_COLOR = true },
--- })
-
 vim.lsp.config('basedpyright', {
   cmd = { 'uvx', '--quiet', '--from', 'basedpyright', 'basedpyright-langserver', '--stdio' },
   settings = {
@@ -18,8 +13,7 @@ vim.lsp.config('basedpyright', {
 })
 
 vim.lsp.config('cssls', {
-  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-css-language-server', '--stdio' },
-  cmd_env = { NO_COLOR = true },
+  cmd = { 'pnpm', 'run', '--silent', '--package=@t1ckbase/vscode-langservers-extracted@latest', 'vscode-css-language-server', '--stdio' },
 })
 
 vim.lsp.config('denols', {
@@ -36,30 +30,34 @@ vim.lsp.config('denols', {
   },
   -- https://github.com/neovim/nvim-lspconfig/issues/3728#issuecomment-2966741537
   workspace_required = true,
-  root_markers = { 'deno.json', 'deno.jsonc' },
+  -- root_markers = { 'deno.json', 'deno.jsonc' },
   -- astronvim config
   -- root_dir = function(...) return require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')(...) end,
 })
 -- vim.lsp.config.denols.root_markers = { 'deno.json', 'deno.jsonc' }
 
 vim.lsp.config('emmet_language_server', {
-  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@olrtg/emmet-language-server', '--stdio' },
-  cmd_env = { NO_COLOR = true },
+  cmd = { 'pnpm', 'dlx', '--silent', '@olrtg/emmet-language-server@latest', '--stdio' },
 })
 
 vim.lsp.config('eslint', {
-  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-eslint-language-server', '--stdio' },
-  cmd_env = { NO_COLOR = true },
+  cmd = { 'pnpm', 'dlx', '--silent', '--package=@t1ckbase/vscode-langservers-extracted@latest', 'vscode-eslint-language-server', '--stdio' },
 })
 
 vim.lsp.config('html', {
-  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-html-language-server', '--stdio' },
-  cmd_env = { NO_COLOR = true },
+  cmd = { 'pnpm', 'dlx', '--silent', '--package=@t1ckbase/vscode-langservers-extracted@latest', 'vscode-html-language-server', '--stdio' },
 })
 
 vim.lsp.config('jsonls', {
-  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@t1ckbase/vscode-langservers-extracted/vscode-json-language-server', '--stdio' },
-  cmd_env = { NO_COLOR = true },
+  cmd = { 'pnpm', 'dlx', '--silent', '--package=@t1ckbase/vscode-langservers-extracted@latest', 'vscode-json-language-server', '--stdio' },
+})
+
+vim.lsp.config('pyrefly', {
+  cmd = { 'uvx', '--quiet', 'pyrefly', 'lsp' }
+})
+
+vim.lsp.config('pyright', {
+  cmd = { 'uvx', '--quiet', '--from', 'pyright', 'pyright-langserver', '--stdio' },
 })
 
 vim.lsp.config('ruff', {
@@ -78,12 +76,9 @@ vim.lsp.config('rust_analyzer', {
   }
 })
 
-vim.lsp.config('pyrefly', {
-  cmd = { 'uvx', '--quiet', 'pyrefly', 'lsp' }
-})
-
-vim.lsp.config('pyright', {
-  cmd = { 'uvx', '--quiet', '--from', 'pyright', 'pyright-langserver', '--stdio' },
+vim.lsp.config('tsgo', {
+  cmd = { 'deno', 'run', '--no-lock', '--allow-all', 'npm:@typescript/native-preview@latest', '--lsp', '--stdio' }, -- pnpm error
+  cmd_env = { NO_COLOR = true },
 })
 
 vim.lsp.config('ty', {
@@ -91,8 +86,7 @@ vim.lsp.config('ty', {
 })
 
 vim.lsp.config('vtsls', {
-  cmd = { 'deno', 'run', '--quiet', '--no-lock', '--allow-all', 'npm:@vtsls/language-server', '--stdio' },
-  cmd_env = { NO_COLOR = true },
+  cmd = { 'pnpm', 'dlx', '--silent', '@vtsls/language-server@latest', '--stdio' },
 })
 
 vim.lsp.enable({
@@ -100,7 +94,6 @@ vim.lsp.enable({
   'biome',
   'cssls',
   'denols',
-  -- 'deno_fmt',
   -- 'basedpyright',
   'emmet_language_server',
   'eslint',
@@ -108,27 +101,35 @@ vim.lsp.enable({
   'jsonls',
   'lua_ls',
   'markdown',
-  'ruff',
-  'rust_analyzer',
-  -- 'stylua',
-  'svelte',
+  'nushell',
   -- 'pyrefly',
   -- 'pyright',
+  'ruff',
+  'rust_analyzer',
+  'svelte',
+  -- 'stylua',
+  'tsgo',
   'ty',
-  'vtsls',
+  -- 'vtsls',
   'zls'
 })
 
 vim.diagnostic.config({
-  virtual_text = true,
-  -- virtual_text = {
-  --   severity = { min = vim.diagnostic.severity.WARN }
-  -- },
-  underline = true,
+  -- virtual_text = true,
+  virtual_text = {
+    severity = { min = 'INFO' }
+  },
+  -- underline = true,
+  underline = {
+    severity = {
+      min = 'HINT',
+      max = 'ERROR',
+    }
+  },
   update_in_insert = true,
   severity_sort = true,
   float = {
-    focusable = false,
+    focusable = true,
     style = 'minimal',
     border = 'none',
     source = true,
@@ -137,6 +138,7 @@ vim.diagnostic.config({
   },
   signs = {
     priority = 0,
+    severity = { min = 'INFO' },
     text = {
       [vim.diagnostic.severity.ERROR] = '󰅚',
       [vim.diagnostic.severity.WARN] = '󰀪',
@@ -169,28 +171,28 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end
 })
 
--- https://github.com/AstroNvim/astrocommunity/blob/main/lua/astrocommunity/pack/typescript-all-in-one/init.lua
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('typescript_deno_switch', {}),
-  callback = function(args)
-    local bufnr = args.buf
-    local curr_client = vim.lsp.get_client_by_id(args.data.client_id)
+-- -- https://github.com/AstroNvim/astrocommunity/blob/main/lua/astrocommunity/pack/typescript-all-in-one/init.lua
+-- vim.api.nvim_create_autocmd('LspAttach', {
+--   group = vim.api.nvim_create_augroup('typescript_deno_switch', {}),
+--   callback = function(args)
+--     local bufnr = args.buf
+--     local curr_client = vim.lsp.get_client_by_id(args.data.client_id)
 
-    if curr_client and curr_client.name == 'denols' then
-      local clients = vim.lsp.get_clients({
-        bufnr = bufnr,
-        name = 'vtsls',
-      })
-      for _, client in ipairs(clients) do
-        vim.lsp.stop_client(client.id, false)
-      end
-    end
+--     if curr_client and curr_client.name == 'denols' then
+--       local clients = vim.lsp.get_clients({
+--         bufnr = bufnr,
+--         name = 'vtsls',
+--       })
+--       for _, client in ipairs(clients) do
+--         vim.lsp.stop_client(client.id, false)
+--       end
+--     end
 
-    -- if vtsls attached, stop it if there is a denols server attached
-    if curr_client and curr_client.name == 'vtsls' then
-      if next(vim.lsp.get_clients({ bufnr = bufnr, name = 'denols' })) then
-        vim.lsp.stop_client(curr_client.id, false)
-      end
-    end
-  end
-})
+--     -- if vtsls attached, stop it if there is a denols server attached
+--     if curr_client and curr_client.name == 'vtsls' then
+--       if next(vim.lsp.get_clients({ bufnr = bufnr, name = 'denols' })) then
+--         vim.lsp.stop_client(curr_client.id, false)
+--       end
+--     end
+--   end
+-- })

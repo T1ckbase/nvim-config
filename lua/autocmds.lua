@@ -3,7 +3,7 @@ local augroup = vim.api.nvim_create_augroup('UserConfig', {})
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = augroup,
   callback = function()
-    vim.highlight.on_yank({ higroup = 'IncSearch', timeout = 80 })
+    vim.hl.on_yank({ timeout = 80 })
   end,
 })
 
@@ -11,11 +11,9 @@ vim.api.nvim_create_autocmd('OptionSet', {
   group = augroup,
   pattern = 'background',
   callback = function()
-    vim.schedule(function()
-      if vim.o.background ~= 'dark' then
-        vim.opt.background = 'dark'
-      end
-    end)
+    if vim.o.background ~= 'dark' then
+      vim.opt.background = 'dark'
+    end
   end,
 })
 

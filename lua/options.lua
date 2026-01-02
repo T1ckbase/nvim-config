@@ -1,7 +1,7 @@
 -- disable
 -- vim.g.loaded_gzip = 1
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
 -- vim.g.loaded_tarPlugin = 1
 -- vim.g.loaded_tohtml = 1
 -- vim.g.loaded_zipPlugin = 1
@@ -16,10 +16,12 @@ vim.g.maplocalleader = '\\'
 
 vim.opt.autoindent = true
 vim.opt.background = 'dark'
+vim.opt.backspace = { 'indent', 'eol', 'start', 'nostop' } -- don't stop backspace at insert
 vim.opt.backup = false
 vim.opt.breakindent = true
 vim.opt.clipboard = 'unnamedplus' -- Sync with system clipboard
 -- vim.opt.cmdheight = 0
+vim.opt.colorcolumn = '160'
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'noinsert', 'preview' }
 vim.opt.confirm = true
 vim.opt.copyindent = true
@@ -42,21 +44,22 @@ vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.opt.foldlevel = 99
 vim.opt.foldmethod = 'expr'
 -- vim.opt.foldtext = ''
--- vim.opt.grepformat = '%f:%l:%c:%m'
--- vim.opt.grepprg = 'rg --vimgrep'
--- vim.opt.laststatus = 3
+vim.opt.guicursor = 'n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20'
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 -- vim.opt.inccommand = 'split'
 vim.opt.incsearch = true
-vim.opt.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+vim.opt.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
+vim.opt.infercase = true
+vim.opt.laststatus = 3
 vim.opt.mouse = 'a'
 vim.opt.number = true
-vim.opt.path:append('**')
+vim.opt.path = '.,,**'
 vim.opt.pumheight = 16
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 4
-vim.opt.shiftwidth = 2
+vim.opt.shiftround = true
+vim.opt.shiftwidth = 0 -- number of space inserted for indentation; when zero the 'tabstop' value will be used
 -- vim.opt.showcmdloc = 'statusline'
 vim.opt.showmode = false
 vim.opt.showtabline = 2
@@ -64,13 +67,14 @@ vim.opt.sidescrolloff = 8
 vim.opt.signcolumn = 'yes:2'
 vim.opt.smartcase = true
 vim.opt.smartindent = true
-vim.opt.softtabstop = 2
+vim.opt.softtabstop = -1
+vim.opt.splitbelow = true
 vim.opt.splitkeep = 'screen'
 vim.opt.splitright = true
-vim.opt.splitbelow = true
 -- vim.opt.statuscolumn = '%s%l%C'
 vim.opt.swapfile = false
 vim.opt.synmaxcol = 1000
+vim.opt.syntax = 'OFF'
 vim.opt.tabstop = 2
 vim.opt.termguicolors = true
 vim.opt.timeoutlen = 500
@@ -81,18 +85,17 @@ vim.opt.updatetime = 300
 vim.opt.virtualedit = 'block'
 vim.opt.wildmenu = true
 vim.opt.wildmode = 'longest:full,full'
-vim.opt.winborder = 'single'
+vim.opt.winborder = 'none'
 vim.opt.wrap = false
 vim.opt.writebackup = false
 
-if vim.fn.has('win32') == 1 then
-  vim.o.shell = 'pwsh'
-  vim.o.shellcmdflag =
-  "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering = 'PlainText';"
-  vim.o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-  vim.o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-  vim.o.shellquote = ''
-  vim.o.shellxquote = ''
+if vim.fn.executable('nu') == 1 then
+  vim.opt.shell = 'nu'
+  vim.opt.shellcmdflag = '--stdin --no-newline -c'
+  vim.opt.shellpipe = '| complete | update stderr { ansi strip } | tee { get stderr | save --force --raw %s } | into record'
+  vim.opt.shellquote = ''
+  vim.opt.shellredir = 'out+err> %s'
+  vim.opt.shelltemp = false
+  vim.opt.shellxescape = ''
+  vim.opt.shellxquote = ''
 end
-
--- vim.cmd('syntax off')
