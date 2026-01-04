@@ -1,5 +1,5 @@
-require('neovide')
-require('options')
+-- require('neovide')
+-- require('options')
 
 -- Clone 'mini.nvim' manually in a way that it gets managed by 'mini.deps'
 local path_package = vim.fn.stdpath('data') .. '/site/'
@@ -21,12 +21,8 @@ require('mini.deps').setup({
   path = { package = path_package }
 })
 
-require('plugins')
-require('colorscheme')
-require('keymaps')
-require('autocmds')
-require('lsp')
-
-vim.keymap.set('i', '<C-n>', function()
-  print('hello')
-end, { desc = 'test' })
+-- require('plugins')
+-- require('colorscheme')
+-- require('keymaps')
+-- require('autocmds')
+-- require('lsp')
