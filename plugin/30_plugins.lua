@@ -283,9 +283,9 @@ now_if_args(function()
     'rust_analyzer',
     'svelte',
     -- 'stylua',
-    'tsgo',
-    -- 'ty',
-    -- 'vtsls',
+    -- 'tsgo',
+    'ty',
+    'vtsls',
     'zls'
   })
 end)

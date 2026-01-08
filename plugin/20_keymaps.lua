@@ -27,7 +27,7 @@ vim.keymap.set('n', 'grr', function() MiniPick.registry.lsp_jump({ scope = 'refe
 vim.keymap.set('n', 'grt', function() MiniPick.registry.lsp_jump({ scope = 'type_definition' }) end, { desc = 'Goto Type Definition' })
 vim.keymap.set('n', 'gw', function() MiniPick.registry.lsp_jump({ scope = 'workspace_symbol' }) end, { desc = 'Workspace symbols' })
 vim.keymap.set('n', 'gW', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol_live' }) end, { desc = 'Workspace symbols live' })
-vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, { desc = 'Format buffer' })
+vim.keymap.set('n', '<leader>lf', function() require('custom.format').format() end, { desc = 'Format buffer' })
 
 vim.keymap.set('n', '<C-w>gd', function()
   vim.cmd.vsplit()
@@ -71,8 +71,8 @@ vim.keymap.set('n', '<leader>fH', function() MiniExtra.pickers.hl_groups() end, 
 vim.keymap.set('n', '<leader>fk', function() MiniExtra.pickers.keymaps() end, { desc = 'Find keymaps' })
 vim.keymap.set('n', '<leader>fr', function() MiniExtra.pickers.registers() end, { desc = 'Find registers' })
 vim.keymap.set('n', '<leader>ft', function() MiniExtra.pickers.colorschemes() end, { desc = 'Find themes' })
-vim.keymap.set('n', '<leader>fw', function() MiniPick.registry.files({ hidden = true }) end, { desc = 'Find words' })
-vim.keymap.set('n', '<leader>fW', function() MiniPick.registry.files({ hidden = true, ignored = true }) end, { desc = 'Find all words' })
+vim.keymap.set('n', '<leader>fw', function() MiniPick.registry.grep_live({ hidden = true }) end, { desc = 'Find words' })
+vim.keymap.set('n', '<leader>fW', function() MiniPick.registry.grep_live({ hidden = true, ignored = true }) end, { desc = 'Find all words' })
 
 vim.keymap.set('n', '<leader>lD', function() MiniExtra.pickers.diagnostic() end, { desc = 'Search diagnostic' })
 
