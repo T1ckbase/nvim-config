@@ -45,22 +45,6 @@ M.get_plugin_path = function(plugin_name)
   return nil
 end
 
-M.diff_with_clipboard = function()
-  local clipboard_content = vim.fn.getreg('+')
-  if clipboard_content == nil or clipboard_content == '' then
-    vim.notify('System clipboard is empty.')
-    return
-  end
-
-  MiniDiff.set_ref_text(0, clipboard_content)
-  MiniDiff.toggle_overlay(0)
-end
-
-M.restore_diff_source = function()
-  MiniDiff.disable(0)
-  MiniDiff.enable(0)
-end
-
 M.status.macro_recording = function(args)
   local recording_register = vim.fn.reg_recording()
   if recording_register == '' then
@@ -85,7 +69,7 @@ M.status.lsp = function(args)
 end
 
 M.create_autocommands = function()
-  local gr = vim.api.nvim_create_augroup('MyUtils', {})
+  local gr = vim.api.nvim_create_augroup('custom-utils', {})
 
   local au = function(event, pattern, callback, desc)
     vim.api.nvim_create_autocmd(event, { group = gr, pattern = pattern, callback = callback, desc = desc })

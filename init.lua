@@ -1,12 +1,3 @@
-if vim.g.vscode then
-  local vscode = require('vscode')
-  vim.notify = vscode.notify
-  return
-end
-
-require('neovide')
-require('options')
-
 -- Clone 'mini.nvim' manually in a way that it gets managed by 'mini.deps'
 local path_package = vim.fn.stdpath('data') .. '/site/'
 local mini_path = path_package .. 'pack/deps/start/mini.nvim'
@@ -22,17 +13,9 @@ if not vim.loop.fs_stat(mini_path) then
 end
 
 -- Set up 'mini.deps' (customize to your liking)
-require('mini.deps').setup({ path = { package = path_package } })
+require('mini.deps').setup({
+  job = { n_threads = #vim.loop.cpu_info() },
+  path = { package = path_package }
+})
 
-require('plugins')
-require('keymaps')
-require('autocmds')
-require('lsp')
-require('colorscheme')
-
--- Load the session if available
-vim.schedule(function()
-  if pcall(MiniSessions.read, vim.fn.getcwd():gsub('[\\/:]', '%%') .. '.vim') then
-    vim.schedule(MiniFiles.close)
-  end
-end)
+vim.api.nvim_create_augroup('custom-config', {})

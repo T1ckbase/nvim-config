@@ -1,3 +1,7 @@
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+
+
 vim.keymap.set({ 'n', 'x' }, '<C-/>', 'gc', { remap = true, silent = true, desc = 'Toggle comment' })
 vim.keymap.set('n', '<C-/>', 'gcc', { remap = true, silent = true, desc = 'Toggle comment line' })
 vim.keymap.set({ 'n', 'x' }, '<C-_>', 'gc', { remap = true, silent = true, desc = 'Toggle comment' })
