@@ -5,6 +5,151 @@ local now_if_args = vim.fn.argc(-1) > 0 and now or later
 -- customUtils.setup()
 
 now(function()
+  add('sainnhe/gruvbox-material')
+
+  vim.g.gruvbox_material_foreground = 'mix'
+  -- vim.g.gruvbox_material_background = 'hard'
+  vim.g.gruvbox_material_diagnostic_virtual_text = 'colored'
+  vim.cmd.colorscheme('gruvbox-material')
+
+  vim.api.nvim_set_hl(0, 'CurSearch', { link = 'Search' })
+  vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', { undercurl = true, sp = '#626262' })
+end)
+
+-- now(function()
+--   add('NvChad/base46')
+
+--   package.loaded['nvconfig'] = {
+--     base46 = {
+--       theme = 'gruvchad',
+--       transparency = false,
+--       integrations = {},
+--       excluded = {},
+--       hl_add = {},
+--       hl_override = {},
+--       changed_themes = {},
+--       theme_toggle = {}
+--     }
+--   }
+
+--   local integrations = { 'defaults', 'treesitter', 'lsp', 'syntax', 'mini-tabline', 'git', 'semantic_tokens' }
+
+--   for _, name in ipairs(integrations) do
+--     local hl_groups = require('base46').get_integration(name)
+
+--     for group, opts in pairs(hl_groups) do
+--       vim.api.nvim_set_hl(0, group, opts)
+--     end
+--   end
+
+--   vim.g.colors_name = 'ashes'
+-- end)
+
+-- now(function()
+--   add('NvChad/base46')
+--   add({ source = 'catppuccin/nvim', name = 'catppuccin' })
+
+--   package.loaded['nvconfig'] = {
+--     base46 = {
+--       theme = 'jellybeans',
+--       transparency = false,
+--       integrations = {},
+--       excluded = {},
+--       hl_add = {},
+--       hl_override = {},
+--       changed_themes = {},
+--       theme_toggle = {}
+--     }
+--   }
+
+--   local function base46_to_catppuccin(theme_name)
+--     local theme = require('base46.themes.' .. theme_name)
+--     local b16 = theme.base_16
+--     local b30 = theme.base_30
+
+--     return {
+--       base      = b30.black,
+--       mantle    = b30.darker_black,
+--       crust     = b30.statusline_bg,
+
+--       surface0  = b30.one_bg,
+--       surface1  = b30.one_bg2,
+--       surface2  = b30.one_bg3,
+--       overlay0  = b30.grey,
+--       overlay1  = b30.grey_fg,
+--       overlay2  = b30.grey_fg2,
+
+--       text      = b30.white,
+--       subtext1  = b16.base06,
+--       subtext0  = b30.light_grey,
+
+--       lavender  = b30.lavender,
+--       blue      = b30.blue,
+--       sapphire  = b30.nord_blue,
+--       sky       = b30.cyan,
+--       teal      = b30.teal,
+--       green     = b30.green,
+--       yellow    = b30.yellow,
+--       peach     = b30.orange,
+--       maroon    = b16.base0F,
+--       red       = b30.red,
+--       mauve     = b16.base0E,
+--       pink      = b30.pink,
+--       flamingo  = b30.baby_pink,
+--       rosewater = b30.sun,
+--     }
+--   end
+
+--   require('catppuccin').setup({
+--     term_colors = true,
+--     lsp_styles = {
+--       enabled = true,
+--       underlines = {
+--         errors = { 'undercurl' },
+--         hints = { 'undercurl' },
+--         warnings = { 'undercurl' },
+--         information = { 'undercurl' },
+--         ok = { 'undercurl' },
+--       },
+--     },
+--     integrations = {
+--       -- blink_cmp = true,
+--       mini = {
+--         enabled = true,
+--         indentscope_color = 'surface2', -- Color of the indent line
+--       },
+--     },
+--     color_overrides = {
+--       all = base46_to_catppuccin(require('nvconfig').base46.theme)
+--     },
+--     highlight_overrides = {
+--       all = function(colors)
+--         -- return {
+--         --   DiagnosticUnnecessary = { undercurl = true, },
+--         --   MiniCursorword = { bg = colors.mantle, style = {} },
+--         --   MiniCursorwordCurrent = { link = 'MiniCursorword' },
+--         --   MiniTablineFill = { bg = '#000000' },
+--         --   -------
+--         -- }
+
+--         local integrations = { 'defaults', 'treesitter', 'lsp', 'syntax', 'mini-tabline', 'git', 'semantic_tokens' }
+--         local all_highlights = {}
+
+--         for _, name in ipairs(integrations) do
+--           local hl_groups = require('base46').get_integration(name)
+
+--           all_highlights = vim.tbl_extend('force', all_highlights, hl_groups)
+--         end
+
+--         return all_highlights
+--       end
+--     }
+--   })
+
+--   vim.cmd.colorscheme('catppuccin')
+-- end)
+
+now(function()
   require('mini.icons').setup({
     lsp = {
       array = { glyph = '' },
@@ -181,14 +326,14 @@ now_if_args(function()
         keymaps = {
           ['ak'] = { query = '@block.outer', desc = 'around block' },
           ['ik'] = { query = '@block.inner', desc = 'inside block' },
-          ['af'] = { query = '@call.outer', desc = 'around function call' },
-          ['if'] = { query = '@call.inner', desc = 'inside function call' },
-          ['ac'] = { query = '@class.outer', desc = 'around class' },
-          ['ic'] = { query = '@class.inner', desc = 'inside class' },
+          ['ac'] = { query = '@call.outer', desc = 'around function call' },
+          ['ic'] = { query = '@call.inner', desc = 'inside function call' },
+          ['aC'] = { query = '@class.outer', desc = 'around class' },
+          ['iC'] = { query = '@class.inner', desc = 'inside class' },
           ['a?'] = { query = '@conditional.outer', desc = 'around conditional' },
           ['i?'] = { query = '@conditional.inner', desc = 'inside conditional' },
-          ['am'] = { query = '@function.outer', desc = 'around method/function definition' },
-          ['im'] = { query = '@function.inner', desc = 'inside method/function definition' },
+          ['af'] = { query = '@function.outer', desc = 'around method/function definition' },
+          ['if'] = { query = '@function.inner', desc = 'inside method/function definition' },
           ['ao'] = { query = '@loop.outer', desc = 'around loop' },
           ['io'] = { query = '@loop.inner', desc = 'inside loop' },
           ['aa'] = { query = '@parameter.outer', desc = 'around argument' },
@@ -200,35 +345,35 @@ now_if_args(function()
         set_jumps = true,
         goto_next_start = {
           [']k'] = { query = '@block.outer', desc = 'Next block start' },
-          [']f'] = { query = '@call.outer', desc = 'Next function call start' },
-          [']c'] = { query = '@class.outer', desc = 'Next class start' },
+          [']c'] = { query = '@call.outer', desc = 'Next function call start' },
+          [']s'] = { query = '@class.outer', desc = 'Next class start' },
           [']?'] = { query = '@conditional.outer', desc = 'Next conditional start' },
-          [']m'] = { query = '@function.outer', desc = 'Next method/function definition start' },
+          [']f'] = { query = '@function.outer', desc = 'Next method/function definition start' },
           [']o'] = { query = '@loop.outer', desc = 'Next loop start' },
           [']a'] = { query = '@parameter.inner', desc = 'Next argument start' },
         },
         goto_next_end = {
           [']K'] = { query = '@block.outer', desc = 'Next block end' },
-          [']F'] = { query = '@call.outer', desc = 'Next function call end' },
-          [']C'] = { query = '@class.outer', desc = 'Next class end' },
-          [']M'] = { query = '@function.outer', desc = 'Next method/function definition end' },
+          [']C'] = { query = '@call.outer', desc = 'Next function call end' },
+          [']S'] = { query = '@class.outer', desc = 'Next class end' },
+          [']F'] = { query = '@function.outer', desc = 'Next method/function definition end' },
           [']O'] = { query = '@loop.outer', desc = 'Next loop end' },
           [']A'] = { query = '@parameter.inner', desc = 'Next argument end' },
         },
         goto_previous_start = {
           ['[k'] = { query = '@block.outer', desc = 'Previous block start' },
-          ['[f'] = { query = '@call.outer', desc = 'Previous function call start' },
-          ['[c'] = { query = '@class.outer', desc = 'Previous class start' },
+          ['[c'] = { query = '@call.outer', desc = 'Previous function call start' },
+          ['[s'] = { query = '@class.outer', desc = 'Previous class start' },
           ['[?'] = { query = '@conditional.outer', desc = 'Previous conditional start' },
-          ['[m'] = { query = '@function.outer', desc = 'Previous method/function definition start' },
+          ['[f'] = { query = '@function.outer', desc = 'Previous method/function definition start' },
           ['[o'] = { query = '@loop.outer', desc = 'Previous loop start' },
           ['[a'] = { query = '@parameter.inner', desc = 'Previous argument start' },
         },
         goto_previous_end = {
           ['[K'] = { query = '@block.outer', desc = 'Previous block end' },
-          ['[F'] = { query = '@call.outer', desc = 'Previous function call end' },
-          ['[C'] = { query = '@class.outer', desc = 'Previous class end' },
-          ['[M'] = { query = '@function.outer', desc = 'Previous method/function definition end' },
+          ['[C'] = { query = '@call.outer', desc = 'Previous function call end' },
+          ['[S'] = { query = '@class.outer', desc = 'Previous class end' },
+          ['[F'] = { query = '@function.outer', desc = 'Previous method/function definition end' },
           ['[O'] = { query = '@loop.outer', desc = 'Previous loop end' },
           ['[A'] = { query = '@parameter.inner', desc = 'Previous argument end' },
         },
@@ -237,14 +382,14 @@ now_if_args(function()
         enable = true,
         swap_next = {
           ['>K'] = { query = '@block.outer', desc = 'Swap next block' },
-          ['>F'] = { query = '@call.outer', desc = 'Swap next function call' },
-          ['>M'] = { query = '@function.outer', desc = 'Swap next method/function definition' },
+          ['>C'] = { query = '@call.outer', desc = 'Swap next function call' },
+          ['>F'] = { query = '@function.outer', desc = 'Swap next method/function definition' },
           ['>A'] = { query = '@parameter.inner', desc = 'Swap next argument' },
         },
         swap_previous = {
           ['<K'] = { query = '@block.outer', desc = 'Swap previous block' },
-          ['<F'] = { query = '@call.outer', desc = 'Swap previous function call' },
-          ['<M'] = { query = '@function.outer', desc = 'Swap previous method/function definition' },
+          ['<C'] = { query = '@call.outer', desc = 'Swap previous function call' },
+          ['<F'] = { query = '@function.outer', desc = 'Swap previous method/function definition' },
           ['<A'] = { query = '@parameter.inner', desc = 'Swap previous argument' },
         },
       },
@@ -504,9 +649,6 @@ later(function()
         neigh_pattern = '[^%w\\][^%w\\]',
         register = { cr = false },
       },
-      ['('] = { action = 'open', pair = '()', neigh_pattern = '[^\\].[%s%z%p]' },
-      ['['] = { action = 'open', pair = '[]', neigh_pattern = '[^\\].[%s%z%p]' },
-      ['{'] = { action = 'open', pair = '{}', neigh_pattern = '[^\\].[%s%z%p]' },
     }
   })
 end)
@@ -636,7 +778,6 @@ later(function()
       vim.api.nvim_set_current_buf(bufnr)
       vim.api.nvim_win_set_cursor(0, { item.lnum, item.col - 1 })
       vim.cmd('normal! zv')
-      vim.cmd('normal! zz')
     end
 
     local on_list = function(options)

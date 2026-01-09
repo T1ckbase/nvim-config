@@ -14,6 +14,12 @@ vim.g.loaded_ruby_provider = 0
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
+vim.g.netrw_altv = 1
+vim.g.netrw_browse_split = 4
+vim.g.netrw_liststyle = 3
+vim.g.netrw_preview = 1
+vim.g.netrw_winsize = 20
+
 vim.opt.autoindent = true
 vim.opt.background = 'dark'
 vim.opt.backspace = { 'indent', 'eol', 'start', 'nostop' } -- don't stop backspace at insert
