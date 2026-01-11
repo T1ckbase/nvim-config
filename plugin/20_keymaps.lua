@@ -25,8 +25,7 @@ vim.keymap.set('n', 'gO', function() MiniPick.registry.lsp_jump({ scope = 'docum
 vim.keymap.set('n', 'gri', function() MiniPick.registry.lsp_jump({ scope = 'implementation' }) end, { desc = 'Goto Implementation' })
 vim.keymap.set('n', 'grr', function() MiniPick.registry.lsp_jump({ scope = 'references' }) end, { desc = 'Goto References' })
 vim.keymap.set('n', 'grt', function() MiniPick.registry.lsp_jump({ scope = 'type_definition' }) end, { desc = 'Goto Type Definition' })
-vim.keymap.set('n', 'gw', function() MiniPick.registry.lsp_jump({ scope = 'workspace_symbol' }) end, { desc = 'Workspace symbols' })
-vim.keymap.set('n', 'gW', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol_live' }) end, { desc = 'Workspace symbols live' })
+vim.keymap.set('n', 'gw', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol_live' }) end, { desc = 'Workspace symbols' })
 vim.keymap.set('n', '<leader>lf', function() require('custom.format').format() end, { desc = 'Format buffer' })
 
 vim.keymap.set('n', '<C-w>gd', function()

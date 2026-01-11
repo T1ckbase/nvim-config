@@ -85,7 +85,6 @@ now(function()
         local lsp = MiniStatusline.section_lsp({ trunc_width = 75 }) -- utils.status.lsp({ trunc_width = 100 }) -- MiniStatusline.section_lsp({ trunc_width = 75 })
         local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
         local location = MiniStatusline.section_location({ trunc_width = 75 })
-        local treesitter = vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()] and '' or '󱐚'
         local percentage = '%P'
 
         return MiniStatusline.combine_groups({
@@ -99,7 +98,6 @@ now(function()
           '%=',
           { hl = 'MiniStatuslineDevinfo',  strings = { lsp } },
           { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
-          { hl = 'MiniStatuslineDevinfo',  strings = { treesitter } },
           { hl = mode_hl,                  strings = { location, percentage } },
         })
       end,
@@ -404,7 +402,7 @@ later(function()
   })
 end)
 
--- later(function() -- I don't like this
+-- later(function() -- Unable to remap <C-n>, <C-p>
 --   require('mini.completion').setup({
 --     lsp_completion = {
 --       source_func = 'completefunc',
