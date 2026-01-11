@@ -1,3 +1,11 @@
+vim.api.nvim_create_autocmd('FileType', {
+  group = 'custom-config',
+  pattern = '*',
+  callback = function()
+    vim.opt_local.formatoptions = 'jqlnM'
+  end,
+})
+
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = 'custom-config',
   callback = function()

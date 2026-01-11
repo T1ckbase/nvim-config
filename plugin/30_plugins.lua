@@ -16,139 +16,6 @@ now(function()
   vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', { undercurl = true, sp = '#626262' })
 end)
 
--- now(function()
---   add('NvChad/base46')
-
---   package.loaded['nvconfig'] = {
---     base46 = {
---       theme = 'gruvchad',
---       transparency = false,
---       integrations = {},
---       excluded = {},
---       hl_add = {},
---       hl_override = {},
---       changed_themes = {},
---       theme_toggle = {}
---     }
---   }
-
---   local integrations = { 'defaults', 'treesitter', 'lsp', 'syntax', 'mini-tabline', 'git', 'semantic_tokens' }
-
---   for _, name in ipairs(integrations) do
---     local hl_groups = require('base46').get_integration(name)
-
---     for group, opts in pairs(hl_groups) do
---       vim.api.nvim_set_hl(0, group, opts)
---     end
---   end
-
---   vim.g.colors_name = 'ashes'
--- end)
-
--- now(function()
---   add('NvChad/base46')
---   add({ source = 'catppuccin/nvim', name = 'catppuccin' })
-
---   package.loaded['nvconfig'] = {
---     base46 = {
---       theme = 'jellybeans',
---       transparency = false,
---       integrations = {},
---       excluded = {},
---       hl_add = {},
---       hl_override = {},
---       changed_themes = {},
---       theme_toggle = {}
---     }
---   }
-
---   local function base46_to_catppuccin(theme_name)
---     local theme = require('base46.themes.' .. theme_name)
---     local b16 = theme.base_16
---     local b30 = theme.base_30
-
---     return {
---       base      = b30.black,
---       mantle    = b30.darker_black,
---       crust     = b30.statusline_bg,
-
---       surface0  = b30.one_bg,
---       surface1  = b30.one_bg2,
---       surface2  = b30.one_bg3,
---       overlay0  = b30.grey,
---       overlay1  = b30.grey_fg,
---       overlay2  = b30.grey_fg2,
-
---       text      = b30.white,
---       subtext1  = b16.base06,
---       subtext0  = b30.light_grey,
-
---       lavender  = b30.lavender,
---       blue      = b30.blue,
---       sapphire  = b30.nord_blue,
---       sky       = b30.cyan,
---       teal      = b30.teal,
---       green     = b30.green,
---       yellow    = b30.yellow,
---       peach     = b30.orange,
---       maroon    = b16.base0F,
---       red       = b30.red,
---       mauve     = b16.base0E,
---       pink      = b30.pink,
---       flamingo  = b30.baby_pink,
---       rosewater = b30.sun,
---     }
---   end
-
---   require('catppuccin').setup({
---     term_colors = true,
---     lsp_styles = {
---       enabled = true,
---       underlines = {
---         errors = { 'undercurl' },
---         hints = { 'undercurl' },
---         warnings = { 'undercurl' },
---         information = { 'undercurl' },
---         ok = { 'undercurl' },
---       },
---     },
---     integrations = {
---       -- blink_cmp = true,
---       mini = {
---         enabled = true,
---         indentscope_color = 'surface2', -- Color of the indent line
---       },
---     },
---     color_overrides = {
---       all = base46_to_catppuccin(require('nvconfig').base46.theme)
---     },
---     highlight_overrides = {
---       all = function(colors)
---         -- return {
---         --   DiagnosticUnnecessary = { undercurl = true, },
---         --   MiniCursorword = { bg = colors.mantle, style = {} },
---         --   MiniCursorwordCurrent = { link = 'MiniCursorword' },
---         --   MiniTablineFill = { bg = '#000000' },
---         --   -------
---         -- }
-
---         local integrations = { 'defaults', 'treesitter', 'lsp', 'syntax', 'mini-tabline', 'git', 'semantic_tokens' }
---         local all_highlights = {}
-
---         for _, name in ipairs(integrations) do
---           local hl_groups = require('base46').get_integration(name)
-
---           all_highlights = vim.tbl_extend('force', all_highlights, hl_groups)
---         end
-
---         return all_highlights
---       end
---     }
---   })
-
---   vim.cmd.colorscheme('catppuccin')
--- end)
-
 now(function()
   require('mini.icons').setup({
     lsp = {
@@ -211,13 +78,14 @@ now(function()
 
         -- local macro_recording = utils.status.macro_recording({})
         local git = MiniStatusline.section_git({ trunc_width = 40 })
-        local diff = MiniStatusline.section_diff({ trunc_width = 75 })
+        local diff = MiniStatusline.section_diff({ trunc_width = 75, icon = '' })
         local filename = (vim.bo.buftype == 'terminal' and '%t' or "%{expand('%:.')}%m%r") -- [[%{substitute(fnamemodify(expand('%'),':~:.'),'\\','/','g')}%m%r]] -- MiniStatusline.section_filename({ trunc_width = 140 })
         local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75, icon = '', signs = { ERROR = '󰅚 ', WARN = '󰀪 ', INFO = '󰋽 ', HINT = '󰌶 ' } })
         local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
         local lsp = MiniStatusline.section_lsp({ trunc_width = 75 }) -- utils.status.lsp({ trunc_width = 100 }) -- MiniStatusline.section_lsp({ trunc_width = 75 })
         local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
         local location = MiniStatusline.section_location({ trunc_width = 75 })
+        local treesitter = vim.treesitter.highlighter.active[vim.api.nvim_get_current_buf()] and '' or '󱐚'
         local percentage = '%P'
 
         return MiniStatusline.combine_groups({
@@ -231,6 +99,7 @@ now(function()
           '%=',
           { hl = 'MiniStatuslineDevinfo',  strings = { lsp } },
           { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
+          { hl = 'MiniStatuslineDevinfo',  strings = { treesitter } },
           { hl = mode_hl,                  strings = { location, percentage } },
         })
       end,
@@ -308,7 +177,7 @@ now_if_args(function()
       enable = true,
       -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
       disable = function(lang, buf)
-        local max_filesize = 2 * 1024 * 1024 -- 2 MB
+        local max_filesize = 10 * 1024 * 1024 -- 10 MB
         local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
         if ok and stats and stats.size > max_filesize then
           return true
@@ -431,6 +300,7 @@ now_if_args(function()
     -- 'tsgo',
     'ty',
     'vtsls',
+    'yamlls',
     'zls'
   })
 end)
@@ -559,11 +429,11 @@ end)
 --   vim.lsp.config('*', { capabilities = MiniCompletion.get_lsp_capabilities() })
 -- end)
 
-later(function()
-  require('mini.cursorword').setup({
-    delay = 0
-  })
-end)
+-- later(function()
+--   require('mini.cursorword').setup({
+--     delay = 0
+--   })
+-- end)
 
 later(function()
   require('mini.diff').setup({
@@ -654,7 +524,24 @@ later(function()
 end)
 
 later(function()
-  require('mini.pick').setup()
+  require('mini.pick').setup({
+    options = {
+      use_cache = true
+    },
+    window = {
+      config = function()
+        local height = math.floor(0.618 * vim.o.lines)
+        local width = math.floor(0.618 * vim.o.columns)
+        return {
+          anchor = 'NW',
+          height = height,
+          width = width,
+          row = math.floor(0.5 * (vim.o.lines - height)),
+          col = math.floor(0.5 * (vim.o.columns - width)),
+        }
+      end
+    }
+  })
 
   MiniPick.registry.files = function(local_opts)
     local_opts = vim.tbl_deep_extend('force', {
