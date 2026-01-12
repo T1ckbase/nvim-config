@@ -5,15 +5,7 @@ local now_if_args = vim.fn.argc(-1) > 0 and now or later
 -- customUtils.setup()
 
 now(function()
-  add('sainnhe/gruvbox-material')
-
-  vim.g.gruvbox_material_foreground = 'mix'
-  -- vim.g.gruvbox_material_background = 'hard'
-  vim.g.gruvbox_material_diagnostic_virtual_text = 'colored'
-  vim.cmd.colorscheme('gruvbox-material')
-
-  vim.api.nvim_set_hl(0, 'CurSearch', { link = 'Search' })
-  vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', { undercurl = true, sp = '#626262' })
+  add('nvim-lua/plenary.nvim')
 end)
 
 now(function()
@@ -55,65 +47,84 @@ now(function()
       variable = { glyph = '' },
     }
   })
-  -- later(MiniIcons.mock_nvim_web_devicons)
+
+  MiniIcons.mock_nvim_web_devicons()
   -- later(MiniIcons.tweak_lsp_kind)
 end)
 
 now(function()
-  require('mini.misc').setup()
-  MiniMisc.setup_restore_cursor()
+  add('nvchad/ui')
+
+  vim.g.base46_cache = vim.fn.stdpath('data') .. '/base46/'
+  require('nvchad')
+  -- dofile?
 end)
 
-now(function() require('mini.notify').setup() end)
-
-now(function() require('mini.sessions').setup() end)
-
-now(function()
-  require('mini.statusline').setup({
-    use_icons = true,
-    content = {
-      active = function()
-        local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
-        mode = string.upper(mode)
-
-        -- local macro_recording = utils.status.macro_recording({})
-        local git = MiniStatusline.section_git({ trunc_width = 40 })
-        local diff = MiniStatusline.section_diff({ trunc_width = 75, icon = '' })
-        local filename = (vim.bo.buftype == 'terminal' and '%t' or "%{expand('%:.')}%m%r") -- MiniStatusline.section_filename({ trunc_width = 140 })
-        local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75, icon = '', signs = { ERROR = '󰅚 ', WARN = '󰀪 ', INFO = '󰋽 ', HINT = '󰌶 ' } })
-        local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
-        local lsp = MiniStatusline.section_lsp({ trunc_width = 75 }) -- utils.status.lsp({ trunc_width = 100 }) -- MiniStatusline.section_lsp({ trunc_width = 75 })
-        local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
-        local location = MiniStatusline.section_location({ trunc_width = 75 })
-        local percentage = '%P'
-
-        return MiniStatusline.combine_groups({
-          { hl = mode_hl,                 strings = { mode } },
-          { hl = 'MiniStatuslineDevinfo', strings = { git, diff } },
-          '%<',
-          { hl = 'MiniStatuslineFilename', strings = { filename } },
-          { hl = 'MiniStatuslineDevinfo',  strings = { diagnostics } },
-          '%=',
-          { hl = 'MiniStatuslineDevinfo',  strings = { search } },
-          '%=',
-          { hl = 'MiniStatuslineDevinfo',  strings = { lsp } },
-          { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
-          { hl = mode_hl,                  strings = { location, percentage } },
-        })
-      end,
+later(function()
+  add({
+    source = 'nvchad/base46',
+    hooks = {
+      post_install = vim.schedule_wrap(function() require('base46').load_all_highlights() end),
+      post_checkout = function() require('base46').load_all_highlights() end
     },
   })
 end)
 
-now(function()
-  require('mini.tabline').setup({
-    format = function(buf_id, label)
-      local suffix = vim.bo[buf_id].modified and ' ' or '  '
-      local default_formatted = MiniTabline.default_format(buf_id, label)
-      return ' ' .. default_formatted .. suffix
-    end,
-  })
-end)
+-- now(function()
+--   require('mini.misc').setup()
+--   MiniMisc.setup_restore_cursor()
+-- end)
+--
+-- now(function() require('mini.notify').setup() end)
+--
+-- now(function() require('mini.sessions').setup() end)
+
+-- now(function()
+--   require('mini.statusline').setup({
+--     use_icons = true,
+--     content = {
+--       active = function()
+--         local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
+--         mode = string.upper(mode)
+--
+--         -- local macro_recording = utils.status.macro_recording({})
+--         local git = MiniStatusline.section_git({ trunc_width = 40 })
+--         local diff = MiniStatusline.section_diff({ trunc_width = 75, icon = '' })
+--         local filename = (vim.bo.buftype == 'terminal' and '%t' or "%{expand('%:.')}%m%r") -- MiniStatusline.section_filename({ trunc_width = 140 })
+--         local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75, icon = '', signs = { ERROR = '󰅚 ', WARN = '󰀪 ', INFO = '󰋽 ', HINT = '󰌶 ' } })
+--         local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
+--         local lsp = MiniStatusline.section_lsp({ trunc_width = 75 }) -- utils.status.lsp({ trunc_width = 100 }) -- MiniStatusline.section_lsp({ trunc_width = 75 })
+--         local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
+--         local location = MiniStatusline.section_location({ trunc_width = 75 })
+--         local percentage = '%P'
+--
+--         return MiniStatusline.combine_groups({
+--           { hl = mode_hl,                 strings = { mode } },
+--           { hl = 'MiniStatuslineDevinfo', strings = { git, diff } },
+--           '%<',
+--           { hl = 'MiniStatuslineFilename', strings = { filename } },
+--           { hl = 'MiniStatuslineDevinfo',  strings = { diagnostics } },
+--           '%=',
+--           { hl = 'MiniStatuslineDevinfo',  strings = { search } },
+--           '%=',
+--           { hl = 'MiniStatuslineDevinfo',  strings = { lsp } },
+--           { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
+--           { hl = mode_hl,                  strings = { location, percentage } },
+--         })
+--       end,
+--     },
+--   })
+-- end)
+
+-- now(function()
+--   require('mini.tabline').setup({
+--     format = function(buf_id, label)
+--       local suffix = vim.bo[buf_id].modified and ' ' or '  '
+--       local default_formatted = MiniTabline.default_format(buf_id, label)
+--       return ' ' .. default_formatted .. suffix
+--     end,
+--   })
+-- end)
 
 now_if_args(function()
   add({
@@ -305,9 +316,7 @@ end)
 
 -- Step two
 
-later(function()
-  require('mini.extra').setup()
-end)
+later(function() require('mini.extra').setup() end)
 
 later(function()
   require('mini.ai').setup({
@@ -847,12 +856,12 @@ later(function()
   })
 end)
 
-later(function()
-  add('akinsho/toggleterm.nvim')
-
-  require('toggleterm').setup({
-    open_mapping = [[<M-i>]],
-    direction = 'tab',
-    start_in_insert = true,
-  })
-end)
+-- later(function()
+--   add('akinsho/toggleterm.nvim')
+--
+--   require('toggleterm').setup({
+--     open_mapping = [[<M-i>]],
+--     direction = 'tab',
+--     start_in_insert = true,
+--   })
+-- end)
