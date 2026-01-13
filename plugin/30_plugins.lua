@@ -112,6 +112,7 @@ now(function()
       local default_formatted = MiniTabline.default_format(buf_id, label)
       return ' ' .. default_formatted .. suffix
     end,
+    tabpage_section = 'right'
   })
 end)
 
@@ -446,7 +447,7 @@ later(function()
     mappings = {
       apply = '',
       -- reset = 'gH',
-      -- textobject = 'gh',
+      textobject = 'gh',
       goto_first = '[H',
       goto_prev = '[h',
       goto_next = ']h',
@@ -464,7 +465,7 @@ later(function()
       use_as_default_explorer = false,
     },
     windows = {
-      preview = true
+      preview = false
     }
   })
 end)

@@ -56,7 +56,6 @@ vim.opt.hlsearch = true
 vim.opt.ignorecase = true
 -- vim.opt.inccommand = 'split'
 vim.opt.incsearch = true
-vim.opt.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
 vim.opt.infercase = true
 vim.opt.jumpoptions = { 'stack', 'view', 'clean' }
 vim.opt.laststatus = 3
