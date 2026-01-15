@@ -468,6 +468,17 @@ later(function()
       preview = false
     }
   })
+
+  vim.api.nvim_create_autocmd('User', {
+    group = 'custom-config',
+    pattern = 'MiniFilesWindowOpen',
+    callback = function(args)
+      local win_id = args.data.win_id
+      local config = vim.api.nvim_win_get_config(win_id)
+      config.border = 'solid'
+      vim.api.nvim_win_set_config(win_id, config)
+    end,
+  })
 end)
 
 later(function() require('mini.git').setup() end)
@@ -537,26 +548,22 @@ later(function()
           width = width,
           row = math.floor(0.5 * (vim.o.lines - height)),
           col = math.floor(0.5 * (vim.o.columns - width)),
+          border = 'solid',
         }
       end
     }
   })
 
   MiniPick.registry.files = function(local_opts)
-    local_opts = vim.tbl_deep_extend('force', {
-      hidden = false,
-      ignored = false,
-    }, local_opts or {})
+    local_opts = vim.tbl_deep_extend('force', { hidden = false, ignored = false }, local_opts or {})
 
-    local command = { 'rg', '--files', '--color=never', '--glob', '!.git/*' }
+    local command = { 'rg', '--files', '--color=never' }
 
     if local_opts.hidden then
-      table.insert(command, '--hidden')
+      vim.list_extend(command, { '--hidden', '--glob', '!.git/*' })
     end
 
-    if local_opts.ignored then
-      table.insert(command, '--no-ignore')
-    end
+    if local_opts.ignored then table.insert(command, '--no-ignore') end
 
     return MiniPick.builtin.cli(
       {
@@ -590,18 +597,19 @@ later(function()
       local cmd = {
         'rg', '--column', '--line-number', '--no-heading',
         '--field-match-separator', '\\x00', '--color=never',
-        '--glob', '!.git/*',
       }
 
-      if local_opts.hidden then table.insert(cmd, '--hidden') end
+      if local_opts.hidden then
+        vim.list_extend(cmd, { '--hidden', '--glob', '!.git/*' })
+      end
+
       if local_opts.ignored then table.insert(cmd, '--no-ignore') end
 
       local case = vim.o.ignorecase and (vim.o.smartcase and 'smart-case' or 'ignore-case') or 'case-sensitive'
       table.insert(cmd, '--' .. case)
 
       for _, g in ipairs(user_globs) do
-        table.insert(cmd, '--glob')
-        table.insert(cmd, g)
+        vim.list_extend(cmd, { '--glob', g })
       end
 
       vim.list_extend(cmd, { '--', pattern })
@@ -645,49 +653,54 @@ later(function()
     })
   end
 
-  MiniPick.registry.lsp_jump = function(local_opts, opts)
+  MiniPick.registry.lsp_jump = function(local_opts)
     local_opts = local_opts or {}
-    local scope = local_opts.scope or 'definition'
+    local scope = local_opts.scope
+
+    if not scope then
+      vim.notify('lsp_jump: scope is required', vim.log.levels.ERROR)
+      return
+    end
+
+    if not vim.tbl_contains({ 'declaration', 'definition', 'type_definition' }, scope) then
+      vim.notify('lsp_jump: invalid scope: ' .. scope, vim.log.levels.ERROR)
+      return
+    end
+
+    -- Capture before request
+    local bufnr = vim.api.nvim_get_current_buf()
+    local win = vim.api.nvim_get_current_win()
+    local from = vim.fn.getpos('.')
+    from[1] = bufnr
+    local tagname = vim.fn.expand('<cword>')
 
     local function jump_to_item(item)
-      local bufnr = item.bufnr
-      if not (bufnr and vim.api.nvim_buf_is_valid(bufnr)) then
-        bufnr = vim.fn.bufadd(item.filename)
+      local b = item.bufnr
+      if not (b and vim.api.nvim_buf_is_valid(b)) then
+        b = vim.fn.bufadd(item.filename)
       end
 
-      local from = { vim.fn.bufnr('%'), vim.fn.line('.'), vim.fn.col('.'), 0 }
-      local tagname = vim.fn.expand('<cword>')
-      vim.fn.settagstack(vim.fn.win_getid(0), { items = { { tagname = tagname, from = from } } }, 't')
-
       vim.cmd("normal! m'")
+      vim.fn.settagstack(vim.fn.win_getid(win), { items = { { tagname = tagname, from = from } } }, 't')
 
-      vim.api.nvim_set_current_buf(bufnr)
+      vim.bo[b].buflisted = true
+      vim.api.nvim_set_current_buf(b)
       vim.api.nvim_win_set_cursor(0, { item.lnum, item.col - 1 })
       vim.cmd('normal! zv')
     end
 
     local on_list = function(options)
       local items = options.items or {}
-      if #items == 1 then
+      if #items == 0 then
+        vim.notify('No locations found', vim.log.levels.INFO)
+      elseif #items == 1 then
         jump_to_item(items[1])
       else
-        MiniExtra.pickers.lsp(local_opts, opts)
+        MiniExtra.pickers.lsp(local_opts)
       end
     end
 
-    if scope == 'references' then
-      vim.lsp.buf.references(nil, { on_list = on_list })
-    elseif scope == 'workspace_symbol' then
-      vim.lsp.buf.workspace_symbol(local_opts.symbol_query or '', { on_list = on_list })
-    elseif vim.tbl_contains({ 'declaration', 'definition', 'implementation', 'type_definition', 'document_symbol' }, scope) then
-      if vim.lsp.buf[scope] then
-        vim.lsp.buf[scope]({ on_list = on_list })
-      else
-        vim.notify('LSP method not supported: ' .. scope, vim.log.levels.ERROR)
-      end
-    else
-      MiniExtra.pickers.lsp(local_opts, opts)
-    end
+    vim.lsp.buf[scope]({ on_list = on_list })
   end
 end)
 

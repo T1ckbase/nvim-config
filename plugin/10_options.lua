@@ -42,7 +42,7 @@ vim.opt.fillchars = {
   foldopen = '󰅀',
   foldclose = '󰅂',
   -- foldsep = ' ',
-  diff = ' ',
+  diff = '╱',
   eob = ' ', -- disable `~` on nonexistent lines
 }
 vim.opt.foldcolumn = '1'
