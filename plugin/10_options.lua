@@ -60,6 +60,7 @@ vim.opt.infercase = true
 vim.opt.jumpoptions = { 'stack', 'view', 'clean' }
 vim.opt.laststatus = 3
 vim.opt.mouse = 'a'
+vim.opt.mousemoveevent = true
 vim.opt.number = true
 vim.opt.numberwidth = 1
 vim.opt.path = '.,,**'
