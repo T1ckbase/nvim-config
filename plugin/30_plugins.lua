@@ -870,3 +870,27 @@ later(function()
     start_in_insert = true,
   })
 end)
+
+later(function()
+  add({
+    name = 'mini-files-git-status',
+    checkout = 'HEAD'
+  })
+
+  local mfgs = require('t1ckbase.mini-files-git-status')
+  mfgs.setup({
+    display_mode = 'virt_text',
+    status_map = {
+      ['--'] = { icon = '' },
+      ['-N'] = { hl = 'NeoTreeGitAdded' },
+      ['-M'] = { hl = 'NeoTreeGitModified' },
+      ['-D'] = { hl = 'NeoTreeGitDeleted' },
+      ['-R'] = { hl = 'NeoTreeGitRenamed' },
+      ['-T'] = { hl = 'NeoTreeGitModified' },
+      ['-I'] = { hl = 'NeoTreeGitIgnored' },
+      ['-U'] = { hl = 'NeoTreeGitConflict' },
+    }
+  })
+
+  mfgs.update_cache(vim.fn.getcwd())
+end)
