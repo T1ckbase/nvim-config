@@ -617,14 +617,17 @@ later(function()
     end
 
     local set_items_opts = { do_match = false, querytick = MiniPick.get_querytick() }
-    local process
+    local sys = { kill = function() end }
     local match = function(_, _, query)
-      if process then pcall(vim.loop.process_kill, process) end
+      sys:kill()
       if MiniPick.get_querytick() == set_items_opts.querytick then return end
-      if #query == 0 then return MiniPick.set_picker_items({}, set_items_opts) end
+      if #query == 0 then
+        sys = { kill = function() end }
+        return MiniPick.set_picker_items({}, set_items_opts)
+      end
 
       set_items_opts.querytick = MiniPick.get_querytick()
-      process = MiniPick.set_picker_items_from_cli(build_rg_command(table.concat(query)), {
+      sys = MiniPick.set_picker_items_from_cli(build_rg_command(table.concat(query)), {
         set_items_opts = set_items_opts,
         spawn_opts = { cwd = MiniPick.get_picker_opts().source.cwd }
       })
