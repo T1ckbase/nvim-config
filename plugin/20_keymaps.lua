@@ -72,6 +72,7 @@ vim.keymap.set('n', '<leader>fr', function() MiniExtra.pickers.registers() end, 
 vim.keymap.set('n', '<leader>ft', function() MiniExtra.pickers.colorschemes() end, { desc = 'Find themes' })
 vim.keymap.set('n', '<leader>fw', function() MiniPick.registry.grep_live({ hidden = true }) end, { desc = 'Find words' })
 vim.keymap.set('n', '<leader>fW', function() MiniPick.registry.grep_live({ hidden = true, ignored = true }) end, { desc = 'Find all words' })
+vim.keymap.set('n', '<leader><space>', function() MiniPick.builtin.resume() end, { desc = 'Resume picker' })
 
 vim.keymap.set('n', '<leader>lD', function() MiniExtra.pickers.diagnostic() end, { desc = 'Search diagnostic' })
 

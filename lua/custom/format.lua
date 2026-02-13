@@ -11,6 +11,7 @@ M.priority = {
   'cssls',
   'jsonls',
   'markdown',
+  'clangd',
   'astro',
   'svelte',
   'nushell',
