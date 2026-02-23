@@ -3,6 +3,8 @@ local M = {}
 ---@type string[]
 M.priority = {
   'biome',
+  'oxfmt',
+  'oxlint',
   'denols',
   'tsgo',
   'vtsls',
