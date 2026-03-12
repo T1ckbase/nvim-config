@@ -167,6 +167,7 @@ now_if_args(function()
       'typescript',
       'vim',
       'vimdoc',
+      'wgsl',
       'yaml',
       'zig',
     },
