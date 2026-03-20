@@ -853,7 +853,11 @@ later(function()
         -- default sorts
         'score',
         'sort_text',
-      }
+      },
+      frecency = {
+        enabled = false
+      },
+      use_proximity = false
     },
     signature = {
       enabled = true,
