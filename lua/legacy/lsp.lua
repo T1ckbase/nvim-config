@@ -20,20 +20,20 @@ vim.lsp.enable({
   'tsgo',
   'ty',
   -- 'vtsls',
-  'zls'
+  'zls',
 })
 
 vim.diagnostic.config({
   -- virtual_text = true,
   virtual_text = {
-    severity = { min = 'INFO' }
+    severity = { min = 'INFO' },
   },
   -- underline = true,
   underline = {
     severity = {
       min = 'HINT',
       max = 'ERROR',
-    }
+    },
   },
   update_in_insert = true,
   severity_sort = true,
@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --     end,
     --   })
     -- end
-  end
+  end,
 })
 
 -- -- https://github.com/AstroNvim/astrocommunity/blob/main/lua/astrocommunity/pack/typescript-all-in-one/init.lua

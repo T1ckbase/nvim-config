@@ -96,8 +96,12 @@ vim.opt.undolevels = 10000
 vim.opt.updatetime = 300
 vim.opt.virtualedit = 'block'
 vim.opt.wildmenu = true
-vim.opt.wildmode = {'longest:full' ,'full'}
-vim.opt.wildoptions = { --[['fuzzy',]] 'pum', 'tagfile' }
+vim.opt.wildmode = { 'longest:full', 'full' }
+vim.opt.wildoptions = {
+  --[['fuzzy',]]
+  'pum',
+  'tagfile',
+}
 vim.opt.winborder = 'none'
 vim.opt.wrap = false
 vim.opt.writebackup = false
@@ -131,14 +135,14 @@ MiniDeps.later(function()
   vim.diagnostic.config({
     -- virtual_text = true,
     virtual_text = {
-      severity = { min = 'INFO' }
+      severity = { min = 'INFO' },
     },
     -- underline = true,
     underline = {
       severity = {
         min = 'HINT',
         max = 'ERROR',
-      }
+      },
     },
     update_in_insert = true,
     severity_sort = true,

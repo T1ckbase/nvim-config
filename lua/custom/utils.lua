@@ -1,6 +1,6 @@
 M = {
   status = {},
-  attached_lsp = {}
+  attached_lsp = {},
 }
 
 M.setup = function()
@@ -13,14 +13,18 @@ M.escape = function(s)
 end
 
 M.ensure_kind_map = function()
-  if H.kind_map ~= nil then return end
+  if H.kind_map ~= nil then
+    return
+  end
 
   -- Cache kind map so as to not recompute it each time (as it will be called
   -- in performance sensitive context). Assumes `tweak_lsp_kind()` is called
   -- right after `require('mini.icons').setup()`.
   M.kind_map = {}
   for k, v in pairs(vim.lsp.protocol.CompletionItemKind) do
-    if type(k) == 'string' and type(v) == 'number' then H.kind_map[v] = k end
+    if type(k) == 'string' and type(v) == 'number' then
+      H.kind_map[v] = k
+    end
   end
 end
 
@@ -58,7 +62,9 @@ end
 
 M.status.lsp = function(args)
   local attached = M.attached_lsp[vim.api.nvim_get_current_buf()]
-  if attached == nil then return '' end
+  if attached == nil then
+    return ''
+  end
   if MiniStatusline.is_truncated(args.trunc_width) then
     return MiniStatusline.section_lsp({ icon = args.icon })
   end

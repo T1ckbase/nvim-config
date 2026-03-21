@@ -5,7 +5,11 @@ add({
   source = 'nvim-treesitter/nvim-treesitter',
   checkout = 'master',
   monitor = 'main',
-  hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
+  hooks = {
+    post_checkout = function()
+      vim.cmd('TSUpdate')
+    end,
+  },
 })
 add({
   source = 'nvim-treesitter/nvim-treesitter-textobjects',
@@ -102,7 +106,7 @@ now(function()
           ['io'] = { query = '@loop.inner', desc = 'inside loop' },
           ['aa'] = { query = '@parameter.outer', desc = 'around argument' },
           ['ia'] = { query = '@parameter.inner', desc = 'inside argument' },
-        }
+        },
       },
       move = {
         enable = true,
@@ -162,7 +166,6 @@ now(function()
   })
 end)
 
-
 now(function()
   require('mini.icons').setup({
     lsp = {
@@ -200,7 +203,7 @@ now(function()
       unit = { glyph = '' },
       value = { glyph = '' },
       variable = { glyph = '' },
-    }
+    },
   })
   -- later(MiniIcons.tweak_lsp_kind)
 end)
@@ -211,7 +214,7 @@ now(function()
       b = false,
       f = false,
       a = false,
-      ['?'] = false
+      ['?'] = false,
     },
     mappings = {
       around_next = '',
@@ -222,7 +225,7 @@ now(function()
       -- goto_right  = '',
     },
     n_lines = 69,
-    silent = true
+    silent = true,
   })
 end)
 
@@ -282,9 +285,9 @@ now(function()
     },
     window = {
       config = {
-        width = 42
-      }
-    }
+        width = 42,
+      },
+    },
   })
 end)
 
@@ -312,7 +315,7 @@ end)
 
 now(function()
   require('mini.cursorword').setup({
-    delay = 0
+    delay = 0,
   })
 end)
 
@@ -347,14 +350,14 @@ end)
 now(function()
   require('mini.files').setup({
     mappings = {
-      go_in_plus = '<CR>'
+      go_in_plus = '<CR>',
     },
     options = {
       use_as_default_explorer = true,
     },
     windows = {
-      preview = true
-    }
+      preview = true,
+    },
   })
 end)
 
@@ -367,21 +370,23 @@ now(function()
     draw = {
       delay = 0,
       animation = require('mini.indentscope').gen_animation.none(),
-      predicate = function(scope) return scope.border.indent > 1 end
+      predicate = function(scope)
+        return scope.border.indent > 1
+      end,
     },
-    symbol = '▏'
+    symbol = '▏',
   })
 end)
 
 now(function()
   require('mini.jump2d').setup({
     view = {
-      dim = true
+      dim = true,
     },
     allowed_windows = {
       not_current = false,
     },
-    silent = true
+    silent = true,
   })
 end)
 
@@ -389,7 +394,9 @@ now(function()
   require('mini.keymap').setup()
   local notify_many_keys = function(key)
     local lhs = string.rep(key, 5)
-    local action = function() vim.notify('Too many ' .. key) end
+    local action = function()
+      vim.notify('Too many ' .. key)
+    end
     MiniKeymap.map_combo({ 'n', 'x' }, lhs, action)
   end
   notify_many_keys('h')
@@ -427,7 +434,7 @@ now(function()
         neigh_pattern = '[^%w\\][^%w\\]',
         register = { cr = false },
       },
-    }
+    },
   })
 end)
 
@@ -438,7 +445,9 @@ end)
 
 now(function()
   require('mini.sessions').setup()
-  vim.api.nvim_create_user_command('SaveSession', function() MiniSessions.write(vim.fn.getcwd():gsub('[\\/:]', '%%') .. '.vim', { force = true }) end, {})
+  vim.api.nvim_create_user_command('SaveSession', function()
+    MiniSessions.write(vim.fn.getcwd():gsub('[\\/:]', '%%') .. '.vim', { force = true })
+  end, {})
 end)
 
 now(function()
@@ -453,7 +462,11 @@ now(function()
         local git = MiniStatusline.section_git({ trunc_width = 40 })
         local diff = MiniStatusline.section_diff({ trunc_width = 75 })
         local filename = [[%{substitute(fnamemodify(expand('%'),':~:.'),'\\','/','g')}%m%r]] -- MiniStatusline.section_filename({ trunc_width = 140 })
-        local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75, icon = '', signs = { ERROR = '󰅚 ', WARN = '󰀪 ', INFO = '󰋽 ', HINT = '󰌶 ' } })
+        local diagnostics = MiniStatusline.section_diagnostics({
+          trunc_width = 75,
+          icon = '',
+          signs = { ERROR = '󰅚 ', WARN = '󰀪 ', INFO = '󰋽 ', HINT = '󰌶 ' },
+        })
         local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
         local lsp = utils.status.lsp({ trunc_width = 100 }) -- MiniStatusline.section_lsp({ trunc_width = 75 })
         local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
@@ -462,18 +475,18 @@ now(function()
         local percentage = '%P'
 
         return MiniStatusline.combine_groups({
-          { hl = mode_hl,                 strings = { mode, macro_recording } },
+          { hl = mode_hl, strings = { mode, macro_recording } },
           { hl = 'MiniStatuslineDevinfo', strings = { git, diff } },
           '%<',
           { hl = 'MiniStatuslineFilename', strings = { filename } },
-          { hl = 'MiniStatuslineDevinfo',  strings = { diagnostics } },
+          { hl = 'MiniStatuslineDevinfo', strings = { diagnostics } },
           '%=',
-          { hl = 'MiniStatuslineDevinfo',  strings = { search } },
+          { hl = 'MiniStatuslineDevinfo', strings = { search } },
           '%=',
-          { hl = 'MiniStatuslineDevinfo',  strings = { lsp } },
+          { hl = 'MiniStatuslineDevinfo', strings = { lsp } },
           { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
-          { hl = 'MiniStatuslineDevinfo',  strings = { treesitter } },
-          { hl = mode_hl,                  strings = { location, percentage } },
+          { hl = 'MiniStatuslineDevinfo', strings = { treesitter } },
+          { hl = mode_hl, strings = { location, percentage } },
         })
       end,
     },
@@ -482,7 +495,7 @@ end)
 
 now(function()
   require('mini.surround').setup({
-    silent = true
+    silent = true,
   })
 end)
 
@@ -507,8 +520,6 @@ now(function()
   })
 end)
 
-
-
 later(function()
   local gen_loader = require('mini.snippets').gen_loader
   require('mini.snippets').setup({
@@ -521,7 +532,7 @@ later(function()
           typescriptreact = { 'typescript.json' },
           tsx = { 'typescript.json' },
           markdown_inline = { 'markdown.json' },
-        }
+        },
       }),
     },
     mappings = {
@@ -533,8 +544,8 @@ later(function()
     expand = {
       insert = function(snippet, _)
         vim.snippet.expand(snippet.body)
-      end
-    }
+      end,
+    },
   })
   -- MiniSnippets.start_lsp_server()
 end)
@@ -555,7 +566,7 @@ later(function()
           end
         end,
         'snippet_forward',
-        'fallback'
+        'fallback',
       },
       ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
       ['<Up>'] = { 'select_prev', 'fallback' },
@@ -567,7 +578,7 @@ later(function()
       ['<C-s>'] = { 'show_signature', 'hide_signature', 'fallback' },
     },
     appearance = {
-      nerd_font_variant = 'normal'
+      nerd_font_variant = 'normal',
     },
     completion = {
       list = { selection = { preselect = true, auto_insert = false } },
@@ -575,7 +586,9 @@ later(function()
         prefetch_on_insert = false,
       },
       menu = {
-        auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,
+        auto_show = function(ctx)
+          return ctx.mode ~= 'cmdline'
+        end,
         max_height = 12,
         scrollbar = true,
         winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None',
@@ -596,7 +609,7 @@ later(function()
                 local _, hl, _ = MiniIcons.get('lsp', ctx.kind)
                 return hl
               end,
-            }
+            },
           },
         },
       },
@@ -627,7 +640,7 @@ later(function()
         -- default sorts
         'score',
         'sort_text',
-      }
+      },
     },
     signature = {
       enabled = true,
@@ -635,7 +648,7 @@ later(function()
         border = 'single',
         show_documentation = true,
         winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder',
-      }
-    }
+      },
+    },
   })
 end)

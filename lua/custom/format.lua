@@ -52,8 +52,12 @@ function M.format(opts)
     local index_b = math.huge
 
     for i, name in ipairs(M.priority) do
-      if a.name == name then index_a = i end
-      if b.name == name then index_b = i end
+      if a.name == name then
+        index_a = i
+      end
+      if b.name == name then
+        index_b = i
+      end
     end
 
     if index_a ~= index_b then
