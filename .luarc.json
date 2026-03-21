@@ -1,6 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
-  "runtime.version": "LuaJIT",
+  "runtime": {
+    "version": "LuaJIT",
+    "path": [
+      "lua/?.lua",
+      "lua/?/init.lua"
+    ]
+  },
   "format": {
     "enable": true,
     "defaultConfig": {
@@ -11,7 +17,11 @@
     }
   },
   "workspace": {
-    "library": ["$VIMRUNTIME/lua", "~/AppData/Local/nvim/lua", "~/AppData/Local/nvim-data/site/pack/deps", "${3rd}/luv/library"],
+    "library": [
+      "$VIMRUNTIME/lua",
+      "~/AppData/Local/nvim-data/site/pack/deps",
+      "${3rd}/luv/library"
+    ],
     "checkThirdParty": false
   }
 }
