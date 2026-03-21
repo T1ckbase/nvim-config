@@ -301,7 +301,7 @@ now_if_args(function()
     -- 'pyright',
     'ruff',
     'rust_analyzer',
-    -- 'stylua',
+    'stylua',
     'svelte',
     -- 'tsgo',
     'ty',
@@ -882,6 +882,7 @@ later(function()
     open_mapping = [[<M-i>]],
     direction = 'tab',
     start_in_insert = true,
+    shell = 'nu'
   })
 end)
 

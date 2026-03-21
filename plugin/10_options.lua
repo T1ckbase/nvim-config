@@ -22,7 +22,7 @@ vim.g.netrw_winsize = 16
 
 vim.opt.autoindent = true
 vim.opt.background = 'dark'
-vim.opt.backspace = { 'indent', 'eol', 'start', 'nostop' } -- don't stop backspace at insert
+vim.opt.backspace = { 'indent', 'eol', 'start', 'nostop' }
 vim.opt.backup = false
 vim.opt.breakindent = true
 vim.opt.clipboard = 'unnamedplus' -- Sync with system clipboard
@@ -96,23 +96,36 @@ vim.opt.undolevels = 10000
 vim.opt.updatetime = 300
 vim.opt.virtualedit = 'block'
 vim.opt.wildmenu = true
-vim.opt.wildmode = 'longest:full,full'
+vim.opt.wildmode = {'longest:full' ,'full'}
 vim.opt.wildoptions = { --[['fuzzy',]] 'pum', 'tagfile' }
 vim.opt.winborder = 'none'
 vim.opt.wrap = false
 vim.opt.writebackup = false
 
-if vim.fn.executable('nu') == 1 then
-  vim.opt.shell = 'nu'
-  vim.opt.shellcmdflag = '--stdin --no-newline -c'
-  vim.opt.shellpipe = '| complete | update stderr { ansi strip } | tee { get stderr | save --force --raw %s } | into record'
-  vim.opt.shellquote = ''
-  vim.opt.shellredir = 'out+err> %s'
-  vim.opt.shellslash = true
-  vim.opt.shelltemp = false
-  vim.opt.shellxescape = ''
-  vim.opt.shellxquote = ''
-end
+-- https://github.com/neovim/neovim/issues/28384
+-- if vim.fn.executable('nu') == 1 then
+--   vim.opt.shell = 'nu'
+--   vim.opt.shellcmdflag = '--stdin --no-newline -c'
+--   vim.opt.shellpipe = '| complete | update stderr { ansi strip } | tee { get stderr | save --force --raw %s } | into record'
+--   vim.opt.shellquote = ''
+--   vim.opt.shellredir = 'out+err> %s'
+--   vim.opt.shellslash = true
+--   vim.opt.shelltemp = false
+--   vim.opt.shellxescape = ''
+--   vim.opt.shellxquote = ''
+-- end
+-- if vim.fn.executable('C:/Program Files/Git/usr/bin/bash.exe') == 1 then
+--   vim.env.TMP = '/tmp'
+--   vim.opt.shell = '"C:/Program Files/Git/usr/bin/bash.exe"'
+--   vim.opt.shellcmdflag = '-c'
+--   vim.opt.shellpipe = '2>&1 | tee'
+--   vim.opt.shellquote = ''
+--   vim.opt.shellredir = '>%s 2>&1'
+--   vim.opt.shellslash = true
+--   vim.opt.shelltemp = false
+--   vim.opt.shellxescape = ''
+--   vim.opt.shellxquote = ''
+-- end
 
 MiniDeps.later(function()
   vim.diagnostic.config({
