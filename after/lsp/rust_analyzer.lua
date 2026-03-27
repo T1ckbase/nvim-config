@@ -4,9 +4,9 @@ return {
     ['rust-analyzer'] = {
       initialization_options = {
         check = {
-          command = 'clippy'
-        }
-      }
-    }
-  }
+          command = 'clippy',
+        },
+      },
+    },
+  },
 }

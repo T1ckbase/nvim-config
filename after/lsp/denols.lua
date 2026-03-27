@@ -5,8 +5,8 @@ return {
       suggest = {
         imports = {
           hosts = {
-            ['https://deno.land'] = false
-          }
+            ['https://deno.land'] = false,
+          },
         },
       },
     },

@@ -6,9 +6,9 @@ return {
       analysis = {
         diagnosticMode = 'workspace',
         inlayHints = {
-          callArgumentNames = false
-        }
+          callArgumentNames = false,
+        },
       },
     },
-  }
+  },
 }

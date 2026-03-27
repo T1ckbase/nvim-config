@@ -53,7 +53,7 @@ now(function()
       unit = { glyph = '' },
       value = { glyph = '' },
       variable = { glyph = '' },
-    }
+    },
   })
   -- later(MiniIcons.mock_nvim_web_devicons)
   -- later(MiniIcons.tweak_lsp_kind)
@@ -64,9 +64,13 @@ now(function()
   MiniMisc.setup_restore_cursor()
 end)
 
-now(function() require('mini.notify').setup() end)
+now(function()
+  require('mini.notify').setup()
+end)
 
-now(function() require('mini.sessions').setup() end)
+now(function()
+  require('mini.sessions').setup()
+end)
 
 now(function()
   require('mini.statusline').setup({
@@ -80,7 +84,11 @@ now(function()
         local git = MiniStatusline.section_git({ trunc_width = 40 })
         local diff = MiniStatusline.section_diff({ trunc_width = 75, icon = '' })
         local filename = (vim.bo.buftype == 'terminal' and '%t' or "%{expand('%:.')}%m%r") -- MiniStatusline.section_filename({ trunc_width = 140 })
-        local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75, icon = '', signs = { ERROR = '󰅚 ', WARN = '󰀪 ', INFO = '󰋽 ', HINT = '󰌶 ' } })
+        local diagnostics = MiniStatusline.section_diagnostics({
+          trunc_width = 75,
+          icon = '',
+          signs = { ERROR = '󰅚 ', WARN = '󰀪 ', INFO = '󰋽 ', HINT = '󰌶 ' },
+        })
         local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
         local lsp = MiniStatusline.section_lsp({ trunc_width = 75 }) -- utils.status.lsp({ trunc_width = 100 }) -- MiniStatusline.section_lsp({ trunc_width = 75 })
         local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
@@ -88,17 +96,17 @@ now(function()
         local percentage = '%P'
 
         return MiniStatusline.combine_groups({
-          { hl = mode_hl,                 strings = { mode } },
+          { hl = mode_hl, strings = { mode } },
           { hl = 'MiniStatuslineDevinfo', strings = { git, diff } },
           '%<',
           { hl = 'MiniStatuslineFilename', strings = { filename } },
-          { hl = 'MiniStatuslineDevinfo',  strings = { diagnostics } },
+          { hl = 'MiniStatuslineDevinfo', strings = { diagnostics } },
           '%=',
-          { hl = 'MiniStatuslineDevinfo',  strings = { search } },
+          { hl = 'MiniStatuslineDevinfo', strings = { search } },
           '%=',
-          { hl = 'MiniStatuslineDevinfo',  strings = { lsp } },
+          { hl = 'MiniStatuslineDevinfo', strings = { lsp } },
           { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
-          { hl = mode_hl,                  strings = { location, percentage } },
+          { hl = mode_hl, strings = { location, percentage } },
         })
       end,
     },
@@ -112,7 +120,7 @@ now(function()
       local default_formatted = MiniTabline.default_format(buf_id, label)
       return ' ' .. default_formatted .. suffix
     end,
-    tabpage_section = 'right'
+    tabpage_section = 'right',
   })
 end)
 
@@ -121,7 +129,11 @@ now_if_args(function()
     source = 'nvim-treesitter/nvim-treesitter',
     checkout = 'master',
     monitor = 'main',
-    hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
+    hooks = {
+      post_checkout = function()
+        vim.cmd('TSUpdate')
+      end,
+    },
   })
   add({
     source = 'nvim-treesitter/nvim-treesitter-textobjects',
@@ -187,7 +199,7 @@ now_if_args(function()
       additional_vim_regex_highlighting = false,
     },
     indent = {
-      enable = true
+      enable = true,
     },
     textobjects = {
       select = {
@@ -208,7 +220,7 @@ now_if_args(function()
           ['io'] = { query = '@loop.inner', desc = 'inside loop' },
           ['aa'] = { query = '@parameter.outer', desc = 'around argument' },
           ['ia'] = { query = '@parameter.inner', desc = 'inside argument' },
-        }
+        },
       },
       move = {
         enable = true,
@@ -307,7 +319,7 @@ now_if_args(function()
     'ty',
     'vtsls',
     'yamlls',
-    'zls'
+    'zls',
   })
 end)
 
@@ -323,7 +335,7 @@ later(function()
       b = false,
       f = false,
       a = false,
-      ['?'] = false
+      ['?'] = false,
     },
     mappings = {
       around_next = '',
@@ -334,7 +346,7 @@ later(function()
       -- goto_right  = '',
     },
     n_lines = 69,
-    silent = true
+    silent = true,
   })
 end)
 
@@ -352,7 +364,7 @@ later(function()
       { mode = { 'n', 'x' }, keys = '[' },
       { mode = { 'n', 'x' }, keys = ']' },
       -- Built-in completion
-      { mode = 'i',          keys = '<C-x>' },
+      { mode = 'i', keys = '<C-x>' },
       -- `g` key
       { mode = { 'n', 'x' }, keys = 'g' },
       -- Marks
@@ -362,15 +374,15 @@ later(function()
       { mode = { 'n', 'x' }, keys = '"' },
       { mode = { 'i', 'c' }, keys = '<C-r>' },
       -- Window commands
-      { mode = 'n',          keys = '<C-w>' },
+      { mode = 'n', keys = '<C-w>' },
       -- `z` key
       { mode = { 'n', 'x' }, keys = 'z' },
       -- Text objects
       { mode = { 'o', 'x' }, keys = 'a' },
       { mode = { 'o', 'x' }, keys = 'i' },
       -- Swap
-      { mode = 'n',          keys = '>' },
-      { mode = 'n',          keys = '<' },
+      { mode = 'n', keys = '>' },
+      { mode = 'n', keys = '<' },
       -- mini.surround
       { mode = { 'n', 'x' }, keys = 's' },
     },
@@ -386,9 +398,9 @@ later(function()
     },
     window = {
       config = {
-        width = 42
-      }
-    }
+        width = 42,
+      },
+    },
   })
 end)
 
@@ -466,14 +478,14 @@ end)
 later(function()
   require('mini.files').setup({
     mappings = {
-      go_in_plus = '<CR>'
+      go_in_plus = '<CR>',
     },
     options = {
       use_as_default_explorer = false,
     },
     windows = {
-      preview = false
-    }
+      preview = false,
+    },
   })
 
   vim.api.nvim_create_autocmd('User', {
@@ -488,16 +500,20 @@ later(function()
   })
 end)
 
-later(function() require('mini.git').setup() end)
+later(function()
+  require('mini.git').setup()
+end)
 
 later(function()
   require('mini.indentscope').setup({
     draw = {
       delay = 0,
       animation = require('mini.indentscope').gen_animation.none(),
-      predicate = function(scope) return scope.border.indent > 1 end
+      predicate = function(scope)
+        return scope.border.indent > 1
+      end,
     },
-    symbol = '▏'
+    symbol = '▏',
   })
 end)
 
@@ -513,7 +529,9 @@ end)
 --   })
 -- end)
 
-later(function() require('mini.move').setup() end)
+later(function()
+  require('mini.move').setup()
+end)
 
 later(function()
   require('mini.pairs').setup({
@@ -536,14 +554,14 @@ later(function()
         neigh_pattern = '[^%w\\][^%w\\]',
         register = { cr = false },
       },
-    }
+    },
   })
 end)
 
 later(function()
   require('mini.pick').setup({
     options = {
-      use_cache = true
+      use_cache = true,
     },
     window = {
       config = function()
@@ -557,8 +575,8 @@ later(function()
           col = math.floor(0.5 * (vim.o.columns - width)),
           border = 'solid',
         }
-      end
-    }
+      end,
+    },
   })
 
   MiniPick.registry.files = function(local_opts)
@@ -570,23 +588,24 @@ later(function()
       vim.list_extend(command, { '--hidden', '--glob', '!.git/*' })
     end
 
-    if local_opts.ignored then table.insert(command, '--no-ignore') end
+    if local_opts.ignored then
+      table.insert(command, '--no-ignore')
+    end
 
-    return MiniPick.builtin.cli(
-      {
-        command = command
+    return MiniPick.builtin.cli({
+      command = command,
+    }, {
+      source = {
+        name = string.format(
+          'Files (rg%s%s)',
+          local_opts.hidden and ' --hidden' or '',
+          local_opts.ignored and ' --no-ignore' or ''
+        ),
+        show = function(buf_id, items, query)
+          MiniPick.default_show(buf_id, items, query, { show_icons = true })
+        end,
       },
-      {
-        source = {
-          name = string.format('Files (rg%s%s)',
-            local_opts.hidden and ' --hidden' or '',
-            local_opts.ignored and ' --no-ignore' or ''),
-          show = function(buf_id, items, query)
-            MiniPick.default_show(buf_id, items, query, { show_icons = true })
-          end
-        }
-      }
-    )
+    })
   end
 
   MiniPick.registry.grep_live = function(local_opts)
@@ -594,23 +613,32 @@ later(function()
     local user_globs = {}
 
     local get_name = function()
-      local name = string.format('Grep Live (rg%s%s)',
+      local name = string.format(
+        'Grep Live (rg%s%s)',
         local_opts.hidden and ' --hidden' or '',
-        local_opts.ignored and ' --no-ignore' or '')
+        local_opts.ignored and ' --no-ignore' or ''
+      )
       return #user_globs > 0 and (name .. ' | ' .. table.concat(user_globs, ', ')) or name
     end
 
     local build_rg_command = function(pattern)
       local cmd = {
-        'rg', '--column', '--line-number', '--no-heading',
-        '--field-match-separator', '\\x00', '--color=never',
+        'rg',
+        '--column',
+        '--line-number',
+        '--no-heading',
+        '--field-match-separator',
+        '\\x00',
+        '--color=never',
       }
 
       if local_opts.hidden then
         vim.list_extend(cmd, { '--hidden', '--glob', '!.git/*' })
       end
 
-      if local_opts.ignored then table.insert(cmd, '--no-ignore') end
+      if local_opts.ignored then
+        table.insert(cmd, '--no-ignore')
+      end
 
       local case = vim.o.ignorecase and (vim.o.smartcase and 'smart-case' or 'ignore-case') or 'case-sensitive'
       table.insert(cmd, '--' .. case)
@@ -627,7 +655,9 @@ later(function()
     local sys = { kill = function() end }
     local match = function(_, _, query)
       sys:kill()
-      if MiniPick.get_querytick() == set_items_opts.querytick then return end
+      if MiniPick.get_querytick() == set_items_opts.querytick then
+        return
+      end
       if #query == 0 then
         sys = { kill = function() end }
         return MiniPick.set_picker_items({}, set_items_opts)
@@ -636,7 +666,7 @@ later(function()
       set_items_opts.querytick = MiniPick.get_querytick()
       sys = MiniPick.set_picker_items_from_cli(build_rg_command(table.concat(query)), {
         set_items_opts = set_items_opts,
-        spawn_opts = { cwd = MiniPick.get_picker_opts().source.cwd }
+        spawn_opts = { cwd = MiniPick.get_picker_opts().source.cwd },
       })
     end
 
@@ -659,7 +689,7 @@ later(function()
           MiniPick.default_show(buf_id, items, query, { show_icons = true })
         end,
       },
-      mappings = { add_glob = { char = '<C-o>', func = add_glob } }
+      mappings = { add_glob = { char = '<C-o>', func = add_glob } },
     })
   end
 
@@ -727,7 +757,7 @@ later(function()
           typescriptreact = { 'typescript.json' },
           tsx = { 'typescript.json' },
           markdown_inline = { 'markdown.json' },
-        }
+        },
       }),
     },
     mappings = {
@@ -739,15 +769,15 @@ later(function()
     expand = {
       insert = function(snippet, _)
         vim.snippet.expand(snippet.body)
-      end
-    }
+      end,
+    },
   })
   -- MiniSnippets.start_lsp_server()
 end)
 
 later(function()
   require('mini.surround').setup({
-    silent = true
+    silent = true,
   })
 end)
 
@@ -772,7 +802,7 @@ later(function()
           end
         end,
         'snippet_forward',
-        'fallback'
+        'fallback',
       },
       ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
       ['<Up>'] = { 'select_prev', 'fallback' },
@@ -784,7 +814,7 @@ later(function()
       ['<C-s>'] = { 'show_signature', 'hide_signature', 'fallback' },
     },
     appearance = {
-      nerd_font_variant = 'normal'
+      nerd_font_variant = 'normal',
     },
     cmdline = { enabled = false },
     completion = {
@@ -793,14 +823,17 @@ later(function()
         prefetch_on_insert = false,
       },
       menu = {
-        auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,
+        auto_show = function(ctx)
+          return ctx.mode ~= 'cmdline'
+        end,
         auto_show_delay_ms = 0,
         max_height = 12,
         scrollbar = true,
         draw = {
           -- treesitter = { 'lsp' },
           columns = {
-            { 'kind_icon', 'label', 'kind', gap = 1 }, { 'label_description', gap = 1 }
+            { 'kind_icon', 'label', 'kind', gap = 1 },
+            { 'label_description', gap = 1 },
           },
           components = {
             kind_icon = {
@@ -818,7 +851,7 @@ later(function()
                 local _, hl, _ = MiniIcons.get('lsp', ctx.kind)
                 return hl
               end,
-            }
+            },
           },
         },
       },
@@ -829,7 +862,7 @@ later(function()
         auto_show = true,
         auto_show_delay_ms = 0,
         window = {
-          border = 'padded'
+          border = 'padded',
         },
       },
     },
@@ -855,9 +888,9 @@ later(function()
         'sort_text',
       },
       frecency = {
-        enabled = false
+        enabled = false,
       },
-      use_proximity = false
+      use_proximity = false,
     },
     signature = {
       enabled = true,
@@ -870,8 +903,8 @@ later(function()
       window = {
         border = 'solid',
         show_documentation = true,
-      }
-    }
+      },
+    },
   })
 end)
 
@@ -888,7 +921,7 @@ end)
 later(function()
   add({
     name = 'mini-files-git-status',
-    checkout = 'HEAD'
+    checkout = 'HEAD',
   })
 
   local mfgs = require('t1ckbase.mini-files-git-status')
@@ -903,7 +936,7 @@ later(function()
       ['-T'] = { hl = 'NeoTreeGitModified' },
       ['-I'] = { hl = 'NeoTreeGitIgnored' },
       ['-U'] = { hl = 'NeoTreeGitConflict' },
-    }
+    },
   })
 
   mfgs.update_cache(vim.fn.getcwd())

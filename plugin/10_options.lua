@@ -97,7 +97,10 @@ vim.opt.updatetime = 300
 vim.opt.virtualedit = 'block'
 vim.opt.wildmenu = true
 vim.opt.wildmode = 'longest:full,full'
-vim.opt.wildoptions = { --[['fuzzy',]] 'pum', 'tagfile' }
+vim.opt.wildoptions = { --[['fuzzy',]]
+  'pum',
+  'tagfile',
+}
 vim.opt.winborder = 'none'
 vim.opt.wrap = false
 vim.opt.writebackup = false
@@ -105,7 +108,8 @@ vim.opt.writebackup = false
 if vim.fn.executable('nu') == 1 then
   vim.opt.shell = 'nu'
   vim.opt.shellcmdflag = '--stdin --no-newline -c'
-  vim.opt.shellpipe = '| complete | update stderr { ansi strip } | tee { get stderr | save --force --raw %s } | into record'
+  vim.opt.shellpipe =
+    '| complete | update stderr { ansi strip } | tee { get stderr | save --force --raw %s } | into record'
   vim.opt.shellquote = ''
   vim.opt.shellredir = 'out+err> %s'
   vim.opt.shellslash = true
@@ -118,14 +122,14 @@ MiniDeps.later(function()
   vim.diagnostic.config({
     -- virtual_text = true,
     virtual_text = {
-      severity = { min = 'INFO' }
+      severity = { min = 'INFO' },
     },
     -- underline = true,
     underline = {
       severity = {
         min = 'HINT',
         max = 'ERROR',
-      }
+      },
     },
     update_in_insert = true,
     severity_sort = true,
