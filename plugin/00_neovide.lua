@@ -2,7 +2,7 @@ if not vim.g.neovide then
   return
 end
 
-vim.opt.guifont = 'JetBrainsMonoNL Nerd Font,Cascadia Mono,Symbols Nerd Font:h11:#e-subpixelantialias'
+vim.opt.guifont = 'JetBrainsMonoNL Nerd Font,Cascadia Mono,Symbols Nerd Font:h11'
 vim.opt.linespace = 0
 
 vim.g.neovide_scale_factor = 1.0
@@ -32,18 +32,8 @@ vim.keymap.set('', '<F11>', function()
 end, { desc = 'Toggle Fullscreen' })
 
 vim.keymap.set('', '<C-F5>', function()
-  local id = vim.api.nvim_create_autocmd('VimLeavePre', {
-    group = vim.api.nvim_create_augroup('NeovideRestart', {}),
-    pattern = '*',
-    callback = function()
-      vim.system({ 'neovide' }, { detach = true })
-    end,
-  })
-
-  vim.cmd('qa')
-
-  vim.api.nvim_del_autocmd(id)
-end, { desc = 'Restart Neovide' })
+  vim.cmd('restart')
+end, { desc = 'Restart' })
 
 -- https://github.com/neovide/neovide/issues/1771
 vim.api.nvim_create_autocmd('BufLeave', {

@@ -1,11 +1,3 @@
--- disable
--- vim.g.loaded_gzip = 1
--- vim.g.loaded_netrw = 1
--- vim.g.loaded_netrwPlugin = 1
--- vim.g.loaded_tarPlugin = 1
--- vim.g.loaded_tohtml = 1
--- vim.g.loaded_zipPlugin = 1
-
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python_provider = 0
@@ -22,7 +14,7 @@ vim.g.netrw_winsize = 16
 
 vim.opt.autoindent = true
 vim.opt.background = 'dark'
-vim.opt.backspace = { 'indent', 'eol', 'start', 'nostop' } -- don't stop backspace at insert
+vim.opt.backspace = { 'indent', 'eol', 'start', 'nostop' }
 vim.opt.backup = false
 vim.opt.breakindent = true
 vim.opt.clipboard = 'unnamedplus' -- Sync with system clipboard
@@ -41,15 +33,14 @@ vim.opt.fillchars = {
   -- fold = '·',
   foldopen = '󰅀',
   foldclose = '󰅂',
-  -- foldsep = ' ',
+  foldsep = ' ',
+  foldinner = ' ',
   diff = ' ',
   eob = ' ', -- disable `~` on nonexistent lines
 }
 vim.opt.foldcolumn = '1'
 vim.opt.foldenable = true
-vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.opt.foldlevel = 99
-vim.opt.foldmethod = 'expr'
 vim.opt.foldtext = ''
 vim.opt.guicursor = 'n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20'
 vim.opt.hlsearch = true
@@ -82,7 +73,7 @@ vim.opt.softtabstop = -1
 vim.opt.splitbelow = true
 vim.opt.splitkeep = 'screen'
 vim.opt.splitright = true
-vim.opt.statuscolumn = '%s%=%l%{%v:virtnum == 0 && foldlevel(v:lnum) > foldlevel(v:lnum-1) ? "%C" : " "%}' -- '%s%=%l%C'
+vim.opt.statuscolumn = '%s%=%l%C' -- use foldcolumn='1' and fillchars: foldinner=' ' to hide fold level numbers
 vim.opt.swapfile = false
 vim.opt.synmaxcol = 1000
 -- vim.opt.syntax = 'OFF'
@@ -96,29 +87,13 @@ vim.opt.undolevels = 10000
 vim.opt.updatetime = 300
 vim.opt.virtualedit = 'block'
 vim.opt.wildmenu = true
-vim.opt.wildmode = 'longest:full,full'
-vim.opt.wildoptions = { --[['fuzzy',]]
-  'pum',
-  'tagfile',
-}
+vim.opt.wildmode = { 'noselect', 'full' }
+vim.opt.wildoptions = { 'fuzzy', 'pum', 'tagfile' }
 vim.opt.winborder = 'none'
 vim.opt.wrap = false
 vim.opt.writebackup = false
 
-if vim.fn.executable('nu') == 1 then
-  vim.opt.shell = 'nu'
-  vim.opt.shellcmdflag = '--stdin --no-newline -c'
-  vim.opt.shellpipe =
-    '| complete | update stderr { ansi strip } | tee { get stderr | save --force --raw %s } | into record'
-  vim.opt.shellquote = ''
-  vim.opt.shellredir = 'out+err> %s'
-  vim.opt.shellslash = true
-  vim.opt.shelltemp = false
-  vim.opt.shellxescape = ''
-  vim.opt.shellxquote = ''
-end
-
-MiniDeps.later(function()
+require('mini.misc').safely('later', function()
   vim.diagnostic.config({
     -- virtual_text = true,
     virtual_text = {

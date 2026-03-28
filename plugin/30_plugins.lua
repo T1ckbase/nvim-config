@@ -1,11 +1,16 @@
-local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
+local now = function(f)
+  require('mini.misc').safely('now', f)
+end
+local later = function(f)
+  require('mini.misc').safely('later', f)
+end
 local now_if_args = vim.fn.argc(-1) > 0 and now or later
 
 -- local customUtils = require('custom.utils')
 -- customUtils.setup()
 
 now(function()
-  add('sainnhe/gruvbox-material')
+  vim.pack.add({ 'https://github.com/sainnhe/gruvbox-material' })
 
   vim.g.gruvbox_material_foreground = 'mix'
   -- vim.g.gruvbox_material_background = 'hard'
@@ -13,7 +18,12 @@ now(function()
   vim.cmd.colorscheme('gruvbox-material')
 
   vim.api.nvim_set_hl(0, 'CurSearch', { link = 'Search' })
-  vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', { undercurl = true, sp = '#626262' })
+
+  if vim.g.neovide then
+    vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', { undercurl = true, sp = '#626262' })
+  else
+    vim.api.nvim_set_hl(0, 'DiagnosticUnnecessary', { dim = true })
+  end
 end)
 
 now(function()
@@ -125,173 +135,259 @@ now(function()
 end)
 
 now_if_args(function()
-  add({
-    source = 'nvim-treesitter/nvim-treesitter',
-    checkout = 'master',
-    monitor = 'main',
-    hooks = {
-      post_checkout = function()
-        vim.cmd('TSUpdate')
-      end,
-    },
-  })
-  add({
-    source = 'nvim-treesitter/nvim-treesitter-textobjects',
-    checkout = 'master',
-    monitor = 'main',
+  vim.pack.add({
+    'https://github.com/nvim-treesitter/nvim-treesitter',
+    'https://github.com/nvim-treesitter/nvim-treesitter-textobjects',
   })
 
-  require('nvim-treesitter.configs').setup({
-    ensure_installed = {
-      'astro',
-      'c',
-      'cpp',
-      'css',
-      'csv',
-      'diff',
-      'dockerfile',
-      'editorconfig',
-      'git_config',
-      'git_rebase',
-      'gitattributes',
-      'gitcommit',
-      'gitignore',
-      'go',
-      'hlsl',
-      'html',
-      'javascript',
-      'jsdoc',
-      'json',
-      'jsonc',
-      'lua',
-      'markdown',
-      'markdown_inline',
-      'nu',
-      'python',
-      'query',
-      'regex',
-      'rust',
-      'scss',
-      'squirrel',
-      'svelte',
-      'toml',
-      'tsx',
-      'typescript',
-      'vim',
-      'vimdoc',
-      'wgsl',
-      'yaml',
-      'zig',
-    },
-    sync_install = false,
-    auto_install = true,
-    ignore_install = {},
-    highlight = {
-      enable = true,
-      -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-      disable = function(lang, buf)
-        local max_filesize = 10 * 1024 * 1024 -- 10 MB
-        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-        if ok and stats and stats.size > max_filesize then
-          return true
-        end
-      end,
-      additional_vim_regex_highlighting = false,
-    },
-    indent = {
-      enable = true,
-    },
-    textobjects = {
-      select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj
-        keymaps = {
-          ['ak'] = { query = '@block.outer', desc = 'around block' },
-          ['ik'] = { query = '@block.inner', desc = 'inside block' },
-          ['ac'] = { query = '@call.outer', desc = 'around function call' },
-          ['ic'] = { query = '@call.inner', desc = 'inside function call' },
-          ['aC'] = { query = '@class.outer', desc = 'around class' },
-          ['iC'] = { query = '@class.inner', desc = 'inside class' },
-          ['a?'] = { query = '@conditional.outer', desc = 'around conditional' },
-          ['i?'] = { query = '@conditional.inner', desc = 'inside conditional' },
-          ['af'] = { query = '@function.outer', desc = 'around method/function definition' },
-          ['if'] = { query = '@function.inner', desc = 'inside method/function definition' },
-          ['ao'] = { query = '@loop.outer', desc = 'around loop' },
-          ['io'] = { query = '@loop.inner', desc = 'inside loop' },
-          ['aa'] = { query = '@parameter.outer', desc = 'around argument' },
-          ['ia'] = { query = '@parameter.inner', desc = 'inside argument' },
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true,
-        goto_next_start = {
-          [']k'] = { query = '@block.outer', desc = 'Next block start' },
-          [']c'] = { query = '@call.outer', desc = 'Next function call start' },
-          [']s'] = { query = '@class.outer', desc = 'Next class start' },
-          [']?'] = { query = '@conditional.outer', desc = 'Next conditional start' },
-          [']f'] = { query = '@function.outer', desc = 'Next method/function definition start' },
-          [']o'] = { query = '@loop.outer', desc = 'Next loop start' },
-          [']a'] = { query = '@parameter.inner', desc = 'Next argument start' },
-        },
-        goto_next_end = {
-          [']K'] = { query = '@block.outer', desc = 'Next block end' },
-          [']C'] = { query = '@call.outer', desc = 'Next function call end' },
-          [']S'] = { query = '@class.outer', desc = 'Next class end' },
-          [']F'] = { query = '@function.outer', desc = 'Next method/function definition end' },
-          [']O'] = { query = '@loop.outer', desc = 'Next loop end' },
-          [']A'] = { query = '@parameter.inner', desc = 'Next argument end' },
-        },
-        goto_previous_start = {
-          ['[k'] = { query = '@block.outer', desc = 'Previous block start' },
-          ['[c'] = { query = '@call.outer', desc = 'Previous function call start' },
-          ['[s'] = { query = '@class.outer', desc = 'Previous class start' },
-          ['[?'] = { query = '@conditional.outer', desc = 'Previous conditional start' },
-          ['[f'] = { query = '@function.outer', desc = 'Previous method/function definition start' },
-          ['[o'] = { query = '@loop.outer', desc = 'Previous loop start' },
-          ['[a'] = { query = '@parameter.inner', desc = 'Previous argument start' },
-        },
-        goto_previous_end = {
-          ['[K'] = { query = '@block.outer', desc = 'Previous block end' },
-          ['[C'] = { query = '@call.outer', desc = 'Previous function call end' },
-          ['[S'] = { query = '@class.outer', desc = 'Previous class end' },
-          ['[F'] = { query = '@function.outer', desc = 'Previous method/function definition end' },
-          ['[O'] = { query = '@loop.outer', desc = 'Previous loop end' },
-          ['[A'] = { query = '@parameter.inner', desc = 'Previous argument end' },
-        },
-      },
-      swap = {
-        enable = true,
-        swap_next = {
-          ['>K'] = { query = '@block.outer', desc = 'Swap next block' },
-          ['>C'] = { query = '@call.outer', desc = 'Swap next function call' },
-          ['>F'] = { query = '@function.outer', desc = 'Swap next method/function definition' },
-          ['>A'] = { query = '@parameter.inner', desc = 'Swap next argument' },
-        },
-        swap_previous = {
-          ['<K'] = { query = '@block.outer', desc = 'Swap previous block' },
-          ['<C'] = { query = '@call.outer', desc = 'Swap previous function call' },
-          ['<F'] = { query = '@function.outer', desc = 'Swap previous method/function definition' },
-          ['<A'] = { query = '@parameter.inner', desc = 'Swap previous argument' },
-        },
-      },
-    },
-    modules = {},
+  local languages = {
+    'astro',
+    'bash',
+    'c',
+    'cmake',
+    'cpp',
+    'css',
+    'csv',
+    'cuda',
+    'diff',
+    'dockerfile',
+    'editorconfig',
+    'git_config',
+    'git_rebase',
+    'gitattributes',
+    'gitcommit',
+    'gitignore',
+    'glsl',
+    'go',
+    'hlsl',
+    'html',
+    'html_tags',
+    'javascript',
+    'jsdoc',
+    'json',
+    'json5',
+    'jsx',
+    'just',
+    'lua',
+    'luadoc',
+    'make',
+    'markdown',
+    'markdown_inline',
+    'ninja',
+    'nu',
+    'python',
+    'query',
+    'regex',
+    'rust',
+    'scss',
+    'sql',
+    'squirrel',
+    'svelte',
+    'toml',
+    'tsx',
+    'typescript',
+    'vim',
+    'vimdoc',
+    'wgsl',
+    'xml',
+    'yaml',
+    'zig',
+  }
+
+  require('nvim-treesitter').install(languages)
+
+  local filetypes = {}
+  for _, lang in ipairs(languages) do
+    for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
+      table.insert(filetypes, ft)
+    end
+  end
+
+  vim.api.nvim_create_autocmd('FileType', {
+    group = 'custom-config',
+    pattern = filetypes,
+    callback = function(args)
+      local ok, err = pcall(vim.treesitter.start, args.buf)
+
+      if ok then
+        vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.opt_local.foldmethod = 'expr'
+        vim.opt_local.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
+      else
+        vim.notify(('treesitter failed for buffer %d: %s'):format(args.buf, err), vim.log.levels.WARN)
+      end
+    end,
   })
-
-  local ts_repeat_move = require('nvim-treesitter.textobjects.repeatable_move')
-  vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move)
-  vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_opposite)
-  vim.keymap.set({ 'n', 'x', 'o' }, 'f', ts_repeat_move.builtin_f_expr, { expr = true })
-  vim.keymap.set({ 'n', 'x', 'o' }, 'F', ts_repeat_move.builtin_F_expr, { expr = true })
-  vim.keymap.set({ 'n', 'x', 'o' }, 't', ts_repeat_move.builtin_t_expr, { expr = true })
-  vim.keymap.set({ 'n', 'x', 'o' }, 'T', ts_repeat_move.builtin_T_expr, { expr = true })
-
-  vim.filetype.add({ pattern = { ['%.gitconfig%-.*'] = 'gitconfig' } })
 end)
 
+-- now_if_args(function()
+--   add({
+--     source = 'nvim-treesitter/nvim-treesitter',
+--     checkout = 'master',
+--     monitor = 'main',
+--     hooks = {
+--       post_checkout = function()
+--         vim.cmd('TSUpdate')
+--       end,
+--     },
+--   })
+--   add({
+--     source = 'nvim-treesitter/nvim-treesitter-textobjects',
+--     checkout = 'master',
+--     monitor = 'main',
+--   })
+--
+--   require('nvim-treesitter.configs').setup({
+--     ensure_installed = {
+--       'astro',
+--       'c',
+--       'cpp',
+--       'css',
+--       'csv',
+--       'diff',
+--       'dockerfile',
+--       'editorconfig',
+--       'git_config',
+--       'git_rebase',
+--       'gitattributes',
+--       'gitcommit',
+--       'gitignore',
+--       'go',
+--       'hlsl',
+--       'html',
+--       'javascript',
+--       'jsdoc',
+--       'json',
+--       'jsonc',
+--       'lua',
+--       'markdown',
+--       'markdown_inline',
+--       'nu',
+--       'python',
+--       'query',
+--       'regex',
+--       'rust',
+--       'scss',
+--       'squirrel',
+--       'svelte',
+--       'toml',
+--       'tsx',
+--       'typescript',
+--       'vim',
+--       'vimdoc',
+--       'wgsl',
+--       'yaml',
+--       'zig',
+--     },
+--     sync_install = false,
+--     auto_install = true,
+--     ignore_install = {},
+--     highlight = {
+--       enable = true,
+--       -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+--       disable = function(lang, buf)
+--         local max_filesize = 10 * 1024 * 1024 -- 10 MB
+--         local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+--         if ok and stats and stats.size > max_filesize then
+--           return true
+--         end
+--       end,
+--       additional_vim_regex_highlighting = false,
+--     },
+--     indent = {
+--       enable = true,
+--     },
+--     textobjects = {
+--       select = {
+--         enable = true,
+--         lookahead = true, -- Automatically jump forward to textobj
+--         keymaps = {
+--           ['ak'] = { query = '@block.outer', desc = 'around block' },
+--           ['ik'] = { query = '@block.inner', desc = 'inside block' },
+--           ['ac'] = { query = '@call.outer', desc = 'around function call' },
+--           ['ic'] = { query = '@call.inner', desc = 'inside function call' },
+--           ['aC'] = { query = '@class.outer', desc = 'around class' },
+--           ['iC'] = { query = '@class.inner', desc = 'inside class' },
+--           ['a?'] = { query = '@conditional.outer', desc = 'around conditional' },
+--           ['i?'] = { query = '@conditional.inner', desc = 'inside conditional' },
+--           ['af'] = { query = '@function.outer', desc = 'around method/function definition' },
+--           ['if'] = { query = '@function.inner', desc = 'inside method/function definition' },
+--           ['ao'] = { query = '@loop.outer', desc = 'around loop' },
+--           ['io'] = { query = '@loop.inner', desc = 'inside loop' },
+--           ['aa'] = { query = '@parameter.outer', desc = 'around argument' },
+--           ['ia'] = { query = '@parameter.inner', desc = 'inside argument' },
+--         },
+--       },
+--       move = {
+--         enable = true,
+--         set_jumps = true,
+--         goto_next_start = {
+--           [']k'] = { query = '@block.outer', desc = 'Next block start' },
+--           [']c'] = { query = '@call.outer', desc = 'Next function call start' },
+--           [']s'] = { query = '@class.outer', desc = 'Next class start' },
+--           [']?'] = { query = '@conditional.outer', desc = 'Next conditional start' },
+--           [']f'] = { query = '@function.outer', desc = 'Next method/function definition start' },
+--           [']o'] = { query = '@loop.outer', desc = 'Next loop start' },
+--           [']a'] = { query = '@parameter.inner', desc = 'Next argument start' },
+--         },
+--         goto_next_end = {
+--           [']K'] = { query = '@block.outer', desc = 'Next block end' },
+--           [']C'] = { query = '@call.outer', desc = 'Next function call end' },
+--           [']S'] = { query = '@class.outer', desc = 'Next class end' },
+--           [']F'] = { query = '@function.outer', desc = 'Next method/function definition end' },
+--           [']O'] = { query = '@loop.outer', desc = 'Next loop end' },
+--           [']A'] = { query = '@parameter.inner', desc = 'Next argument end' },
+--         },
+--         goto_previous_start = {
+--           ['[k'] = { query = '@block.outer', desc = 'Previous block start' },
+--           ['[c'] = { query = '@call.outer', desc = 'Previous function call start' },
+--           ['[s'] = { query = '@class.outer', desc = 'Previous class start' },
+--           ['[?'] = { query = '@conditional.outer', desc = 'Previous conditional start' },
+--           ['[f'] = { query = '@function.outer', desc = 'Previous method/function definition start' },
+--           ['[o'] = { query = '@loop.outer', desc = 'Previous loop start' },
+--           ['[a'] = { query = '@parameter.inner', desc = 'Previous argument start' },
+--         },
+--         goto_previous_end = {
+--           ['[K'] = { query = '@block.outer', desc = 'Previous block end' },
+--           ['[C'] = { query = '@call.outer', desc = 'Previous function call end' },
+--           ['[S'] = { query = '@class.outer', desc = 'Previous class end' },
+--           ['[F'] = { query = '@function.outer', desc = 'Previous method/function definition end' },
+--           ['[O'] = { query = '@loop.outer', desc = 'Previous loop end' },
+--           ['[A'] = { query = '@parameter.inner', desc = 'Previous argument end' },
+--         },
+--       },
+--       swap = {
+--         enable = true,
+--         swap_next = {
+--           ['>K'] = { query = '@block.outer', desc = 'Swap next block' },
+--           ['>C'] = { query = '@call.outer', desc = 'Swap next function call' },
+--           ['>F'] = { query = '@function.outer', desc = 'Swap next method/function definition' },
+--           ['>A'] = { query = '@parameter.inner', desc = 'Swap next argument' },
+--         },
+--         swap_previous = {
+--           ['<K'] = { query = '@block.outer', desc = 'Swap previous block' },
+--           ['<C'] = { query = '@call.outer', desc = 'Swap previous function call' },
+--           ['<F'] = { query = '@function.outer', desc = 'Swap previous method/function definition' },
+--           ['<A'] = { query = '@parameter.inner', desc = 'Swap previous argument' },
+--         },
+--       },
+--     },
+--     modules = {},
+--   })
+--
+--   local ts_repeat_move = require('nvim-treesitter.textobjects.repeatable_move')
+--   vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move)
+--   vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_opposite)
+--   vim.keymap.set({ 'n', 'x', 'o' }, 'f', ts_repeat_move.builtin_f_expr, { expr = true })
+--   vim.keymap.set({ 'n', 'x', 'o' }, 'F', ts_repeat_move.builtin_F_expr, { expr = true })
+--   vim.keymap.set({ 'n', 'x', 'o' }, 't', ts_repeat_move.builtin_t_expr, { expr = true })
+--   vim.keymap.set({ 'n', 'x', 'o' }, 'T', ts_repeat_move.builtin_T_expr, { expr = true })
+--
+--   vim.filetype.add({ pattern = { ['%.gitconfig%-.*'] = 'gitconfig' } })
+-- end)
+
 now_if_args(function()
-  add('neovim/nvim-lspconfig')
+  vim.pack.add({ 'https://github.com/neovim/nvim-lspconfig' })
 
   vim.lsp.enable({
     'astro',
@@ -313,7 +409,7 @@ now_if_args(function()
     -- 'pyright',
     'ruff',
     'rust_analyzer',
-    -- 'stylua',
+    'stylua',
     'svelte',
     -- 'tsgo',
     'ty',
@@ -321,6 +417,11 @@ now_if_args(function()
     'yamlls',
     'zls',
   })
+end)
+
+now_if_args(function()
+  vim.cmd.packadd('nvim.difftool')
+  vim.cmd.packadd('nvim.undotree')
 end)
 
 -- Step two
@@ -405,18 +506,15 @@ later(function()
 end)
 
 later(function()
-  add('JoosepAlviste/nvim-ts-context-commentstring')
+  vim.pack.add({ 'https://github.com/folke/ts-comments.nvim' })
+
+  require('ts-comments').setup()
 
   require('mini.comment').setup({
-    options = {
-      custom_commentstring = function()
-        return require('ts_context_commentstring').calculate_commentstring() or vim.bo.commentstring
-      end,
-    },
     mappings = {
-      comment = 'gc',
-      comment_line = 'gcc',
-      comment_visual = 'gc',
+      comment = '',
+      comment_line = '',
+      comment_visual = '',
       textobject = 'igc',
     },
   })
@@ -539,19 +637,19 @@ later(function()
       ['"'] = {
         action = 'closeopen',
         pair = '""',
-        neigh_pattern = '[^%w\\][^%w\\]',
+        neigh_pattern = '^[\r%s%(%[%{,][%s\n%)%]%},]',
         register = { cr = false },
       },
       ["'"] = {
         action = 'closeopen',
         pair = "''",
-        neigh_pattern = '[^%w\\][^%w\\]',
+        neigh_pattern = '^[\r%s%(%[%{,][%s\n%)%]%},]',
         register = { cr = false },
       },
       ['`'] = {
         action = 'closeopen',
         pair = '``',
-        neigh_pattern = '[^%w\\][^%w\\]',
+        neigh_pattern = '[^\\][%s\n%)%]%},]',
         register = { cr = false },
       },
     },
@@ -664,6 +762,7 @@ later(function()
       end
 
       set_items_opts.querytick = MiniPick.get_querytick()
+      ---@diagnostic disable-next-line: cast-local-type
       sys = MiniPick.set_picker_items_from_cli(build_rg_command(table.concat(query)), {
         set_items_opts = set_items_opts,
         spawn_opts = { cwd = MiniPick.get_picker_opts().source.cwd },
@@ -745,7 +844,7 @@ later(function()
 end)
 
 later(function()
-  add('T1ckbase/vscode-snippets')
+  vim.pack.add({ 'https://github.com/T1ckbase/vscode-snippets' })
 
   require('mini.snippets').setup({
     snippets = {
@@ -782,9 +881,11 @@ later(function()
 end)
 
 later(function()
-  add({
-    source = 'saghen/blink.cmp',
-    checkout = 'v1.8.0', -- https://github.com/nvim-mini/mini.nvim/discussions/1896
+  vim.pack.add({
+    {
+      src = 'https://github.com/saghen/blink.cmp',
+      version = vim.version.range('^1'),
+    },
   })
 
   require('blink.cmp').setup({
@@ -909,35 +1010,36 @@ later(function()
 end)
 
 later(function()
-  add('akinsho/toggleterm.nvim')
+  vim.pack.add({ 'https://github.com/akinsho/toggleterm.nvim' })
 
   require('toggleterm').setup({
     open_mapping = [[<M-i>]],
     direction = 'tab',
     start_in_insert = true,
+    shell = 'nu',
   })
 end)
 
-later(function()
-  add({
-    name = 'mini-files-git-status',
-    checkout = 'HEAD',
-  })
-
-  local mfgs = require('t1ckbase.mini-files-git-status')
-  mfgs.setup({
-    display_mode = 'virt_text',
-    status_map = {
-      ['--'] = { icon = '' },
-      ['-N'] = { hl = 'NeoTreeGitAdded' },
-      ['-M'] = { hl = 'NeoTreeGitModified' },
-      ['-D'] = { hl = 'NeoTreeGitDeleted' },
-      ['-R'] = { hl = 'NeoTreeGitRenamed' },
-      ['-T'] = { hl = 'NeoTreeGitModified' },
-      ['-I'] = { hl = 'NeoTreeGitIgnored' },
-      ['-U'] = { hl = 'NeoTreeGitConflict' },
-    },
-  })
-
-  mfgs.update_cache(vim.fn.getcwd())
-end)
+-- later(function()
+--   add({
+--     name = 'mini-files-git-status',
+--     checkout = 'HEAD',
+--   })
+--
+--   local mfgs = require('t1ckbase.mini-files-git-status')
+--   mfgs.setup({
+--     display_mode = 'virt_text',
+--     status_map = {
+--       ['--'] = { icon = '' },
+--       ['-N'] = { hl = 'NeoTreeGitAdded' },
+--       ['-M'] = { hl = 'NeoTreeGitModified' },
+--       ['-D'] = { hl = 'NeoTreeGitDeleted' },
+--       ['-R'] = { hl = 'NeoTreeGitRenamed' },
+--       ['-T'] = { hl = 'NeoTreeGitModified' },
+--       ['-I'] = { hl = 'NeoTreeGitIgnored' },
+--       ['-U'] = { hl = 'NeoTreeGitConflict' },
+--     },
+--   })
+--
+--   mfgs.update_cache(vim.fn.getcwd())
+-- end)
