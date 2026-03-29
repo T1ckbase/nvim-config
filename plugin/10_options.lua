@@ -107,17 +107,17 @@ vim.opt.wrap = false
 vim.opt.writebackup = false
 
 -- https://github.com/neovim/neovim/issues/28384
--- if vim.fn.executable('nu') == 1 then
---   vim.opt.shell = 'nu'
---   vim.opt.shellcmdflag = '--stdin --no-newline -c'
---   vim.opt.shellpipe = '| complete | update stderr { ansi strip } | tee { get stderr | save --force --raw %s } | into record'
---   vim.opt.shellquote = ''
---   vim.opt.shellredir = 'out+err> %s'
---   vim.opt.shellslash = true
---   vim.opt.shelltemp = false
---   vim.opt.shellxescape = ''
---   vim.opt.shellxquote = ''
--- end
+if vim.fn.executable('nu') == 1 then
+  vim.opt.shell = 'nu'
+  vim.opt.shellcmdflag = '--stdin --no-newline -c'
+  vim.opt.shellpipe = '| complete | update stderr { ansi strip } | tee { get stderr | save --force --raw %s } | into record'
+  vim.opt.shellquote = ''
+  vim.opt.shellredir = 'out+err> %s'
+  vim.opt.shellslash = true
+  vim.opt.shelltemp = false
+  vim.opt.shellxescape = ''
+  vim.opt.shellxquote = ''
+end
 -- if vim.fn.executable('C:/Program Files/Git/usr/bin/bash.exe') == 1 then
 --   vim.env.TMP = '/tmp'
 --   vim.opt.shell = '"C:/Program Files/Git/usr/bin/bash.exe"'

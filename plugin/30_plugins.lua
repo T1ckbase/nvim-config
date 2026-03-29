@@ -287,7 +287,14 @@ now_if_args(function()
   vim.keymap.set({ 'n', 'x', 'o' }, 't', ts_repeat_move.builtin_t_expr, { expr = true })
   vim.keymap.set({ 'n', 'x', 'o' }, 'T', ts_repeat_move.builtin_T_expr, { expr = true })
 
-  vim.filetype.add({ pattern = { ['%.gitconfig%-.*'] = 'gitconfig' } })
+  vim.filetype.add({
+    extension = {
+      effect = 'hlsl',
+    },
+    pattern = {
+      ['%.gitconfig%-.*'] = 'gitconfig',
+    },
+  })
 end)
 
 now_if_args(function()
@@ -539,19 +546,19 @@ later(function()
       ['"'] = {
         action = 'closeopen',
         pair = '""',
-        neigh_pattern = '[^%w\\][^%w\\]',
+        neigh_pattern = '^[\r%s%(%[%{,][%s\n%)%]%},]',
         register = { cr = false },
       },
       ["'"] = {
         action = 'closeopen',
         pair = "''",
-        neigh_pattern = '[^%w\\][^%w\\]',
+        neigh_pattern = '^[\r%s%(%[%{,][%s\n%)%]%},]',
         register = { cr = false },
       },
       ['`'] = {
         action = 'closeopen',
         pair = '``',
-        neigh_pattern = '[^%w\\][^%w\\]',
+        neigh_pattern = '[^\\][%s\n%)%]%},]',
         register = { cr = false },
       },
     },
