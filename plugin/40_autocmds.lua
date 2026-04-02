@@ -27,18 +27,20 @@ vim.api.nvim_create_autocmd('BufWritePost', {
   end,
 })
 
-vim.api.nvim_create_autocmd('CmdlineChanged', {
-  group = 'custom-config',
-  pattern = { ':' }, -- { ':', '/', '?' },
-  callback = function()
-    vim.fn.wildtrigger()
-  end,
-})
+-- vim.api.nvim_create_autocmd('CmdlineChanged', {
+--   group = 'custom-config',
+--   pattern = ':', -- { ':', '/', '?' },
+--   callback = function()
+--     vim.fn.wildtrigger()
+--   end,
+-- })
 
 vim.api.nvim_create_autocmd('FileType', {
   group = 'custom-config',
   callback = function()
-    vim.opt_local.formatoptions = 'jqlnM'
+    -- vim.opt_local.formatoptions = 'jqlnM'
+    vim.opt_local.formatoptions:remove({ 'c', 'r', 'o' })
+    vim.opt_local.formatoptions:append('M')
   end,
 })
 
@@ -55,34 +57,37 @@ vim.api.nvim_create_autocmd('PackChanged', {
   end,
 })
 
+local format_group = vim.api.nvim_create_augroup('LspFormatOnSave', { clear = false })
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = 'custom-config',
   callback = function(args)
     local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
-    if client:supports_method('textDocument/documentColor') then
-      vim.lsp.document_color.enable(true, { bufnr = args.buf }, { style = 'virtual' })
+    if client.name ~= 'zls' and client.name ~= 'gopls' then
+      return
     end
 
-    if client:supports_method('textDocument/inlineCompletion') then
-      vim.lsp.inline_completion.enable(true, { bufnr = args.buf })
+    if not client:supports_method('textDocument/formatting') then
+      return
     end
 
-    -- if client:supports_method('textDocument/codeLens') then
-    --   vim.lsp.codelens.enable(true, { bufnr = args.buf })
-    -- end
+    vim.api.nvim_clear_autocmds({
+      group = format_group,
+      buffer = args.buf,
+    })
 
-    -- -- format on save
-    -- if not client:supports_method('textDocument/willSaveWaitUntil') and client:supports_method('textDocument/formatting') then
-    --   vim.api.nvim_create_autocmd('BufWritePre', {
-    --     group = vim.api.nvim_create_augroup('LspFormatOnSave', {}),
-    --     buffer = args.buf,
-    --     callback = function()
-    --       if client.name == 'jsonls' then return end
-    --       vim.lsp.buf.format({ async = false, id = args.data.client_id, timeout_ms = 5000 })
-    --     end,
-    --   })
-    -- end
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = format_group,
+      buffer = args.buf,
+      callback = function()
+        vim.lsp.buf.format({
+          async = false,
+          id = client.id,
+          timeout_ms = 5000,
+        })
+      end,
+    })
   end,
 })
 

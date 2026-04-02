@@ -54,7 +54,7 @@ vim.opt.mouse = 'a'
 vim.opt.mousemoveevent = true
 vim.opt.number = true
 vim.opt.numberwidth = 1
-vim.opt.path = '.,,**'
+vim.opt.path = { '.', '', '**' }
 vim.opt.pumheight = 16
 vim.opt.relativenumber = true
 vim.opt.ruler = false
@@ -87,8 +87,8 @@ vim.opt.undolevels = 10000
 vim.opt.updatetime = 300
 vim.opt.virtualedit = 'block'
 vim.opt.wildmenu = true
-vim.opt.wildmode = { 'noselect', 'full' }
-vim.opt.wildoptions = { 'fuzzy', 'pum', 'tagfile' }
+vim.opt.wildmode = { 'longest:full', 'full' } -- { 'noselect', 'full' }
+vim.opt.wildoptions = { 'pum', 'tagfile' } -- { 'fuzzy', 'pum', 'tagfile' }
 vim.opt.winborder = 'none'
 vim.opt.wrap = false
 vim.opt.writebackup = false
@@ -97,13 +97,13 @@ require('mini.misc').safely('later', function()
   vim.diagnostic.config({
     -- virtual_text = true,
     virtual_text = {
-      severity = { min = 'INFO' },
+      severity = { min = vim.diagnostic.severity.INFO },
     },
     -- underline = true,
     underline = {
       severity = {
-        min = 'HINT',
-        max = 'ERROR',
+        min = vim.diagnostic.severity.HINT,
+        max = vim.diagnostic.severity.ERROR,
       },
     },
     update_in_insert = true,
@@ -118,7 +118,7 @@ require('mini.misc').safely('later', function()
     },
     signs = {
       priority = 0,
-      severity = { min = 'INFO' },
+      severity = { min = vim.diagnostic.severity.INFO },
       text = {
         [vim.diagnostic.severity.ERROR] = '󰅚',
         [vim.diagnostic.severity.WARN] = '󰀪',

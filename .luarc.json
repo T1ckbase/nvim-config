@@ -11,8 +11,7 @@
   "workspace": {
     "library": [
       "$VIMRUNTIME/lua",
-      "~/AppData/Local/nvim-data/site/pack/deps",
-      "${3rd}/luv/library"
+      "$LOCALAPPDATA/nvim-data/site/pack/core/opt"
     ],
     "checkThirdParty": false
   }

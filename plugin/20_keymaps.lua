@@ -1,12 +1,12 @@
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
-vim.keymap.set({ 'n', 'i' }, '<M-J>', '<Cmd>copy .<cr>', { desc = 'Copy Line Down' })
-vim.keymap.set({ 'n', 'i' }, '<M-K>', '<Cmd>copy .-1<cr>', { desc = 'Copy Line Up' })
-vim.keymap.set('x', '<M-J>', ":<C-u>'<,'>copy '<-1<cr>gv=gv", { desc = 'Copy Selection Down' })
-vim.keymap.set('x', '<M-K>', ":<C-u>'<,'>copy '><cr>gv=gv", { desc = 'Copy Selection Up' })
+vim.keymap.set({ 'n', 'i' }, '<M-J>', '<Cmd>copy .<CR>', { desc = 'Copy Line Down' })
+vim.keymap.set({ 'n', 'i' }, '<M-K>', '<Cmd>copy .-1<CR>', { desc = 'Copy Line Up' })
+vim.keymap.set('x', '<M-J>', ":<C-u>'<,'>copy '<-1<CR>gv=gv", { desc = 'Copy Selection Down' })
+vim.keymap.set('x', '<M-K>', ":<C-u>'<,'>copy '><CR>gv=gv", { desc = 'Copy Selection Up' })
 
-vim.keymap.set('n', '<C-s>', '<Cmd>w<CR>', { desc = 'Force write', silent = true })
+vim.keymap.set('n', '<C-s>', '<Cmd>w<CR>', { desc = 'Write', silent = true })
 
 vim.keymap.set({ 'i', 'c' }, '<C-v>', '<C-r>+', { desc = 'Paste' })
 
