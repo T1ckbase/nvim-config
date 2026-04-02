@@ -23,13 +23,8 @@ vim.g.neovide_cursor_short_animation_length = 0
 vim.g.neovide_cursor_animate_in_insert_mode = false
 -- vim.g.neovide_cursor_vfx_mode = 'pixiedust'
 
-vim.keymap.set('', '<F10>', function()
-  vim.g.neovide_profiler = not vim.g.neovide_profiler
-end, { desc = 'Toggle Profiler' })
-
-vim.keymap.set('', '<F11>', function()
-  vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
-end, { desc = 'Toggle Fullscreen' })
+vim.keymap.set('', '<F10>', function() vim.g.neovide_profiler = not vim.g.neovide_profiler end, { desc = 'Toggle Profiler' })
+vim.keymap.set('', '<F11>', function() vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen end, { desc = 'Toggle Fullscreen' })
 
 -- https://github.com/neovide/neovide/issues/3196
 -- https://github.com/neovim/neovim/issues/34367
@@ -37,9 +32,7 @@ vim.keymap.set('', '<C-F5>', function()
   local id = vim.api.nvim_create_autocmd('VimLeavePre', {
     group = vim.api.nvim_create_augroup('NeovideRestart', {}),
     pattern = '*',
-    callback = function()
-      vim.system({ 'neovide' }, { detach = true })
-    end,
+    callback = function() vim.system({ 'neovide' }, { detach = true }) end,
   })
 
   vim.cmd('qa')

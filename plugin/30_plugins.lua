@@ -1,9 +1,5 @@
-local now = function(f)
-  require('mini.misc').safely('now', f)
-end
-local later = function(f)
-  require('mini.misc').safely('later', f)
-end
+local now = function(f) require('mini.misc').safely('now', f) end
+local later = function(f) require('mini.misc').safely('later', f) end
 local now_if_args = vim.fn.argc(-1) > 0 and now or later
 
 -- local customUtils = require('custom.utils')
@@ -74,13 +70,9 @@ now(function()
   MiniMisc.setup_restore_cursor()
 end)
 
-now(function()
-  require('mini.notify').setup()
-end)
+now(function() require('mini.notify').setup() end)
 
-now(function()
-  require('mini.sessions').setup()
-end)
+now(function() require('mini.sessions').setup() end)
 
 now(function()
   require('mini.statusline').setup({
@@ -228,189 +220,72 @@ now_if_args(function()
     },
   })
 
-  local ts_select = function(query)
-    require('nvim-treesitter-textobjects.select').select_textobject(query, 'textobjects')
-  end
+  local ts_select = function(query) require('nvim-treesitter-textobjects.select').select_textobject(query, 'textobjects') end
+  local ts_move = function(method, query) require('nvim-treesitter-textobjects.move')[method](query, 'textobjects') end
+  local ts_swap = function(method, query) require('nvim-treesitter-textobjects.swap')[method](query) end
 
-  local ts_move = function(method, query)
-    require('nvim-treesitter-textobjects.move')[method](query, 'textobjects')
-  end
+  vim.keymap.set({ 'x', 'o' }, 'ak', function() ts_select('@block.outer') end, { desc = 'Around block' })
+  vim.keymap.set({ 'x', 'o' }, 'ik', function() ts_select('@block.inner') end, { desc = 'Inside block' })
+  vim.keymap.set({ 'x', 'o' }, 'ac', function() ts_select('@call.outer') end, { desc = 'Around function call' })
+  vim.keymap.set({ 'x', 'o' }, 'ic', function() ts_select('@call.inner') end, { desc = 'Inside function call' })
+  vim.keymap.set({ 'x', 'o' }, 'as', function() ts_select('@class.outer') end, { desc = 'Around class' })
+  vim.keymap.set({ 'x', 'o' }, 'is', function() ts_select('@class.inner') end, { desc = 'Inside class' })
+  vim.keymap.set({ 'x', 'o' }, 'af', function() ts_select('@function.outer') end, { desc = 'Around method/function definition' })
+  vim.keymap.set({ 'x', 'o' }, 'if', function() ts_select('@function.inner') end, { desc = 'Inside method/function definition' })
+  vim.keymap.set({ 'x', 'o' }, 'ao', function() ts_select('@loop.outer') end, { desc = 'Around loop' })
+  vim.keymap.set({ 'x', 'o' }, 'io', function() ts_select('@loop.inner') end, { desc = 'Inside loop' })
+  vim.keymap.set({ 'x', 'o' }, 'aa', function() ts_select('@parameter.outer') end, { desc = 'Around argument' })
+  vim.keymap.set({ 'x', 'o' }, 'ia', function() ts_select('@parameter.inner') end, { desc = 'Inside argument' })
+  vim.keymap.set({ 'x', 'o' }, 'a?', function() ts_select('@conditional.outer') end, { desc = 'Around conditional' })
+  vim.keymap.set({ 'x', 'o' }, 'i?', function() ts_select('@conditional.inner') end, { desc = 'Inside conditional' })
 
-  local ts_swap = function(method, query)
-    require('nvim-treesitter-textobjects.swap')[method](query)
-  end
+  vim.keymap.set({ 'n', 'x', 'o' }, ']k', function() ts_move('goto_next_start', '@block.outer') end, { desc = 'Next block start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']c', function() ts_move('goto_next_start', '@call.outer') end, { desc = 'Next function call start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']s', function() ts_move('goto_next_start', '@class.outer') end, { desc = 'Next class start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']f', function() ts_move('goto_next_start', '@function.outer') end, { desc = 'Next method/function definition start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']o', function() ts_move('goto_next_start', '@loop.outer') end, { desc = 'Next loop start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']a', function() ts_move('goto_next_start', '@parameter.inner') end, { desc = 'Next argument start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']?', function() ts_move('goto_next_start', '@conditional.outer') end, { desc = 'Next conditional start' })
 
-  vim.keymap.set({ 'x', 'o' }, 'ak', function()
-    ts_select('@block.outer')
-  end, { desc = 'Around block' })
-  vim.keymap.set({ 'x', 'o' }, 'ik', function()
-    ts_select('@block.inner')
-  end, { desc = 'Inside block' })
-  vim.keymap.set({ 'x', 'o' }, 'ac', function()
-    ts_select('@call.outer')
-  end, { desc = 'Around function call' })
-  vim.keymap.set({ 'x', 'o' }, 'ic', function()
-    ts_select('@call.inner')
-  end, { desc = 'Inside function call' })
-  vim.keymap.set({ 'x', 'o' }, 'as', function()
-    ts_select('@class.outer')
-  end, { desc = 'Around class' })
-  vim.keymap.set({ 'x', 'o' }, 'is', function()
-    ts_select('@class.inner')
-  end, { desc = 'Inside class' })
-  vim.keymap.set({ 'x', 'o' }, 'af', function()
-    ts_select('@function.outer')
-  end, { desc = 'Around method/function definition' })
-  vim.keymap.set({ 'x', 'o' }, 'if', function()
-    ts_select('@function.inner')
-  end, { desc = 'Inside method/function definition' })
-  vim.keymap.set({ 'x', 'o' }, 'ao', function()
-    ts_select('@loop.outer')
-  end, { desc = 'Around loop' })
-  vim.keymap.set({ 'x', 'o' }, 'io', function()
-    ts_select('@loop.inner')
-  end, { desc = 'Inside loop' })
-  vim.keymap.set({ 'x', 'o' }, 'aa', function()
-    ts_select('@parameter.outer')
-  end, { desc = 'Around argument' })
-  vim.keymap.set({ 'x', 'o' }, 'ia', function()
-    ts_select('@parameter.inner')
-  end, { desc = 'Inside argument' })
-  vim.keymap.set({ 'x', 'o' }, 'a?', function()
-    ts_select('@conditional.outer')
-  end, { desc = 'Around conditional' })
-  vim.keymap.set({ 'x', 'o' }, 'i?', function()
-    ts_select('@conditional.inner')
-  end, { desc = 'Inside conditional' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']K', function() ts_move('goto_next_end', '@block.outer') end, { desc = 'Next block end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']C', function() ts_move('goto_next_end', '@call.outer') end, { desc = 'Next function call end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']S', function() ts_move('goto_next_end', '@class.outer') end, { desc = 'Next class end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']F', function() ts_move('goto_next_end', '@function.outer') end, { desc = 'Next method/function definition end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']O', function() ts_move('goto_next_end', '@loop.outer') end, { desc = 'Next loop end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, ']A', function() ts_move('goto_next_end', '@parameter.inner') end, { desc = 'Next argument end' })
 
-  vim.keymap.set({ 'n', 'x', 'o' }, ']k', function()
-    ts_move('goto_next_start', '@block.outer')
-  end, { desc = 'Next block start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']c', function()
-    ts_move('goto_next_start', '@call.outer')
-  end, { desc = 'Next function call start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']s', function()
-    ts_move('goto_next_start', '@class.outer')
-  end, { desc = 'Next class start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']f', function()
-    ts_move('goto_next_start', '@function.outer')
-  end, { desc = 'Next method/function definition start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']o', function()
-    ts_move('goto_next_start', '@loop.outer')
-  end, { desc = 'Next loop start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']a', function()
-    ts_move('goto_next_start', '@parameter.inner')
-  end, { desc = 'Next argument start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']?', function()
-    ts_move('goto_next_start', '@conditional.outer')
-  end, { desc = 'Next conditional start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[k', function() ts_move('goto_previous_start', '@block.outer') end, { desc = 'Previous block start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[c', function() ts_move('goto_previous_start', '@call.outer') end, { desc = 'Previous function call start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[s', function() ts_move('goto_previous_start', '@class.outer') end, { desc = 'Previous class start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[f', function() ts_move('goto_previous_start', '@function.outer') end, { desc = 'Previous method/function definition start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[o', function() ts_move('goto_previous_start', '@loop.outer') end, { desc = 'Previous loop start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[a', function() ts_move('goto_previous_start', '@parameter.inner') end, { desc = 'Previous argument start' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[?', function() ts_move('goto_previous_start', '@conditional.outer') end, { desc = 'Previous conditional start' })
 
-  vim.keymap.set({ 'n', 'x', 'o' }, ']K', function()
-    ts_move('goto_next_end', '@block.outer')
-  end, { desc = 'Next block end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']C', function()
-    ts_move('goto_next_end', '@call.outer')
-  end, { desc = 'Next function call end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']S', function()
-    ts_move('goto_next_end', '@class.outer')
-  end, { desc = 'Next class end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']F', function()
-    ts_move('goto_next_end', '@function.outer')
-  end, { desc = 'Next method/function definition end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']O', function()
-    ts_move('goto_next_end', '@loop.outer')
-  end, { desc = 'Next loop end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, ']A', function()
-    ts_move('goto_next_end', '@parameter.inner')
-  end, { desc = 'Next argument end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[K', function() ts_move('goto_previous_end', '@block.outer') end, { desc = 'Previous block end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[C', function() ts_move('goto_previous_end', '@call.outer') end, { desc = 'Previous function call end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[S', function() ts_move('goto_previous_end', '@class.outer') end, { desc = 'Previous class end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[F', function() ts_move('goto_previous_end', '@function.outer') end, { desc = 'Previous method/function definition end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[O', function() ts_move('goto_previous_end', '@loop.outer') end, { desc = 'Previous loop end' })
+  vim.keymap.set({ 'n', 'x', 'o' }, '[A', function() ts_move('goto_previous_end', '@parameter.inner') end, { desc = 'Previous argument end' })
 
-  vim.keymap.set({ 'n', 'x', 'o' }, '[k', function()
-    ts_move('goto_previous_start', '@block.outer')
-  end, { desc = 'Previous block start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[c', function()
-    ts_move('goto_previous_start', '@call.outer')
-  end, { desc = 'Previous function call start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[s', function()
-    ts_move('goto_previous_start', '@class.outer')
-  end, { desc = 'Previous class start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[f', function()
-    ts_move('goto_previous_start', '@function.outer')
-  end, { desc = 'Previous method/function definition start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[o', function()
-    ts_move('goto_previous_start', '@loop.outer')
-  end, { desc = 'Previous loop start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[a', function()
-    ts_move('goto_previous_start', '@parameter.inner')
-  end, { desc = 'Previous argument start' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[?', function()
-    ts_move('goto_previous_start', '@conditional.outer')
-  end, { desc = 'Previous conditional start' })
+  vim.keymap.set('n', '>K', function() ts_swap('swap_next', '@block.outer') end, { desc = 'Swap next block' })
+  vim.keymap.set('n', '>C', function() ts_swap('swap_next', '@call.outer') end, { desc = 'Swap next function call' })
+  vim.keymap.set('n', '>S', function() ts_swap('swap_next', '@class.outer') end, { desc = 'Swap next class' })
+  vim.keymap.set('n', '>F', function() ts_swap('swap_next', '@function.outer') end, { desc = 'Swap next method/function definition' })
+  vim.keymap.set('n', '>O', function() ts_swap('swap_next', '@loop.outer') end, { desc = 'Swap next loop' })
+  vim.keymap.set('n', '>A', function() ts_swap('swap_next', '@parameter.inner') end, { desc = 'Swap next argument' })
 
-  vim.keymap.set({ 'n', 'x', 'o' }, '[K', function()
-    ts_move('goto_previous_end', '@block.outer')
-  end, { desc = 'Previous block end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[C', function()
-    ts_move('goto_previous_end', '@call.outer')
-  end, { desc = 'Previous function call end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[S', function()
-    ts_move('goto_previous_end', '@class.outer')
-  end, { desc = 'Previous class end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[F', function()
-    ts_move('goto_previous_end', '@function.outer')
-  end, { desc = 'Previous method/function definition end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[O', function()
-    ts_move('goto_previous_end', '@loop.outer')
-  end, { desc = 'Previous loop end' })
-  vim.keymap.set({ 'n', 'x', 'o' }, '[A', function()
-    ts_move('goto_previous_end', '@parameter.inner')
-  end, { desc = 'Previous argument end' })
-
-  vim.keymap.set('n', '>K', function()
-    ts_swap('swap_next', '@block.outer')
-  end, { desc = 'Swap next block' })
-  vim.keymap.set('n', '>C', function()
-    ts_swap('swap_next', '@call.outer')
-  end, { desc = 'Swap next function call' })
-  vim.keymap.set('n', '>S', function()
-    ts_swap('swap_next', '@class.outer')
-  end, { desc = 'Swap next class' })
-  vim.keymap.set('n', '>F', function()
-    ts_swap('swap_next', '@function.outer')
-  end, { desc = 'Swap next method/function definition' })
-  vim.keymap.set('n', '>O', function()
-    ts_swap('swap_next', '@loop.outer')
-  end, { desc = 'Swap next loop' })
-  vim.keymap.set('n', '>A', function()
-    ts_swap('swap_next', '@parameter.inner')
-  end, { desc = 'Swap next argument' })
-
-  vim.keymap.set('n', '<lt>K', function()
-    ts_swap('swap_previous', '@block.outer')
-  end, { desc = 'Swap previous block' })
-  vim.keymap.set('n', '<lt>C', function()
-    ts_swap('swap_previous', '@call.outer')
-  end, { desc = 'Swap previous function call' })
-  vim.keymap.set('n', '<lt>S', function()
-    ts_swap('swap_previous', '@class.outer')
-  end, { desc = 'Swap previous class' })
-  vim.keymap.set('n', '<lt>F', function()
-    ts_swap('swap_previous', '@function.outer')
-  end, { desc = 'Swap previous method/function definition' })
-  vim.keymap.set('n', '<lt>O', function()
-    ts_swap('swap_previous', '@loop.outer')
-  end, { desc = 'Swap previous loop' })
-  vim.keymap.set('n', '<lt>A', function()
-    ts_swap('swap_previous', '@parameter.inner')
-  end, { desc = 'Swap previous argument' })
+  vim.keymap.set('n', '<lt>K', function() ts_swap('swap_previous', '@block.outer') end, { desc = 'Swap previous block' })
+  vim.keymap.set('n', '<lt>C', function() ts_swap('swap_previous', '@call.outer') end, { desc = 'Swap previous function call' })
+  vim.keymap.set('n', '<lt>S', function() ts_swap('swap_previous', '@class.outer') end, { desc = 'Swap previous class' })
+  vim.keymap.set('n', '<lt>F', function() ts_swap('swap_previous', '@function.outer') end, { desc = 'Swap previous method/function definition' })
+  vim.keymap.set('n', '<lt>O', function() ts_swap('swap_previous', '@loop.outer') end, { desc = 'Swap previous loop' })
+  vim.keymap.set('n', '<lt>A', function() ts_swap('swap_previous', '@parameter.inner') end, { desc = 'Swap previous argument' })
 
   local ts_repeat_move = require('nvim-treesitter-textobjects.repeatable_move')
   vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move, { desc = 'Repeat last move' })
-  vim.keymap.set(
-    { 'n', 'x', 'o' },
-    ',',
-    ts_repeat_move.repeat_last_move_opposite,
-    { desc = 'Repeat last move opposite' }
-  )
+  vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_opposite, { desc = 'Repeat last move opposite' })
   vim.keymap.set({ 'n', 'x', 'o' }, 'f', ts_repeat_move.builtin_f_expr, { expr = true, desc = 'Repeatable f' })
   vim.keymap.set({ 'n', 'x', 'o' }, 'F', ts_repeat_move.builtin_F_expr, { expr = true, desc = 'Repeatable F' })
   vim.keymap.set({ 'n', 'x', 'o' }, 't', ts_repeat_move.builtin_t_expr, { expr = true, desc = 'Repeatable t' })
@@ -459,9 +334,7 @@ later(function()
   vim.cmd.packadd('nvim.undotree')
 end)
 
-later(function()
-  require('mini.extra').setup()
-end)
+later(function() require('mini.extra').setup() end)
 
 later(function()
   require('mini.ai').setup({
@@ -484,9 +357,7 @@ later(function()
   })
 end)
 
-later(function()
-  require('mini.bufremove').setup()
-end)
+later(function() require('mini.bufremove').setup() end)
 
 later(function()
   local miniclue = require('mini.clue')
@@ -600,18 +471,14 @@ later(function()
   })
 end)
 
-later(function()
-  require('mini.git').setup()
-end)
+later(function() require('mini.git').setup() end)
 
 later(function()
   require('mini.indentscope').setup({
     draw = {
       delay = 0,
       animation = require('mini.indentscope').gen_animation.none(),
-      predicate = function(scope)
-        return scope.border.indent > 1
-      end,
+      predicate = function(scope) return scope.border.indent > 1 end,
     },
     symbol = '▏',
   })
@@ -629,34 +496,34 @@ end)
 --   })
 -- end)
 
-later(function()
-  require('mini.move').setup()
-end)
+later(function() require('mini.move').setup() end)
 
-later(function()
-  require('mini.pairs').setup({
-    mappings = {
-      ['"'] = {
-        action = 'closeopen',
-        pair = '""',
-        neigh_pattern = '^[\r%s%(%[%{,][%s\n%)%]%},]',
-        register = { cr = false },
+later(
+  function()
+    require('mini.pairs').setup({
+      mappings = {
+        ['"'] = {
+          action = 'closeopen',
+          pair = '""',
+          neigh_pattern = '^[\r%s%(%[%{,][%s\n%)%]%},]',
+          register = { cr = false },
+        },
+        ["'"] = {
+          action = 'closeopen',
+          pair = "''",
+          neigh_pattern = '^[\r%s%(%[%{,][%s\n%)%]%},]',
+          register = { cr = false },
+        },
+        ['`'] = {
+          action = 'closeopen',
+          pair = '``',
+          neigh_pattern = '[^\\][%s\n%)%]%},]',
+          register = { cr = false },
+        },
       },
-      ["'"] = {
-        action = 'closeopen',
-        pair = "''",
-        neigh_pattern = '^[\r%s%(%[%{,][%s\n%)%]%},]',
-        register = { cr = false },
-      },
-      ['`'] = {
-        action = 'closeopen',
-        pair = '``',
-        neigh_pattern = '[^\\][%s\n%)%]%},]',
-        register = { cr = false },
-      },
-    },
-  })
-end)
+    })
+  end
+)
 
 later(function()
   require('mini.pick').setup({
@@ -696,14 +563,8 @@ later(function()
       command = command,
     }, {
       source = {
-        name = string.format(
-          'Files (fd%s%s)',
-          local_opts.hidden and ' --hidden' or '',
-          local_opts.ignored and ' --no-ignore' or ''
-        ),
-        show = function(buf_id, items, query)
-          MiniPick.default_show(buf_id, items, query, { show_icons = true })
-        end,
+        name = string.format('Files (fd%s%s)', local_opts.hidden and ' --hidden' or '', local_opts.ignored and ' --no-ignore' or ''),
+        show = function(buf_id, items, query) MiniPick.default_show(buf_id, items, query, { show_icons = true }) end,
       },
     })
   end
@@ -713,11 +574,7 @@ later(function()
     local user_globs = {}
 
     local get_name = function()
-      local name = string.format(
-        'Grep Live (rg%s%s)',
-        local_opts.hidden and ' --hidden' or '',
-        local_opts.ignored and ' --no-ignore' or ''
-      )
+      local name = string.format('Grep Live (rg%s%s)', local_opts.hidden and ' --hidden' or '', local_opts.ignored and ' --no-ignore' or '')
       return #user_globs > 0 and (name .. ' | ' .. table.concat(user_globs, ', ')) or name
     end
 
@@ -786,9 +643,7 @@ later(function()
         name = get_name(),
         items = {},
         match = match,
-        show = function(buf_id, items, query)
-          MiniPick.default_show(buf_id, items, query, { show_icons = true })
-        end,
+        show = function(buf_id, items, query) MiniPick.default_show(buf_id, items, query, { show_icons = true }) end,
       },
       mappings = { add_glob = { char = '<C-o>', func = add_glob } },
     })
@@ -868,9 +723,7 @@ later(function()
       stop = '<C-c>',
     },
     expand = {
-      insert = function(snippet, _)
-        vim.snippet.expand(snippet.body)
-      end,
+      insert = function(snippet, _) vim.snippet.expand(snippet.body) end,
     },
   })
   -- MiniSnippets.start_lsp_server()
@@ -926,9 +779,7 @@ later(function()
         prefetch_on_insert = false,
       },
       menu = {
-        auto_show = function(ctx)
-          return ctx.mode ~= 'cmdline'
-        end,
+        auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,
         auto_show_delay_ms = 0,
         max_height = 12,
         scrollbar = true,

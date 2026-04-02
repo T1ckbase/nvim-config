@@ -17,11 +17,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
       local lnum = vim.fn.search([[\s\+$]], 'nw')
 
       if lnum > 0 then
-        vim.notify(
-          ('Trailing whitespace detected on line %d'):format(lnum),
-          vim.log.levels.WARN,
-          { title = 'Save warning' }
-        )
+        vim.notify(('Trailing whitespace detected on line %d'):format(lnum), vim.log.levels.WARN, { title = 'Save warning' })
       end
     end)
   end,
@@ -39,7 +35,7 @@ vim.api.nvim_create_autocmd('FileType', {
   group = 'custom-config',
   callback = function()
     -- vim.opt_local.formatoptions = 'jqlnM'
-    vim.opt_local.formatoptions:remove({ 'c', 'r', 'o' })
+    vim.opt_local.formatoptions:remove({ 't', 'c', 'r', 'o' })
     vim.opt_local.formatoptions:append('M')
   end,
 })
@@ -93,7 +89,5 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = 'custom-config',
-  callback = function()
-    vim.hl.on_yank({ timeout = 80 })
-  end,
+  callback = function() vim.hl.on_yank({ timeout = 80 }) end,
 })

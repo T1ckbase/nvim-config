@@ -3,14 +3,10 @@ M = {
   attached_lsp = {},
 }
 
-M.setup = function()
-  M.create_autocommands()
-end
+M.setup = function() M.create_autocommands() end
 
 ---@param s string
-M.escape = function(s)
-  return (s:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]', '%%%1'))
-end
+M.escape = function(s) return (s:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]', '%%%1')) end
 
 M.ensure_kind_map = function()
   if H.kind_map ~= nil then
@@ -77,14 +73,10 @@ end
 M.create_autocommands = function()
   local gr = vim.api.nvim_create_augroup('custom-utils', {})
 
-  local au = function(event, pattern, callback, desc)
-    vim.api.nvim_create_autocmd(event, { group = gr, pattern = pattern, callback = callback, desc = desc })
-  end
+  local au = function(event, pattern, callback, desc) vim.api.nvim_create_autocmd(event, { group = gr, pattern = pattern, callback = callback, desc = desc }) end
 
   -- Use `schedule_wrap()` because at `LspDetach` server is still present
-  local track_lsp = vim.schedule_wrap(function(data)
-    M.attached_lsp[data.buf] = vim.api.nvim_buf_is_valid(data.buf) and M.get_lsp_client_names(data.buf) or nil
-  end)
+  local track_lsp = vim.schedule_wrap(function(data) M.attached_lsp[data.buf] = vim.api.nvim_buf_is_valid(data.buf) and M.get_lsp_client_names(data.buf) or nil end)
   au({ 'LspAttach', 'LspDetach' }, '*', track_lsp, 'Track LSP clients')
 end
 
