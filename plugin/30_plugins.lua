@@ -551,13 +551,9 @@ later(function()
 
     local command = { 'fd', '--type=f', '--color=never' }
 
-    if local_opts.hidden then
-      vim.list_extend(command, { '--hidden', '--exclude', '.git/*' })
-    end
+    if local_opts.hidden then vim.list_extend(command, { '--hidden', '--exclude', '.git/*' }) end
 
-    if local_opts.ignored then
-      table.insert(command, '--no-ignore')
-    end
+    if local_opts.ignored then table.insert(command, '--no-ignore') end
 
     return MiniPick.builtin.cli({
       command = command,
@@ -589,13 +585,9 @@ later(function()
         '--color=never',
       }
 
-      if local_opts.hidden then
-        vim.list_extend(cmd, { '--hidden', '--glob', '!.git/*' })
-      end
+      if local_opts.hidden then vim.list_extend(cmd, { '--hidden', '--glob', '!.git/*' }) end
 
-      if local_opts.ignored then
-        table.insert(cmd, '--no-ignore')
-      end
+      if local_opts.ignored then table.insert(cmd, '--no-ignore') end
 
       local case = vim.o.ignorecase and (vim.o.smartcase and 'smart-case' or 'ignore-case') or 'case-sensitive'
       table.insert(cmd, '--' .. case)
@@ -612,9 +604,7 @@ later(function()
     local sys = { kill = function() end }
     local match = function(_, _, query)
       sys:kill()
-      if MiniPick.get_querytick() == set_items_opts.querytick then
-        return
-      end
+      if MiniPick.get_querytick() == set_items_opts.querytick then return end
       if #query == 0 then
         sys = { kill = function() end }
         return MiniPick.set_picker_items({}, set_items_opts)
@@ -672,9 +662,7 @@ later(function()
 
     local function jump_to_item(item)
       local b = item.bufnr
-      if not (b and vim.api.nvim_buf_is_valid(b)) then
-        b = vim.fn.bufadd(item.filename)
-      end
+      if not (b and vim.api.nvim_buf_is_valid(b)) then b = vim.fn.bufadd(item.filename) end
 
       vim.cmd("normal! m'")
       vim.fn.settagstack(vim.fn.win_getid(win), { items = { { tagname = tagname, from = from } } }, 't')
@@ -830,9 +818,7 @@ later(function()
       -- This can impact performance, particularly when working with large lists.
       sorts = {
         function(a, b) -- depriority emmet_language_server
-          if (a.client_name == nil or b.client_name == nil) or (a.client_name == b.client_name) then
-            return
-          end
+          if (a.client_name == nil or b.client_name == nil) or (a.client_name == b.client_name) then return end
           return b.client_name == 'emmet_language_server'
         end,
         -- default sorts
@@ -894,3 +880,8 @@ end)
 --
 --   mfgs.update_cache(vim.fn.getcwd())
 -- end)
+
+later(function ()
+  vim.opt.runtimepath:prepend('C:/Users/nah/code/archive/supermaven-language-server')
+  vim.lsp.enable('supermaven')
+end)

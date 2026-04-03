@@ -5,20 +5,14 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     local bufnr = args.buf
 
     -- Skip buffers where this is not useful.
-    if not vim.api.nvim_buf_is_valid(bufnr) then
-      return
-    end
-    if vim.bo[bufnr].buftype ~= '' or vim.bo[bufnr].binary or not vim.bo[bufnr].modifiable then
-      return
-    end
+    if not vim.api.nvim_buf_is_valid(bufnr) then return end
+    if vim.bo[bufnr].buftype ~= '' or vim.bo[bufnr].binary or not vim.bo[bufnr].modifiable then return end
 
     -- Search only until the first match, without moving the cursor.
     vim.api.nvim_buf_call(bufnr, function()
       local lnum = vim.fn.search([[\s\+$]], 'nw')
 
-      if lnum > 0 then
-        vim.notify(('Trailing whitespace detected on line %d'):format(lnum), vim.log.levels.WARN, { title = 'Save warning' })
-      end
+      if lnum > 0 then vim.notify(('Trailing whitespace detected on line %d'):format(lnum), vim.log.levels.WARN, { title = 'Save warning' }) end
     end)
   end,
 })
@@ -47,13 +41,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
-    if client.name ~= 'zls' and client.name ~= 'gopls' then
-      return
-    end
+    if client.name ~= 'zls' and client.name ~= 'gopls' then return end
 
-    if not client:supports_method('textDocument/formatting') then
-      return
-    end
+    if not client:supports_method('textDocument/formatting') then return end
 
     vim.api.nvim_clear_autocmds({
       group = format_group,
@@ -79,9 +69,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
   callback = function(args)
     local name, kind = args.data.spec.name, args.data.kind
     if name == 'nvim-treesitter' and kind == 'update' then
-      if not args.data.active then
-        vim.cmd.packadd('nvim-treesitter')
-      end
+      if not args.data.active then vim.cmd.packadd('nvim-treesitter') end
       vim.cmd('TSUpdate')
     end
   end,

@@ -36,9 +36,7 @@ function M.format(opts)
   -- Filter clients that support formatting
   local formatters = {}
   for _, client in ipairs(clients) do
-    if client:supports_method('textDocument/formatting') then
-      table.insert(formatters, client)
-    end
+    if client:supports_method('textDocument/formatting') then table.insert(formatters, client) end
   end
 
   if #formatters == 0 then
@@ -52,17 +50,11 @@ function M.format(opts)
     local index_b = math.huge
 
     for i, name in ipairs(M.priority) do
-      if a.name == name then
-        index_a = i
-      end
-      if b.name == name then
-        index_b = i
-      end
+      if a.name == name then index_a = i end
+      if b.name == name then index_b = i end
     end
 
-    if index_a ~= index_b then
-      return index_a < index_b
-    end
+    if index_a ~= index_b then return index_a < index_b end
 
     -- If neither is in priority list (or both same priority), sort by ID for stability
     return a.id < b.id
@@ -77,9 +69,7 @@ function M.format(opts)
   -- But standard vim.lsp.buf.format uses all.
   -- Let's stick to "Use ONLY the best one" to avoid conflicts unconditionally.
 
-  if #formatters > 1 then
-    vim.notify('Formatting with: ' .. chosen.name, vim.log.levels.INFO)
-  end
+  if #formatters > 1 then vim.notify('Formatting with: ' .. chosen.name, vim.log.levels.INFO) end
 
   vim.lsp.buf.format({
     bufnr = bufnr,

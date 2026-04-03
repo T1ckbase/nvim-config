@@ -9,18 +9,14 @@ M.setup = function() M.create_autocommands() end
 M.escape = function(s) return (s:gsub('[%-%.%+%[%]%(%)%$%^%%%?%*]', '%%%1')) end
 
 M.ensure_kind_map = function()
-  if H.kind_map ~= nil then
-    return
-  end
+  if H.kind_map ~= nil then return end
 
   -- Cache kind map so as to not recompute it each time (as it will be called
   -- in performance sensitive context). Assumes `tweak_lsp_kind()` is called
   -- right after `require('mini.icons').setup()`.
   M.kind_map = {}
   for k, v in pairs(vim.lsp.protocol.CompletionItemKind) do
-    if type(k) == 'string' and type(v) == 'number' then
-      H.kind_map[v] = k
-    end
+    if type(k) == 'string' and type(v) == 'number' then H.kind_map[v] = k end
   end
 end
 
@@ -38,18 +34,14 @@ end
 ---@param plugin_name string
 M.get_plugin_path = function(plugin_name)
   for _, path in ipairs(vim.api.nvim_list_runtime_paths()) do
-    if string.match(path, M.escape(plugin_name)) then
-      return path
-    end
+    if string.match(path, M.escape(plugin_name)) then return path end
   end
   return nil
 end
 
 M.status.macro_recording = function(args)
   local recording_register = vim.fn.reg_recording()
-  if recording_register == '' then
-    return ''
-  end
+  if recording_register == '' then return '' end
 
   local use_icons = MiniStatusline.config.use_icons
   local icon = args.icon or (use_icons and ' ' or 'recording')
@@ -58,12 +50,8 @@ end
 
 M.status.lsp = function(args)
   local attached = M.attached_lsp[vim.api.nvim_get_current_buf()]
-  if attached == nil then
-    return ''
-  end
-  if MiniStatusline.is_truncated(args.trunc_width) then
-    return MiniStatusline.section_lsp({ icon = args.icon })
-  end
+  if attached == nil then return '' end
+  if MiniStatusline.is_truncated(args.trunc_width) then return MiniStatusline.section_lsp({ icon = args.icon }) end
 
   local use_icons = MiniStatusline.config.use_icons
   local icon = args.icon or (use_icons and '󰰎 ' or 'LSP')

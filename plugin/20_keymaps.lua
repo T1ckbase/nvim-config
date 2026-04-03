@@ -16,6 +16,7 @@ vim.keymap.set('n', '<C-Up>', '"<Cmd>resize +" . v:count1 . "<CR>"', { expr = tr
 vim.keymap.set('n', '<C-Right>', '"<Cmd>vertical resize +" . v:count1 . "<CR>"', { expr = true, replace_keycodes = false, desc = 'Increase window width' })
 
 -- lsp
+vim.keymap.set('i', '<M-l>', function() vim.lsp.inline_completion.get() end, { desc = 'vim.lsp.inline_completion.get()' })
 vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ max_width = 100, max_height = 20, border = 'solid' }) end, { desc = 'vim.lsp.buf.hover()' })
 vim.keymap.set('n', '<leader>ld', function() vim.diagnostic.open_float(nil, { focusable = true, border = 'solid' }) end, { desc = 'Hover diagnostic' })
 vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.code_action, { desc = 'Code Action' })
@@ -54,9 +55,7 @@ vim.keymap.set('n', '<C-w>grt', function()
 end, { desc = 'Go to type_definition in a new vertical split' })
 
 vim.keymap.set('n', '<leader>e', function()
-  if not MiniFiles.close() then
-    MiniFiles.open()
-  end
+  if not MiniFiles.close() then MiniFiles.open() end
 end, { desc = 'Toggle Explorer' })
 
 -- Disable `s` shortcut (use `cl` instead) for safer usage of 'mini.surround'
