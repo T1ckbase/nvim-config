@@ -769,9 +769,6 @@ later(function()
       ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
       ['<C-s>'] = { 'show_signature', 'hide_signature', 'fallback' },
     },
-    appearance = {
-      nerd_font_variant = 'normal',
-    },
     cmdline = { enabled = false },
     completion = {
       list = { selection = { preselect = true, auto_insert = false } },
@@ -786,14 +783,15 @@ later(function()
         draw = {
           -- treesitter = { 'lsp' },
           columns = {
-            { 'kind_icon', 'label', 'kind', gap = 1 },
-            { 'label_description', gap = 1 },
+            { 'kind_icon' },
+            { 'label', 'label_description', gap = 1 },
+            { 'kind' },
           },
           components = {
             kind_icon = {
               text = function(ctx)
                 local kind_icon, _, _ = MiniIcons.get('lsp', ctx.kind)
-                return kind_icon
+                return kind_icon .. ctx.icon_gap
               end,
               highlight = function(ctx)
                 local _, hl, _ = MiniIcons.get('lsp', ctx.kind)
