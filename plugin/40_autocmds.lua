@@ -40,19 +40,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-vim.api.nvim_create_autocmd('PackChanged', {
-  group = 'custom-config',
-  callback = function(args)
-    local name, kind = args.data.spec.name, args.data.kind
-    if name == 'nvim-treesitter' and kind == 'update' then
-      if not args.data.active then
-        vim.cmd.packadd('nvim-treesitter')
-      end
-      vim.cmd('TSUpdate')
-    end
-  end,
-})
-
 local format_group = vim.api.nvim_create_augroup('LspFormatOnSave', { clear = false })
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -87,7 +74,43 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+vim.api.nvim_create_autocmd('PackChanged', {
+  group = 'custom-config',
+  callback = function(args)
+    local name, kind = args.data.spec.name, args.data.kind
+    if name == 'nvim-treesitter' and kind == 'update' then
+      if not args.data.active then
+        vim.cmd.packadd('nvim-treesitter')
+      end
+      vim.cmd('TSUpdate')
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = 'custom-config',
   callback = function() vim.hl.on_yank({ timeout = 80 }) end,
+})
+
+vim.api.nvim_create_autocmd('User', {
+  group = 'custom-config',
+  pattern = 'MiniFilesBufferCreate',
+  callback = function(args)
+    local buf_id = args.data.buf_id
+    vim.keymap.set('n', '<C-s>', function()
+      local entry = MiniFiles.get_fs_entry()
+      if entry ~= nil and entry.fs_type == 'file' then
+        MiniFiles.close()
+        vim.cmd('split ' .. entry.path)
+      end
+    end, { buffer = buf_id, desc = 'Split horizontal' })
+
+    vim.keymap.set('n', '<C-v>', function()
+      local entry = MiniFiles.get_fs_entry()
+      if entry ~= nil and entry.fs_type == 'file' then
+        MiniFiles.close()
+        vim.cmd('vsplit ' .. entry.path)
+      end
+    end, { buffer = buf_id, desc = 'Split vertical' })
+  end,
 })
