@@ -1,28 +1,28 @@
 {
   "plugins": {
     "blink.cmp": {
-      "rev": "451168851e8e2466bc97ee3e026c3dcb9141ce07",
+      "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
     },
     "gruvbox-material": {
-      "rev": "790afe9dd085aa04eccd1da3626c5fa05c620e53",
+      "rev": "11d779b26a9ab2b3db8c22c6ac9fb6e8ed4fea79",
       "src": "https://github.com/sainnhe/gruvbox-material"
     },
     "mini.nvim": {
-      "rev": "d35b6bdac2a6f710afd8afa02a873a9fd0447f61",
+      "rev": "a5fda91040763cf9ad70bdce1c656b0f4ba1d16e",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "97774019cb17697f35872b28bc020a72b4ca1b51",
+      "rev": "b80f82f59544f0770981b5a6c7d129ca276dab36",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
-      "rev": "f059649bc39ab39d55f2a165db752c956897d4fd",
+      "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-textobjects": {
-      "rev": "93d60a475f0b08a8eceb99255863977d3a25f310",
+      "rev": "851e865342e5a4cb1ae23d31caf6e991e1c99f1e",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
     },
     "toggleterm.nvim": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/folke/ts-comments.nvim"
     },
     "vscode-snippets": {
-      "rev": "5365faba370163f3cf18786a88118ccd61164497",
+      "rev": "fa20f7547c4d16b0825a49367e00a448551ad267",
       "src": "https://github.com/T1ckbase/vscode-snippets"
     }
   }
