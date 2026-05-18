@@ -2,9 +2,11 @@
 return {
   settings = {
     ['rust-analyzer'] = {
-      initialization_options = {
-        check = {
-          command = 'clippy',
+      check = { command = 'clippy' },
+      checkOnSave = true,
+      diagnostics = {
+        styleLints = {
+          enable = true,
         },
       },
     },
