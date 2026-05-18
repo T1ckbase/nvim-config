@@ -312,7 +312,6 @@ now_if_args(function()
     'oxfmt',
     'oxlint',
     -- 'pyrefly',
-    -- 'pyright',
     'ruff',
     'rust_analyzer',
     'stylua',
