@@ -1,4 +1,4 @@
-M = {
+local M = {
   status = {},
   attached_lsp = {},
 }

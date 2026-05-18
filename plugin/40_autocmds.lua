@@ -89,7 +89,7 @@ vim.api.nvim_create_autocmd('User', {
       local entry = MiniFiles.get_fs_entry()
       if entry ~= nil and entry.fs_type == 'file' then
         MiniFiles.close()
-        vim.cmd('split ' .. entry.path)
+        vim.cmd.split(entry.path)
       end
     end, { buffer = buf_id, desc = 'Split horizontal' })
 
@@ -97,7 +97,7 @@ vim.api.nvim_create_autocmd('User', {
       local entry = MiniFiles.get_fs_entry()
       if entry ~= nil and entry.fs_type == 'file' then
         MiniFiles.close()
-        vim.cmd('vsplit ' .. entry.path)
+        vim.cmd.vsplit(entry.path)
       end
     end, { buffer = buf_id, desc = 'Split vertical' })
   end,

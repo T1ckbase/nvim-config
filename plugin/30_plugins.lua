@@ -214,6 +214,7 @@ now_if_args(function()
   require('nvim-treesitter-textobjects').setup({
     select = {
       lookahead = true,
+      include_surrounding_whitespace = false,
     },
     move = {
       set_jumps = true,
@@ -880,8 +881,3 @@ end)
 --
 --   mfgs.update_cache(vim.fn.getcwd())
 -- end)
-
-later(function ()
-  vim.opt.runtimepath:prepend('C:/Users/nah/code/archive/supermaven-language-server')
-  vim.lsp.enable('supermaven')
-end)
