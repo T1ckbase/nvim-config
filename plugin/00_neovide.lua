@@ -1,6 +1,6 @@
 if not vim.g.neovide then return end
 
-vim.opt.guifont = 'JetBrainsMonoNL Nerd Font,Cascadia Mono,Symbols Nerd Font:h11'
+vim.opt.guifont = 'JetBrainsMonoNL Nerd Font,Cascadia Mono,Symbols Nerd Font:h11:#e-subpixelantialias:#h-slight'
 vim.opt.linespace = 0
 
 vim.g.neovide_scale_factor = 1.0
