@@ -316,6 +316,7 @@ now_if_args(function()
     'rust_analyzer',
     'stylua',
     'svelte',
+    'tombi',
     -- 'tsgo',
     'ty',
     'vtsls',
