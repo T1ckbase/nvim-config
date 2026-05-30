@@ -18,41 +18,64 @@ vim.keymap.set('n', '<C-Right>', '"<Cmd>vertical resize +" . v:count1 . "<CR>"',
 -- lsp
 vim.keymap.set('i', '<M-l>', function() vim.lsp.inline_completion.get() end, { desc = 'vim.lsp.inline_completion.get()' })
 vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ max_width = 100, max_height = 20, border = 'solid' }) end, { desc = 'vim.lsp.buf.hover()' })
-vim.keymap.set('n', '<leader>ld', function() vim.diagnostic.open_float(nil, { focusable = true, border = 'solid' }) end, { desc = 'Hover diagnostic' })
+vim.keymap.set('n', '<C-w>d', function() vim.diagnostic.open_float(nil, { focusable = true, border = 'solid' }) end, { desc = 'Show diagnostics under the cursor' })
+vim.keymap.set('n', '<leader>ld', '<C-w>d', { remap = true, desc = 'Show diagnostics under the cursor' })
 vim.keymap.set({ 'n', 'x' }, 'g.', vim.lsp.buf.code_action, { desc = 'Code Action' })
-vim.keymap.set('n', 'gd', function() MiniPick.registry.lsp_jump({ scope = 'definition' }) end, { desc = 'Goto Definition' })
-vim.keymap.set('n', 'gD', function() MiniPick.registry.lsp_jump({ scope = 'declaration' }) end, { desc = 'Goto Declaration' })
-vim.keymap.set('n', 'gO', function() MiniExtra.pickers.lsp({ scope = 'document_symbol' }) end, { desc = 'Document symbols' })
-vim.keymap.set('n', 'gri', function() MiniExtra.pickers.lsp({ scope = 'implementation' }) end, { desc = 'Goto Implementation' })
-vim.keymap.set('n', 'grr', function() MiniExtra.pickers.lsp({ scope = 'references' }) end, { desc = 'Goto References' })
-vim.keymap.set('n', 'grt', function() MiniPick.registry.lsp_jump({ scope = 'type_definition' }) end, { desc = 'Goto Type Definition' })
-vim.keymap.set('n', 'gw', function() MiniExtra.pickers.lsp({ scope = 'workspace_symbol_live' }) end, { desc = 'Workspace symbols' })
-vim.keymap.set('n', '<leader>lf', function() require('custom.format').format() end, { desc = 'Format buffer' })
+vim.keymap.set('n', 'gd', function() Snacks.picker.lsp_definitions() end, { desc = 'Goto Definition' })
+vim.keymap.set('n', 'gD', function() Snacks.picker.lsp_declarations() end, { desc = 'Goto Declaration' })
+vim.keymap.set('n', 'gO', function() Snacks.picker.lsp_symbols() end, { desc = 'Document symbols' })
+vim.keymap.set('n', 'gri', function() Snacks.picker.lsp_implementations() end, { desc = 'Goto Implementation' })
+vim.keymap.set('n', 'grr', function() Snacks.picker.lsp_references() end, { desc = 'Goto References' })
+vim.keymap.set('n', 'grt', function() Snacks.picker.lsp_type_definitions() end, { desc = 'Goto Type Definition' })
+vim.keymap.set('n', 'gai', function() Snacks.picker.lsp_incoming_calls() end, { desc = 'Incoming Calls' })
+vim.keymap.set('n', 'gao', function() Snacks.picker.lsp_outgoing_calls() end, { desc = 'Outgoing Calls' })
+vim.keymap.set('n', 'gw', function() Snacks.picker.lsp_workspace_symbols() end, { desc = 'Workspace Symbols' })
 
-vim.keymap.set('n', '<C-w>gd', function()
-  vim.cmd.vsplit()
-  MiniPick.registry.lsp_jump({ scope = 'definition' })
-end, { desc = 'Go to definition in a new vertical split' })
+local format_priority = {
+  biome = 1,
+  oxfmt = 2,
+  oxlint = 3,
+  denols = 4,
+  tsgo = 5,
+  vtsls = 6,
+  eslint = 7,
+  html = 8,
+  cssls = 9,
+  jsonls = 10,
+  markdown = 11,
+  clangd = 12,
+  astro = 13,
+  svelte = 14,
+  nushell = 15,
+  stylua = 16,
+  lua_ls = 17,
+  ruff = 18,
+  ty = 19,
+  rust_analyzer = 20,
+  zls = 21,
+  tombi = 22,
+}
 
-vim.keymap.set('n', '<C-w>gD', function()
-  vim.cmd.vsplit()
-  MiniPick.registry.lsp_jump({ scope = 'declaration' })
-end, { desc = 'Go to declaration in a new vertical split' })
+vim.keymap.set('n', '<leader>lf', function()
+  local clients = vim.lsp.get_clients({
+    bufnr = vim.api.nvim_get_current_buf(),
+    method = 'textDocument/formatting',
+  })
 
-vim.keymap.set('n', '<C-w>gri', function()
-  vim.cmd.vsplit()
-  MiniExtra.pickers.lsp({ scope = 'implementation' })
-end, { desc = 'Go to implementation in a new vertical split' })
+  table.sort(clients, function(a, b)
+    local index_a = format_priority[a.name] or math.huge
+    local index_b = format_priority[b.name] or math.huge
 
-vim.keymap.set('n', '<C-w>grr', function()
-  vim.cmd.vsplit()
-  MiniExtra.pickers.lsp({ scope = 'references' })
-end, { desc = 'Go to references in a new vertical split' })
+    if index_a ~= index_b then return index_a < index_b end
 
-vim.keymap.set('n', '<C-w>grt', function()
-  vim.cmd.vsplit()
-  MiniPick.registry.lsp_jump({ scope = 'type_definition' })
-end, { desc = 'Go to type_definition in a new vertical split' })
+    return a.id < b.id
+  end)
+
+  local chosen = clients[1]
+  vim.lsp.buf.format({
+    id = chosen and chosen.id,
+  })
+end, { desc = 'Format Buffer' })
 
 vim.keymap.set('n', '<leader>e', function()
   if not MiniFiles.close() then MiniFiles.open() end
@@ -61,22 +84,22 @@ end, { desc = 'Toggle Explorer' })
 -- Disable `s` shortcut (use `cl` instead) for safer usage of 'mini.surround'
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 
-vim.keymap.set('n', "<leader>f'", function() MiniExtra.pickers.marks() end, { desc = 'Find marks' })
-vim.keymap.set('n', '<leader>f/', function() MiniExtra.pickers.history({ scope = '/' }) end, { desc = 'Find search history' })
-vim.keymap.set('n', '<leader>f:', function() MiniExtra.pickers.history({ scope = ':' }) end, { desc = 'Find command history' })
-vim.keymap.set('n', '<leader>fb', function() MiniPick.builtin.buffers() end, { desc = 'Find buffers' })
-vim.keymap.set('n', '<leader>fe', function() MiniExtra.pickers.explorer() end, { desc = 'File explorer' })
-vim.keymap.set('n', '<leader>ff', function() MiniPick.registry.files({ hidden = true }) end, { desc = 'Find files' })
-vim.keymap.set('n', '<leader>fF', function() MiniPick.registry.files({ hidden = true, ignored = true }) end, { desc = 'Find all files' })
-vim.keymap.set('n', '<leader>fh', function() MiniPick.builtin.help() end, { desc = 'Find help' })
-vim.keymap.set('n', '<leader>fH', function() MiniExtra.pickers.hl_groups() end, { desc = 'Find highlights' })
-vim.keymap.set('n', '<leader>fk', function() MiniExtra.pickers.keymaps() end, { desc = 'Find keymaps' })
-vim.keymap.set('n', '<leader>fr', function() MiniExtra.pickers.registers() end, { desc = 'Find registers' })
-vim.keymap.set('n', '<leader>ft', function() MiniExtra.pickers.colorschemes() end, { desc = 'Find themes' })
-vim.keymap.set('n', '<leader>fw', function() MiniPick.registry.grep_live({ hidden = true }) end, { desc = 'Find words' })
-vim.keymap.set('n', '<leader>fW', function() MiniPick.registry.grep_live({ hidden = true, ignored = true }) end, { desc = 'Find all words' })
-vim.keymap.set('n', '<leader><space>', function() MiniPick.builtin.resume() end, { desc = 'Resume picker' })
+vim.keymap.set('n', "<leader>f'", function() Snacks.picker.marks() end, { desc = 'Marks' })
+vim.keymap.set('n', '<leader>f/', function() Snacks.picker.search_history() end, { desc = 'Search History' })
+vim.keymap.set('n', '<leader>f:', function() Snacks.picker.command_history() end, { desc = 'Command History' })
+vim.keymap.set('n', '<leader>fb', function() Snacks.picker.buffers() end, { desc = 'Buffers' })
+vim.keymap.set('n', '<leader>fd', function() Snacks.picker.diagnostics_buffer() end, { desc = 'Buffer Diagnostics' })
+vim.keymap.set('n', '<leader>fD', function() Snacks.picker.diagnostics() end, { desc = 'Diagnostics' })
+-- vim.keymap.set('n', '<leader>fe', function() Snacks.explorer() end, { desc = 'File Explorer' })
+vim.keymap.set('n', '<leader>ff', function() Snacks.picker.files({ hidden = true }) end, { desc = 'Find files' })
+vim.keymap.set('n', '<leader>fF', function() Snacks.picker.files({ hidden = true, ignored = true }) end, { desc = 'Find All Files' })
+vim.keymap.set('n', '<leader>fh', function() Snacks.picker.help() end, { desc = 'Help Pages' })
+vim.keymap.set('n', '<leader>fH', function() Snacks.picker.highlights() end, { desc = 'Highlights' })
+vim.keymap.set('n', '<leader>fk', function() Snacks.picker.keymaps() end, { desc = 'Keymaps' })
+vim.keymap.set('n', '<leader>fr', function() Snacks.picker.registers() end, { desc = 'Registers' })
+vim.keymap.set('n', '<leader>ft', function() Snacks.picker.colorschemes() end, { desc = 'Colorschemes' })
+vim.keymap.set('n', '<leader>fw', function() Snacks.picker.grep({ hidden = true }) end, { desc = 'Grep' })
+vim.keymap.set('n', '<leader>fW', function() Snacks.picker.grep({ hidden = true, ignored = true }) end, { desc = 'Grep All' })
+vim.keymap.set('n', '<leader><space>', function() Snacks.picker.resume() end, { desc = 'Resume picker' })
 
-vim.keymap.set('n', '<leader>lD', function() MiniExtra.pickers.diagnostic() end, { desc = 'Search diagnostic' })
-
-vim.keymap.set('n', '<leader>nh', function() MiniNotify.show_history() end, { desc = 'Notify history' })
+vim.keymap.set('n', '<leader>nh', function() MiniNotify.show_history() end, { desc = 'Notify History' })

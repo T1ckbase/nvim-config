@@ -64,17 +64,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
-vim.api.nvim_create_autocmd('PackChanged', {
-  group = 'custom-config',
-  callback = function(args)
-    local name, kind = args.data.spec.name, args.data.kind
-    if name == 'nvim-treesitter' and kind == 'update' then
-      if not args.data.active then vim.cmd.packadd('nvim-treesitter') end
-      vim.cmd('TSUpdate')
-    end
-  end,
-})
-
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = 'custom-config',
   callback = function() vim.hl.on_yank({ timeout = 80 }) end,

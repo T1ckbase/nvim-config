@@ -1,0 +1,21 @@
+{
+  "HTML Document": {
+    "prefix": "!",
+    "body": [
+      "<!doctype html>",
+      "<html lang=\"en\">",
+      "\t<head>",
+      "\t\t<meta charset=\"UTF-8\" />",
+      "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />",
+      "\t\t<meta name=\"color-scheme\" content=\"dark light\" />",
+      "\t\t<link rel=\"icon\" href=\"data:,\" />",
+      "\t\t<title>${1:title}</title>",
+      "\t</head>",
+      "\t<body>",
+      "\t\t$0",
+      "\t</body>",
+      "</html>"
+    ],
+    "description": "HTML Document"
+  }
+}

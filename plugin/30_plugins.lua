@@ -127,6 +127,17 @@ now(function()
 end)
 
 now_if_args(function()
+  vim.api.nvim_create_autocmd('PackChanged', {
+    group = 'custom-config',
+    callback = function(args)
+      local name, kind = args.data.spec.name, args.data.kind
+      if name == 'nvim-treesitter' and kind == 'update' then
+        if not args.data.active then vim.cmd.packadd('nvim-treesitter') end
+        vim.cmd('TSUpdate')
+      end
+    end,
+  })
+
   vim.pack.add({
     'https://github.com/nvim-treesitter/nvim-treesitter',
     'https://github.com/nvim-treesitter/nvim-treesitter-textobjects',
@@ -474,16 +485,16 @@ end)
 
 later(function() require('mini.git').setup() end)
 
-later(function()
-  require('mini.indentscope').setup({
-    draw = {
-      delay = 0,
-      animation = require('mini.indentscope').gen_animation.none(),
-      predicate = function(scope) return scope.border.indent > 1 end,
-    },
-    symbol = '▏',
-  })
-end)
+-- later(function()
+--   require('mini.indentscope').setup({
+--     draw = {
+--       delay = 0,
+--       animation = require('mini.indentscope').gen_animation.none(),
+--       predicate = function(scope) return scope.border.indent > 1 end,
+--     },
+--     symbol = '▏',
+--   })
+-- end)
 
 -- later(function()
 --   require('mini.jump2d').setup({
@@ -527,171 +538,6 @@ later(
 )
 
 later(function()
-  require('mini.pick').setup({
-    options = {
-      use_cache = true,
-    },
-    window = {
-      config = function()
-        local height = math.floor(0.618 * vim.o.lines)
-        local width = math.floor(0.618 * vim.o.columns)
-        return {
-          anchor = 'NW',
-          height = height,
-          width = width,
-          row = math.floor(0.5 * (vim.o.lines - height)),
-          col = math.floor(0.5 * (vim.o.columns - width)),
-          border = 'solid',
-        }
-      end,
-    },
-  })
-
-  MiniPick.registry.files = function(local_opts)
-    local_opts = vim.tbl_deep_extend('force', { hidden = false, ignored = false }, local_opts or {})
-
-    local command = { 'fd', '--type=f', '--color=never' }
-
-    if local_opts.hidden then vim.list_extend(command, { '--hidden', '--exclude', '.git/*' }) end
-
-    if local_opts.ignored then table.insert(command, '--no-ignore') end
-
-    return MiniPick.builtin.cli({
-      command = command,
-    }, {
-      source = {
-        name = string.format('Files (fd%s%s)', local_opts.hidden and ' --hidden' or '', local_opts.ignored and ' --no-ignore' or ''),
-        show = function(buf_id, items, query) MiniPick.default_show(buf_id, items, query, { show_icons = true }) end,
-      },
-    })
-  end
-
-  MiniPick.registry.grep_live = function(local_opts)
-    local_opts = vim.tbl_deep_extend('force', { hidden = false, ignored = false }, local_opts or {})
-    local user_globs = {}
-
-    local get_name = function()
-      local name = string.format('Grep Live (rg%s%s)', local_opts.hidden and ' --hidden' or '', local_opts.ignored and ' --no-ignore' or '')
-      return #user_globs > 0 and (name .. ' | ' .. table.concat(user_globs, ', ')) or name
-    end
-
-    local build_rg_command = function(pattern)
-      local cmd = {
-        'rg',
-        '--column',
-        '--line-number',
-        '--no-heading',
-        '--field-match-separator',
-        '\\x00',
-        '--color=never',
-      }
-
-      if local_opts.hidden then vim.list_extend(cmd, { '--hidden', '--glob', '!.git/*' }) end
-
-      if local_opts.ignored then table.insert(cmd, '--no-ignore') end
-
-      local case = vim.o.ignorecase and (vim.o.smartcase and 'smart-case' or 'ignore-case') or 'case-sensitive'
-      table.insert(cmd, '--' .. case)
-
-      for _, g in ipairs(user_globs) do
-        vim.list_extend(cmd, { '--glob', g })
-      end
-
-      vim.list_extend(cmd, { '--', pattern })
-      return cmd
-    end
-
-    local set_items_opts = { do_match = false, querytick = MiniPick.get_querytick() }
-    local sys = { kill = function() end }
-    local match = function(_, _, query)
-      sys:kill()
-      if MiniPick.get_querytick() == set_items_opts.querytick then return end
-      if #query == 0 then
-        sys = { kill = function() end }
-        return MiniPick.set_picker_items({}, set_items_opts)
-      end
-
-      set_items_opts.querytick = MiniPick.get_querytick()
-      ---@diagnostic disable-next-line: cast-local-type
-      sys = MiniPick.set_picker_items_from_cli(build_rg_command(table.concat(query)), {
-        set_items_opts = set_items_opts,
-        spawn_opts = { cwd = MiniPick.get_picker_opts().source.cwd },
-      })
-    end
-
-    local add_glob = function()
-      local ok, glob = pcall(vim.fn.input, 'Glob pattern: ')
-      if ok and glob ~= '' then
-        table.insert(user_globs, glob)
-        MiniPick.set_picker_opts({ source = { name = get_name() } })
-        ---@diagnostic disable-next-line: param-type-mismatch
-        MiniPick.set_picker_query(MiniPick.get_picker_query())
-      end
-    end
-
-    return MiniPick.start({
-      source = {
-        name = get_name(),
-        items = {},
-        match = match,
-        show = function(buf_id, items, query) MiniPick.default_show(buf_id, items, query, { show_icons = true }) end,
-      },
-      mappings = { add_glob = { char = '<C-o>', func = add_glob } },
-    })
-  end
-
-  MiniPick.registry.lsp_jump = function(local_opts)
-    local_opts = local_opts or {}
-    local scope = local_opts.scope
-
-    if not scope then
-      vim.notify('lsp_jump: scope is required', vim.log.levels.ERROR)
-      return
-    end
-
-    if not vim.tbl_contains({ 'declaration', 'definition', 'type_definition' }, scope) then
-      vim.notify('lsp_jump: invalid scope: ' .. scope, vim.log.levels.ERROR)
-      return
-    end
-
-    -- Capture before request
-    local bufnr = vim.api.nvim_get_current_buf()
-    local win = vim.api.nvim_get_current_win()
-    local from = vim.fn.getpos('.')
-    from[1] = bufnr
-    local tagname = vim.fn.expand('<cword>')
-
-    local function jump_to_item(item)
-      local b = item.bufnr
-      if not (b and vim.api.nvim_buf_is_valid(b)) then b = vim.fn.bufadd(item.filename) end
-
-      vim.cmd("normal! m'")
-      vim.fn.settagstack(vim.fn.win_getid(win), { items = { { tagname = tagname, from = from } } }, 't')
-
-      vim.bo[b].buflisted = true
-      vim.api.nvim_set_current_buf(b)
-      vim.api.nvim_win_set_cursor(0, { item.lnum, item.col - 1 })
-      vim.cmd('normal! zv')
-    end
-
-    local on_list = function(options)
-      local items = options.items or {}
-      if #items == 0 then
-        vim.notify('No locations found', vim.log.levels.INFO)
-      elseif #items == 1 then
-        jump_to_item(items[1])
-      else
-        MiniExtra.pickers.lsp(local_opts)
-      end
-    end
-
-    vim.lsp.buf[scope]({ on_list = on_list })
-  end
-end)
-
-later(function()
-  vim.pack.add({ 'https://github.com/T1ckbase/vscode-snippets' })
-
   require('mini.snippets').setup({
     snippets = {
       -- require('mini.snippets').gen_loader.from_file(vim.fn.stdpath('config') .. '/snippets/global.json'),
@@ -718,9 +564,39 @@ later(function()
   -- MiniSnippets.start_lsp_server()
 end)
 
+later(function() require('mini.surround').setup({ silent = true }) end)
+
 later(function()
-  require('mini.surround').setup({
-    silent = true,
+  vim.pack.add({
+    {
+      src = 'https://github.com/folke/snacks.nvim',
+      version = vim.version.range('^2'),
+    },
+  })
+
+  require('snacks').setup({
+    indent = {
+      enabled = true,
+      indent = { char = '▏', only_scope = false },
+      scope = { char = '▏', hl = 'SnacksIndent' },
+      animate = { enabled = false },
+    },
+    picker = {
+      enabled = true,
+      layout = {
+        layout = {
+          backdrop = false,
+        },
+      },
+      win = {
+        input = {
+          keys = {
+            ['<Esc>'] = { 'close', mode = { 'n', 'i' } },
+          },
+        },
+      },
+    },
+    scope = { enabled = true },
   })
 end)
 
@@ -857,27 +733,3 @@ later(function()
     shell = 'nu',
   })
 end)
-
--- later(function()
---   add({
---     name = 'mini-files-git-status',
---     checkout = 'HEAD',
---   })
---
---   local mfgs = require('t1ckbase.mini-files-git-status')
---   mfgs.setup({
---     display_mode = 'virt_text',
---     status_map = {
---       ['--'] = { icon = '' },
---       ['-N'] = { hl = 'NeoTreeGitAdded' },
---       ['-M'] = { hl = 'NeoTreeGitModified' },
---       ['-D'] = { hl = 'NeoTreeGitDeleted' },
---       ['-R'] = { hl = 'NeoTreeGitRenamed' },
---       ['-T'] = { hl = 'NeoTreeGitModified' },
---       ['-I'] = { hl = 'NeoTreeGitIgnored' },
---       ['-U'] = { hl = 'NeoTreeGitConflict' },
---     },
---   })
---
---   mfgs.update_cache(vim.fn.getcwd())
--- end)
