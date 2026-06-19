@@ -328,9 +328,9 @@ now_if_args(function()
     'stylua',
     'svelte',
     'tombi',
-    -- 'tsgo',
+    'tsgo',
     'ty',
-    'vtsls',
+    -- 'vtsls',
     'yamlls',
     'zls',
   })
@@ -484,29 +484,6 @@ later(function()
 end)
 
 later(function() require('mini.git').setup() end)
-
--- later(function()
---   require('mini.indentscope').setup({
---     draw = {
---       delay = 0,
---       animation = require('mini.indentscope').gen_animation.none(),
---       predicate = function(scope) return scope.border.indent > 1 end,
---     },
---     symbol = '▏',
---   })
--- end)
-
--- later(function()
---   require('mini.jump2d').setup({
---     view = {
---       dim = true
---     },
---     allowed_windows = {
---       not_current = false,
---     },
---     silent = true
---   })
--- end)
 
 later(function() require('mini.move').setup() end)
 
@@ -686,6 +663,16 @@ later(function()
     snippets = { preset = 'mini_snippets' },
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
+      providers = {
+        lsp = {
+          transform_items = function(_, items)
+            for _, item in ipairs(items) do
+              if item.client_name == 'tsgo' and item.label == 'Symbol' then item.score_offset = -50 end
+            end
+            return items
+          end,
+        },
+      },
     },
     fuzzy = {
       implementation = 'rust',
@@ -705,7 +692,6 @@ later(function()
       frecency = {
         enabled = false,
       },
-      use_proximity = false,
     },
     signature = {
       enabled = true,
