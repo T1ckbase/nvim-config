@@ -1,4 +1,6 @@
 ---@type vim.lsp.Config
 return {
-  cmd = { 'uvx', '--quiet', 'ruff', 'server' },
+  cmd = { 'uv', 'run', 'ruff', 'server' },
+  root_markers = { 'ruff.toml', '.ruff.toml' },
+  workspace_required = true,
 }
