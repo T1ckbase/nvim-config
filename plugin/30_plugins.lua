@@ -133,7 +133,7 @@ now_if_args(function()
       local name, kind = args.data.spec.name, args.data.kind
       if name == 'nvim-treesitter' and kind == 'update' then
         if not args.data.active then vim.cmd.packadd('nvim-treesitter') end
-        vim.cmd('TSUpdate')
+        require('nvim-treesitter.install').update({}, { summary = true })
       end
     end,
   })
@@ -199,12 +199,7 @@ now_if_args(function()
 
   require('nvim-treesitter').install(languages)
 
-  local filetypes = {}
-  for _, lang in ipairs(languages) do
-    for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
-      table.insert(filetypes, ft)
-    end
-  end
+  local filetypes = vim.iter(languages):map(vim.treesitter.language.get_filetypes):flatten():totable()
 
   vim.api.nvim_create_autocmd('FileType', {
     group = 'custom-config',

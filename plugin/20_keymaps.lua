@@ -78,7 +78,7 @@ vim.keymap.set('n', '<leader>lf', function()
 end, { desc = 'Format Buffer' })
 
 vim.keymap.set('n', '<leader>e', function()
-  if not MiniFiles.close() then MiniFiles.open() end
+  if MiniFiles.close() == nil then MiniFiles.open() end
 end, { desc = 'Toggle Explorer' })
 
 -- Disable `s` shortcut (use `cl` instead) for safer usage of 'mini.surround'
