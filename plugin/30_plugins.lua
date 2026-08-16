@@ -613,8 +613,6 @@ later(function()
         prefetch_on_insert = false,
       },
       menu = {
-        auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,
-        auto_show_delay_ms = 0,
         max_height = 12,
         scrollbar = true,
         draw = {
@@ -629,16 +627,6 @@ later(function()
               text = function(ctx)
                 local kind_icon, _, _ = MiniIcons.get('lsp', ctx.kind)
                 return kind_icon .. ctx.icon_gap
-              end,
-              highlight = function(ctx)
-                local _, hl, _ = MiniIcons.get('lsp', ctx.kind)
-                return hl
-              end,
-            },
-            kind = {
-              highlight = function(ctx)
-                local _, hl, _ = MiniIcons.get('lsp', ctx.kind)
-                return hl
               end,
             },
           },

@@ -34,7 +34,7 @@ vim.opt.fillchars = {
   foldsep = ' ',
   foldinner = ' ',
   diff = ' ',
-  eob = ' ', -- disable `~` on nonexistent lines
+  eob = ' ',
 }
 vim.opt.foldcolumn = '1'
 vim.opt.foldlevelstart = 999
@@ -48,7 +48,7 @@ vim.opt.laststatus = 3
 vim.opt.mouse = 'a'
 -- vim.opt.mousemoveevent = true
 vim.opt.number = true
-vim.opt.numberwidth = 1
+-- vim.opt.numberwidth = 1
 vim.opt.path = { '.', '', '**' }
 vim.opt.pumheight = 16
 vim.opt.relativenumber = true
