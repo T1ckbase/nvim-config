@@ -323,7 +323,7 @@ now_if_args(function()
     'stylua',
     'svelte',
     'tombi',
-    'tsgo',
+    'tsc',
     'ty',
     -- 'vtsls',
     'yamlls',
@@ -662,7 +662,7 @@ later(function()
         lsp = {
           transform_items = function(_, items)
             for _, item in ipairs(items) do
-              if item.client_name == 'tsgo' and item.label == 'Symbol' then item.score_offset = -50 end
+              if item.client_name == 'tsc' and item.label == 'Symbol' then item.score_offset = -50 end
             end
             return items
           end,
