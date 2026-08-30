@@ -155,6 +155,7 @@ now_if_args(function()
     'diff',
     'dockerfile',
     'editorconfig',
+    'gdscript',
     'git_config',
     'git_rebase',
     'gitattributes',
@@ -310,6 +311,7 @@ now_if_args(function()
     'denols',
     'emmet_language_server',
     'eslint',
+    'gdscript',
     'html',
     'jsonls',
     'lua_ls',
@@ -618,18 +620,18 @@ later(function()
         draw = {
           -- treesitter = { 'lsp' },
           columns = {
-            { 'kind_icon' },
+            -- { 'kind_icon' },
             { 'label', 'label_description', gap = 1 },
             { 'kind' },
           },
-          components = {
-            kind_icon = {
-              text = function(ctx)
-                local kind_icon, _, _ = MiniIcons.get('lsp', ctx.kind)
-                return kind_icon .. ctx.icon_gap
-              end,
-            },
-          },
+          -- components = {
+          --   kind_icon = {
+          --     text = function(ctx)
+          --       local kind_icon, _, _ = MiniIcons.get('lsp', ctx.kind)
+          --       return kind_icon .. ctx.icon_gap
+          --     end,
+          --   },
+          -- },
         },
       },
       accept = {
